@@ -1,0 +1,20 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "phoenix_storms/iron_rails"
+	"$phong" "1"
+	"$phongexponent" "15"
+	"$phongboost" "3"
+	"$phongfresnelranges"	"[1 1 1]"
+
+	"$envmap" "Effects/cubemapper"
+	"$envmaptint" "[.2 .2 .2]" 
+
+
+	// Rim lighting parameters
+	"$rimlight" "1"												// To enable rim lighting (requires phong)
+	"$rimlightexponent" "50"									// Exponent for phong component of rim lighting	
+	"$rimlightboost" "15"										// Boost for ambient cube component of rim lighting
+
+}
+
+

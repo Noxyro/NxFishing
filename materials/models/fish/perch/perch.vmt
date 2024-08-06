@@ -1,0 +1,6 @@
+"Vertexlitgeneric"
+{
+	"$basetexture" "models\fish\perch\perch"
+	"$surfaceprop" "flesh"
+	"$model" 1
+}

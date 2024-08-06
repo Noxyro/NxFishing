@@ -1,0 +1,3 @@
+VertexLitGeneric {
+	$baseTexture "models\props_interiors/printer"
+}

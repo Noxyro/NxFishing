@@ -1,0 +1,8 @@
+"Vertexlitgeneric"
+{
+	"$basetexture" "models\fish\perch\perch_flappers"
+	"$surfaceprop" "flesh"
+	"$model" 1
+	"$translucent" 1
+//	"$nocull" 1
+}

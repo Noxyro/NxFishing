@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "phoenix_storms/grey_chrome"
+	"$phong" "1"
+	"$phongexponent" "200"
+	"$phongboost" "100"
+	"$phongfresnelranges"	"[1 1 1]"
+	"$basemapalphaphongmask" "1"
+
+}
+
+

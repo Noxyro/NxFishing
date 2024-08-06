@@ -1,0 +1,5 @@
+"vertexlitgeneric"
+{
+	"$basetexture" "models/tmp_mod/island_fish"
+	"$bumpmap" "models/tmp_mod/island_fish_normal"
+}

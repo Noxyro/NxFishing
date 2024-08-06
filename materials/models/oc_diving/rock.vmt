@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/oc_diving/rock.vtf"
+	"$bumpmap" "models/oc_diving/rock_bump.vtf"
+	"$normalmapalphaenvmapmask" 1
+	"$surfaceprop" "stone"
+}
