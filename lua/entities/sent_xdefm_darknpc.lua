@@ -1,3 +1,13 @@
+--[[
+Custom Non-Commercial License v1.0 - 06.08.2024
+
+Part of the "NxFishing" project on GitHub: https://github.com/Noxyro/NxFishing
+© 2024 Noxyro; Original work by LemonCola3424
+
+BASIC LICENSE TERMS: NON-COMMERCIAL USE ONLY; CREDITS TO ORIGINAL AUTHOR REQUIRED; MODIFY AND DISTRIBUTE FREELY UNDER LICENSE TERMS
+See "LICENSE.md" and "README.md" in project folder or on GitHub for full license and contact details.
+--]]
+
 sound.Add( { name = "xdefm.NPCHey", channel = CHAN_VOICE, volume = 0.5, level = 60, pitch = 100,
 sound = { "*lostcoast/vo/fisherman/fish_hey.wav", "*lostcoast/vo/fisherman/fish_youthere.wav", "*lostcoast/vo/fisherman/fish_wait01.wav",
 "*lostcoast/vo/fisherman/fish_wait02.wav", "*lostcoast/vo/fisherman/fish_wait03.wav", "*lostcoast/vo/fisherman/fish_wait04.wav" } } )

@@ -1,3 +1,13 @@
+--[[
+Custom Non-Commercial License v1.0 - 06.08.2024
+
+Part of the "NxFishing" project on GitHub: https://github.com/Noxyro/NxFishing
+© 2024 Noxyro; Original work by LemonCola3424
+
+BASIC LICENSE TERMS: NON-COMMERCIAL USE ONLY; CREDITS TO ORIGINAL AUTHOR REQUIRED; MODIFY AND DISTRIBUTE FREELY UNDER LICENSE TERMS
+See "LICENSE.md" and "README.md" in project folder or on GitHub for full license and contact details.
+--]]
+
 AddCSLuaFile() -- 交易,极度赘余警告
 SWEP.PrintName		= "#xdefm.Weapon_Trade"
 SWEP.Author 		= "LemonCola3424"
