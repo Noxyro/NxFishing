@@ -61,7 +61,7 @@ if CLIENT then
 		surface.SetDrawColor( 0, 255, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 1 )
 		self.InfoMarkup:Draw( x + 5, y + 5, nil, nil, alpha )
 		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Version" )..": "..xdefm.miscs.Version, pos = { xx, yy + hh + 16 },
+			text = language.GetPhrase( "xdefm.Version" )..": "..xdefmod.util.Version, pos = { xx, yy + hh + 16 },
 			font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
 		}, 1, 255 ) self.InfoMarkup = nil
 	end
@@ -85,13 +85,13 @@ if CLIENT then
 		local function MakeItNice( x, y, w, h )
 			draw.RoundedBox( 0, x, y, w, h, col ) surface.DrawOutlinedRect( x, y, w, h, 1 )
 			surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( x, y, w, h, 1 )
-		end local LAng = ( xdefm.miscs.CamAng != nil and xdefm.miscs.CamAng or ply:EyeAngles() )
+		end local LAng = ( xdefmod.util.camera_ang != nil and xdefmod.util.camera_ang or ply:EyeAngles() )
 		local tr = util.TraceLine( {
 			start = ply:EyePos(), endpos = ply:EyePos() +ply:EyeAngles():Forward()*128,
 			filter = ply, mask = MASK_SHOT_HULL
 		} ) local hps = ( tr.HitPos + tr.HitNormal )
-		if !xdefm.miscs.CrsPos then xdefm.miscs.CrsPos = hps else xdefm.miscs.CrsPos = LerpVector( 0.1, xdefm.miscs.CrsPos, hps ) end
-		scr = xdefm.miscs.CrsPos:ToScreen()  scr.x = math.Round( scr.x )  scr.y = math.Round( scr.y )
+		if !xdefmod.util.cursor_pos then xdefmod.util.cursor_pos = hps else xdefmod.util.cursor_pos = LerpVector( 0.1, xdefmod.util.cursor_pos, hps ) end
+		scr = xdefmod.util.cursor_pos:ToScreen()  scr.x = math.Round( scr.x )  scr.y = math.Round( scr.y )
 		if sl >= 0 then local per = 0
 			if st == 1 then per = math.Clamp( sl/100, 0, 1 ) elseif st == 2 then
 			per = math.Clamp( self:GetFMod_RL()/xdefm_GetUpValue( pro.UpdB, "B" ), 0, 1 ) end
@@ -136,7 +136,7 @@ if CLIENT then
 							local aa, bb = xdefm_ItemGet( v:GetFMod_HK():GetFMod_FS() )
 							if istable( bb ) then
 								draw.TextShadow( { text = language.GetPhrase( "xdefm.Caught" )..": "..language.GetPhrase( bb.Name ), pos = { scr.x, scr.y +16 +hh }, font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = xdefm.miscs.Rarity[ bb.Rarity +1 ] }, 1, 255 )
+								xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ] }, 1, 255 )
 							end
 						end
 					end
@@ -154,7 +154,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 0, "FMod_ST" ) --Rod State
 	self:NetworkVar( "Float", 2, "FMod_RL" ) --Reel Length
 end
-function SWEP:Initialize() self:SetHoldType( "passive" ) if CLIENT then xdefm.miscs.CrsPos = nil end end
+function SWEP:Initialize() self:SetHoldType( "passive" ) if CLIENT then xdefmod.util.cursor_pos = nil end end
 function SWEP:Deploy() local own = self.Owner
 	if SERVER and ( !IsValid( own ) or !own:IsPlayer() ) then self:Remove() return end
 	self:SetFMod_SL( 0 ) self:SetFMod_ST( 0 ) self:SetHoldType( "passive" ) local phy = self:GetPhysicsObject()
@@ -313,7 +313,7 @@ if true then // xdefm_rod
 		if !IsValid( own ) or !own:IsPlayer() then return end
 		local bone = own:LookupBone( "ValveBiped.Bip01_R_Hand" ) if !bone then return end
 		local CPos, CAng = own:GetBonePosition( bone ) if !CPos or !CAng then return end
-		local LVec = xdefm.miscs.RodPos  local LAng = xdefm.miscs.RodAng  local siz = self:GetModelScale()
+		local LVec = xdefmod.util.ROD_POS  local LAng = xdefmod.util.ROD_ANG  local siz = self:GetModelScale()
 		local NPos, NAng = LocalToWorld( LVec*siz +Vector(-1,2,-2)*siz -Vector(-1,1,0), LAng, CPos, CAng )
 		self.ShadowParams.secondstoarrive = 0.0001  self.ShadowParams.pos = NPos
 		self.ShadowParams.angle = NAng  self.ShadowParams.maxangular = 0
@@ -328,7 +328,7 @@ if true then // xdefm_rod
 			if !IsValid( own ) or !own:IsPlayer() then return end
 			local bone = own:LookupBone( "ValveBiped.Bip01_R_Hand" ) if !bone then return end
 			local CPos, CAng = own:GetBonePosition( bone ) if !CPos or !CAng then return end
-			local LVec = xdefm.miscs.RodPos  local LAng = xdefm.miscs.RodAng  local siz = self:GetModelScale()
+			local LVec = xdefmod.util.ROD_POS  local LAng = xdefmod.util.ROD_ANG  local siz = self:GetModelScale()
 			local NPos, NAng = LocalToWorld( LVec*siz +Vector(-1,2,-2)*siz -Vector(-1,1,0), LAng, CPos, CAng )
 			self:SetPos( NPos ) self:SetAngles( NAng )
 			self:SetRenderBounds( Vector( -1024, -1024, -1024 ), Vector( 1024, 1024, 1024 ) )
@@ -378,7 +378,7 @@ if true then // xdefm_bobber
 		else self:SetFMod_DP( 0 ) end
 		if IsValid( hh ) and IsValid( self:GetFMod_RD() ) and self.FMod_RS > 0 then local rod = self:GetFMod_RD()
 			local CPos, CAng = rod:GetPos(), rod:GetAngles()
-			local LVec = xdefm.miscs.RodPos  local LAng = xdefm.miscs.RodAng  local siz = rod:GetModelScale()
+			local LVec = xdefmod.util.ROD_POS  local LAng = xdefmod.util.ROD_ANG  local siz = rod:GetModelScale()
 			local NPos, NAng = LocalToWorld( LVec*siz +Vector(-1,2,-2)*siz -Vector(-1,1,0), LAng, CPos, CAng )
 			local p1, p2 = self.FMod_RL, NPos:Distance( hh:GetPos() )
 			local p3 = self:GetPos():Distance( hh:GetPos() )*3

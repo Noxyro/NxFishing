@@ -76,9 +76,9 @@ hook.Add( "HUDPaint", "xdefm_Radar", function() local ply = LocalPlayer()
 				continue
 			end
 			local aa, bb = xdefm_ItemGet( v ) if !istable( bb ) then continue end
-			local ico = xdefm.miscs.Icons[ bb.Type ]  if !ico then continue end
+			local ico = xdefmod.util.ITEM_ICONS[ bb.Type ]  if !ico then continue end
 			local scr = v:GetPos():ToScreen()  local xx, yy = math.Round( scr.x ), math.Round( scr.y )
-			local col = xdefm.miscs.Rarity[ bb.Rarity +1 ]
+			local col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]
 			surface.SetDrawColor( col )
 			surface.SetMaterial( ico )
 			surface.DrawTexturedRectRotated( xx, yy, 16, 16, 0 )

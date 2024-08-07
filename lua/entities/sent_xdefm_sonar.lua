@@ -32,13 +32,13 @@ function ENT:Think() if SERVER then local ow = self:GetFMod_OW()
 	self:NextThink( CurTime() +1 ) return true end local text = self:GetOverlayText() local ply, tag = LocalPlayer(), GetConVar( "xdefmod_tagdist" ):GetInt()
 	if !IsValid( ply ) or tag == 0 or ply:GetPos():DistToSqr( self:GetPos() ) > tag^2 then return end local tak = false
 	if self:BeingLookedAtByLocalPlayer() then local aa, bb = xdefm_ItemGet( self:GetFMod_DT() )  local col = Color( 0, 255, 255 )
-	if istable( bb ) then col = xdefm.miscs.Rarity[ bb.Rarity +1 ] end halo.Add( { self }, col, 1, 1, 1 )
+	if istable( bb ) then col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ] end halo.Add( { self }, col, 1, 1, 1 )
 	if text != "" then AddWorldTip( self:EntIndex(), text, 0.5, self:GetPos(), self ) end end end
 function ENT:OnTakeDamage( dmg ) self:TakePhysicsDamage( dmg ) end
 function ENT:PhysicsCollide( dat, phy ) if dat.Speed >= 60 and dat.DeltaTime > 0.2 then self:EmitSound( "SolidMetal.ImpactSoft" ) end end
 function ENT:Draw() local txt = self:GetFMod_DT()  local aa, bb = xdefm_ItemGet( txt )  self:DrawModel()
 	surface.SetFont( "xdefm_Font3" ) if txt == "" or txt == "_" or !istable( bb ) then return end
-	local col = xdefm.miscs.Rarity[ bb.Rarity +1 ]  txt = language.GetPhrase( bb.Name )  local xx, yy = surface.GetTextSize( txt )
+	local col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]  txt = language.GetPhrase( bb.Name )  local xx, yy = surface.GetTextSize( txt )
 	cam.IgnoreZ( true ) cam.Start3D2D( self:GetPos(), self:LocalToWorldAngles( Angle( 0, 90, 90 ) ), 0.1 )
 		draw.RoundedBox( 8, -xx/2 -8, -yy/2 -100 -8, xx +16, yy +16, Color( 0, 0, 0, 155 ) )
 		draw.TextShadow( { text = txt, pos = { 0, -100 }, font = "xdefm_Font3",

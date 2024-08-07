@@ -932,7 +932,7 @@ if true then local it = "it_bag1"
 		end return false
 	end
 	function ITEM:OnDraw( self )
-		local aa, bb = xdefm_ItemGet( self )  local col = xdefm.miscs.Rarity[ bb.Rarity +1 ]
+		local aa, bb = xdefm_ItemGet( self )  local col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]
 		render.SetMaterial( Ma2 ) local siz = 26 +math.sin( CurTime()*5 )*2
 		render.DrawSprite( self:WorldSpaceCenter(), siz, siz, Color( col.r, col.g, col.b, 55 ) )
 	end
