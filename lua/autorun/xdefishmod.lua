@@ -51,7 +51,7 @@ end
 
 if istable(xdefmod) and istable(xdefmod.util) and istable(xdefmod.util.menus) then
 	for k, v in pairs(xdefmod.util.menus) do
-		if v != nil then
+		if v ~= nil then
 			v:Remove()
 		end
 	end
@@ -125,17 +125,12 @@ xdefmod.util.ITEM_ICONS = {
 }
 
 -- Sound definitions
-sound.Add({ name = "xdefm.ChargeMax", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 80, sound =
-")weapons/shotgun/shotgun_empty.wav" })
-sound.Add({ name = "xdefm.UnReel", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = { 95, 105 }, sound =
-")weapons/crossbow/reload1.wav" })
-sound.Add({ name = "xdefm.Break", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound =
-"npc/roller/blade_in.wav" })
+sound.Add({ name = "xdefm.ChargeMax", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 80, sound =")weapons/shotgun/shotgun_empty.wav" })
+sound.Add({ name = "xdefm.UnReel", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = { 95, 105 }, sound =")weapons/crossbow/reload1.wav" })
+sound.Add({ name = "xdefm.Break", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound ="npc/roller/blade_in.wav" })
 sound.Add({ name = "xdefm.Throw", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound = { "npc/vort/claw_swing1.wav", "npc/vort/claw_swing2.wav" } })
-sound.Add({ name = "xdefm.Reel", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound =
-"fishingrod/reel.wav" })
-sound.Add({ name = "xdefm.Bite", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound =
-"weapons/slam/mine_mode.wav" })
+sound.Add({ name = "xdefm.Reel", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound ="fishingrod/reel.wav" })
+sound.Add({ name = "xdefm.Bite", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound ="weapons/slam/mine_mode.wav" })
 
 -- URS/ULX integration
 local SP_URS = "ulx/modules/urs_server.lua"
@@ -409,11 +404,11 @@ if CLIENT then
 	function xdefm_SlotBox( x, y, w, h, slo, ext, ico, con )
 		if !isnumber( x ) or !isnumber( y ) or !isnumber( w ) or !isnumber( h ) or !isnumber( slo ) then return end
 		local pax = vgui.Create( "DButton" ) pax:SetSize( w, h ) pax:SetPos( x, y )  pax.S_Place = tostring( slo )  pax.B_OnMove = nil
-		pax:SetCursor( "blank" ) pax.S_Type = "None"  pax:SetText( "" ) pax.B_OnMove = false  if ico != nil then
+		pax:SetCursor( "blank" ) pax.S_Type = "None"  pax:SetText( "" ) pax.B_OnMove = false  if ico ~= nil then
 		pax.P_Sprite = vgui.Create( "DSprite", pax ) local spr = pax.P_Sprite  spr:SetMaterial( isstring( ico ) and Material( ico ) or ico )
 		spr:SetPos( w*0.15, h*0.15 ) spr:SetSize( w*0.15, h*0.15 ) end if !con then pax:Droppable( "XDEFM_MenuDrop" ) end pax.N_Lerp = 1
 		pax.T_Item = nil  pax.T_Extra = nil  pax.S_Name = ""  pax.N_Rarity = 0  pax.S_Item = "_" function pax:Paint( w, h ) local col = xdefmod.util.RARITY_COLORS[ pax.N_Rarity+1 ]
-			if pax.N_Rarity != 0 then draw.RoundedBox( 0, 1, 1, w -2, h -2, Color( col.r*0.4, col.g*0.4, col.b*0.4 ) )
+			if pax.N_Rarity ~= 0 then draw.RoundedBox( 0, 1, 1, w -2, h -2, Color( col.r*0.4, col.g*0.4, col.b*0.4 ) )
 			if xdefmod.util.aim_pan == pax then pax.N_Lerp = Lerp( 0.2, pax.N_Lerp, 4 ) else pax.N_Lerp = Lerp( 0.2, pax.N_Lerp, 1 ) end
 			else draw.RoundedBox( 0, 0, 0, w, h, col ) draw.RoundedBox( 0, 1, 1, w -2, h -2, Color( col.r*0.4, col.g*0.4, col.b*0.4 ) ) end
 			local alp = math.Clamp( ( pax.N_Lerp -1 )/3, 0, 1 )*255
@@ -425,9 +420,9 @@ if CLIENT then
 				yalign = TEXT_ALIGN_DOWN, color = Color( 255, 255, 255 ) }, 1, 255 )
 		end if !con then
 		function pax:DoClick() local ply = LocalPlayer() local typ, men, pro = pax.S_Type, xdefmod.util.menus, ply.xdefm_Profile
-			if ( input.IsControlDown() or input.IsButtonDown( KEY_LCONTROL ) or input.IsButtonDown( KEY_RCONTROL ) ) and pax.S_Item != "_" then
+			if ( input.IsControlDown() or input.IsButtonDown( KEY_LCONTROL ) or input.IsButtonDown( KEY_RCONTROL ) ) and pax.S_Item ~= "_" then
 			if typ == "Inventory" then xdefm_Command( ply, "DestroyInv", pax.S_Place ) end return end
-			if ( input.IsShiftDown() or input.IsButtonDown( KEY_LSHIFT ) or input.IsButtonDown( KEY_RSHIFT ) ) and pax.S_Item != "_" then
+			if ( input.IsShiftDown() or input.IsButtonDown( KEY_LSHIFT ) or input.IsButtonDown( KEY_RSHIFT ) ) and pax.S_Item ~= "_" then
 			if typ == "Inventory" then
 				if IsValid( men[ "Bank" ] ) then local num = 0
 					for k, v in pairs( pro.Bnk ) do if k > pro.UpdF then break end
@@ -440,10 +435,10 @@ if CLIENT then
 					if num > 0 then xdefm_Command( ply, "Struct", pax.S_Place.."|"..num )
 					else xdefm_AddNote( ply, "!V", "resource/warning.wav", "cross", 5 ) end return
 				elseif !IsValid( men[ "Trade" ] ) then
-					if pax.T_Item.Type == "Bait" and pax.S_Place != "21" then xdefm_Command( ply, "MoveInv", pax.S_Place.."|21" ) return
+					if pax.T_Item.Type == "Bait" and pax.S_Place ~= "21" then xdefm_Command( ply, "MoveInv", pax.S_Place.."|21" ) return
 					elseif pax.T_Item.Type == "Bait" and pax.S_Place == "21" then
 						local num = 0  for k, v in pairs( pro.Items ) do
-							if isstring( v ) and v == "_" and k != 21 then num = k break end
+							if isstring( v ) and v == "_" and k ~= 21 then num = k break end
 						end if num > 0 then xdefm_Command( ply, "MoveInv", pax.S_Place.."|"..num ) end return
 					end
 				end
@@ -455,30 +450,31 @@ if CLIENT then
 					if isstring( v.S_Item ) and v.S_Item == "_" then num = k break end end
 					if num > 0 then xdefm_Command( ply, "MoveTrade", pax.S_Place.."|"..num )
 					else xdefm_AddNote( ply, "!V", "resource/warning.wav", "cross", 5 ) end return
-				elseif pax.T_Item.Type == "Bait" and pax.S_Place != "21" then xdefm_Command( ply, "MoveInv", pax.S_Place.."|21" ) return end
+				elseif pax.T_Item.Type == "Bait" and pax.S_Place ~= "21" then xdefm_Command( ply, "MoveInv", pax.S_Place.."|21" ) return end
 			end
 			if typ == "Bank" and men[ "Inventory" ] then
 				local num = 0  for k, v in pairs( pro.Items ) do
-					if isstring( v ) and v == "_" and ( k != 21 or pax.T_Item.Type == "Bait" ) then num = k break end
+					if isstring( v ) and v == "_" and ( k ~= 21 or pax.T_Item.Type == "Bait" ) then num = k break end
 				end if num > 0 then xdefm_Command( ply, "MoveBank", num.."|"..pax.S_Place )
 				else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end return
 			end
 			if typ == "Storage" and men[ "Inventory" ] then
 				local num = 0  for k, v in pairs( pro.Items ) do
-					if isstring( v ) and v == "_" and ( k != 21 or pax.T_Item.Type == "Bait" ) then num = k break end
+					if isstring( v ) and v == "_" and ( k ~= 21 or pax.T_Item.Type == "Bait" ) then num = k break end
 				end if num > 0 then xdefm_Command( ply, "Struct", num.."|"..pax.S_Place )
 				else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end return
 			end
 			if typ == "Trade" and men[ "Inventory" ] then
 				local num = 0  for k, v in pairs( pro.Items ) do
-					if isstring( v ) and v == "_" and ( k != 21 or pax.T_Item.Type == "Bait" ) then num = k break end
+					if isstring( v ) and v == "_" and ( k ~= 21 or pax.T_Item.Type == "Bait" ) then num = k break end
 				end if num > 0 then xdefm_Command( ply, "MoveTrade", num.."|"..pax.S_Place )
 				else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end return
 			end
 			if typ == "Recipe" and men[ "Inventory" ] then
 				local num = 0  for k, v in pairs( pro.Items ) do
-					if !isstring( v ) or k == 21 then continue end
-					if v == "_" then num = k break end local aa, bb = xdefm_ItemGet( v )
+					if isstring( v ) and k ~= 21 then
+						if v == "_" then num = k break end local aa, bb = xdefm_ItemGet( v )
+					end
 				end if num > 0 then xdefm_Command( ply, "MoveCraft", num )
 				else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end return
 			end
@@ -488,7 +484,7 @@ if CLIENT then
 				if own.S_Type == ppp.S_Type and own.S_Type == "Inventory" then
 					xdefm_Command( LocalPlayer(), "MoveInv", own.S_Place.."|"..ppp.S_Place )
 				end
-				if own.S_Type != ppp.S_Type then
+				if own.S_Type ~= ppp.S_Type then
 					if ppp.S_Type == "Inventory" and own.S_Type == "Bank" then
 						xdefm_Command( LocalPlayer(), "MoveBank", ppp.S_Place.."|"..own.S_Place )
 					elseif own.S_Type == "Inventory" and ppp.S_Type == "Bank" then
@@ -522,10 +518,10 @@ if CLIENT then
 			end
 		end )
 		function pax:Think()
-			if isbool( self:IsDragging() ) and self.B_OnMove != self:IsDragging() then self.B_OnMove = self:IsDragging()
+			if isbool( self:IsDragging() ) and self.B_OnMove ~= self:IsDragging() then self.B_OnMove = self:IsDragging()
 			end if xdefmod.util.aim_pan == pax then xdefmod.util.marker = pax.S_Item end
 		end end
-		function pax:OnCursorEntered() xdefmod.util.aim_pan = pax  xdefmod.util.marker = pax.S_Item  pax.B_OnMove = true  if pax.S_Item != "_" then xdefmod.util.lc = false end end
+		function pax:OnCursorEntered() xdefmod.util.aim_pan = pax  xdefmod.util.marker = pax.S_Item  pax.B_OnMove = true  if pax.S_Item ~= "_" then xdefmod.util.lc = false end end
 		function pax:OnCursorExited() if xdefmod.util.aim_pan == pax then xdefmod.util.aim_pan = nil  xdefmod.util.marker = nil end  pax.B_OnMove = false end
 		function pax:F_SetupItem( ite ) if !isstring( ite ) then return end local aa, bb = xdefm_ItemGet( ite )  if IsValid( pax.P_Txt ) then pax.P_Txt:Remove() end
 			if !istable( aa ) or !istable( bb ) or ite == "_" or ite == "" then if IsValid( pax.P_Mdl ) then pax.P_Mdl:Remove() end
@@ -535,8 +531,8 @@ if CLIENT then
 				else pax.P_Mdl:SetModel( bb.Model[ 1 ] ) end pax.S_Name = bb.Name  pax.N_Rarity = math.Clamp( bb.Rarity, 0, 5 )
 				pax.T_Item = bb  pax.T_Extra = aa  pax.S_Item = ite  local col = xdefmod.util.RARITY_COLORS[ pax.N_Rarity+1 ]
 				local pap = vgui.Create( "DPanel", pax ) pap:SetSize( w, h*0.25 ) pap:SetPos( 0, h*0.75 ) pap:SetMouseInputEnabled( false )
-				function pap:Paint( ww, hh ) if pax.N_Rarity !=0 then draw.RoundedBox( 0, 0, 0, ww, hh, Color( 0, 0, 0, 200 ) )
-					surface.SetFont( "xdefm_Font2" )  local nam = ( pax.S_Name != "_" and pax.S_Name or "" ) local size, _ = surface.GetTextSize( nam )
+				function pap:Paint( ww, hh ) if pax.N_Rarity ~=0 then draw.RoundedBox( 0, 0, 0, ww, hh, Color( 0, 0, 0, 200 ) )
+					surface.SetFont( "xdefm_Font2" )  local nam = ( pax.S_Name ~= "_" and pax.S_Name or "" ) local size, _ = surface.GetTextSize( nam )
 					local xx = 0  if size >= w then xx = math.sin( CurTime()*2 )*size/2 end
 					draw.TextShadow( { text = nam, pos = { ww/2 +xx/2, hh/2 }, font = "xdefm_Font2",
 						xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col
@@ -664,14 +660,14 @@ if CLIENT then
 	end )
 	hook.Add( "ShouldDrawLocalPlayer", "xdefm_DrawPly", function( ply )
 		local wep = ply:GetActiveWeapon()
-		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and GetConVar( "xdefmod_fps" ):GetInt() != 1 then
+		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and GetConVar( "xdefmod_fps" ):GetInt() ~= 1 then
 			return true
 		end
 	end )
 	hook.Add( "CalcView", "xdefm_Cam", function( ply, pos, ang, fov )
 		local wep = ply:GetActiveWeapon()
 		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" then
-			if GetConVar( "xdefmod_fps" ):GetInt() != 1 then
+			if GetConVar( "xdefmod_fps" ):GetInt() ~= 1 then
 				local siz = ply:OBBMins():Distance( ply:OBBMaxs() )
 				local LPos, LAng = Vector( -40, 0, 10 ), ang
 				if xdefmod.util.see_ang then
@@ -714,7 +710,7 @@ if CLIENT then
 		elseif xdefmod.util.Reloaded and !cmd:KeyDown( IN_USE ) then
 			xdefmod.util.Reloaded = false
 		end
-		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and GetConVar( "xdefmod_fps" ):GetInt() != 1 then
+		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and GetConVar( "xdefmod_fps" ):GetInt() ~= 1 then
 			if !xdefmod.util.see_ang then
 				xdefmod.util.see_ang = Angle( 0, cmd:GetViewAngles().yaw, 0 )
 				cmd:SetViewAngles( xdefmod.util.see_ang )
@@ -743,9 +739,10 @@ if CLIENT then
 	end )
 	hook.Add( "RenderScene", "xdefm_MoveRod", function()
 		for k, v in pairs( ents.FindByClass( "xdefm_*" ) ) do
-			if !IsValid( v ) or v:GetClass() == "xdefm_firespot" or !IsValid( v:GetFMod_OW() ) then continue end
-			if isfunction( v.xdefm_Move ) then
-				v:xdefm_Move()
+			if IsValid( v ) and v:GetClass() ~= "xdefm_firespot" and IsValid( v:GetFMod_OW() ) then
+				if isfunction( v.xdefm_Move ) then
+					v:xdefm_Move()
+				end
 			end
 		end
 	end )
@@ -754,63 +751,65 @@ if CLIENT then
 		if istable( xdefmod.util.notes ) and #xdefmod.util.notes > 0 then
 			local hei = 0
 			for k, v in pairs( xdefmod.util.notes ) do
-				if !istable( v ) or #v != 4 or ( v[ 1 ] < SysTime() and math.Round( v[ 4 ], 2 ) == 0 ) then continue end
-				local aaa = math.Clamp( math.Round( v[ 4 ]*255 ), 1, 254 )
-				surface.SetFont( "xdefm_Font1" )
-				local size, _ = surface.GetTextSize( v[ 2 ] )
-				size = math.Clamp( size, 15, 200 )
-				local mark = markup.Parse( "<color=255,255,255,255><font=xdefm_Font1>"..v[ 2 ].."</color></font>", size*2 )
-				local posx, posy, ler = math.Round( ScrW() -10, 2 ), math.Round( ScrH()/2 +hei, 2 ), v[ 4 ]
-				draw.RoundedBox( 0, posx -mark:GetWidth()*ler -5 -35, posy +1, mark:GetWidth() +20 +20, mark:GetHeight() +10, Color( xdefmod.COLOR_LINE.r, xdefmod.COLOR_LINE.g, xdefmod.COLOR_LINE.b, aaa ) )
-				draw.RoundedBox( 0, posx -mark:GetWidth()*ler -4 -35, posy +2, mark:GetWidth() +18 +20, mark:GetHeight() +8, Color( xdefmod.COLOR_BORDER.r, xdefmod.COLOR_BORDER.g, xdefmod.COLOR_BORDER.b, aaa ) )
-				draw.RoundedBox( 0, posx -mark:GetWidth()*ler -3 -35, posy +3, mark:GetWidth() +16 +20, mark:GetHeight() +6, Color( xdefmod.COLOR_BACKGROUND.r, xdefmod.COLOR_BACKGROUND.g, xdefmod.COLOR_BACKGROUND.b, aaa ) )
-				draw.RoundedBoxEx( 0, posx -mark:GetWidth()*ler -38, posy +3, 22, mark:GetHeight() +6, Color( xdefmod.COLOR_BORDER.r*0.5, xdefmod.COLOR_BORDER.g*0.5, xdefmod.COLOR_BORDER.b*0.5, aaa ), true, false, true, false )
-				mark:Draw( posx -mark:GetWidth()*ler +mark:GetWidth()*0.5 -10, posy +6, TEXT_ALIGN_CENTER, nil, aaa )
-				surface.SetMaterial( v[ 3 ] )
-				surface.SetDrawColor( 255, 255, 255, aaa )
-				surface.DrawTexturedRect( posx -mark:GetWidth()*ler -36, posy +mark:GetHeight()*0.5 -1, 16, 16 )
-				hei = hei +math.Round( ( mark:GetHeight() +15 )*math.Clamp( ler, 0.01, 1 ), 3 )
+				if istable( v ) and #v == 4 and ( v[ 1 ] >= SysTime() or math.Round( v[ 4 ], 2 ) ~= 0 ) then
+					local aaa = math.Clamp( math.Round( v[ 4 ]*255 ), 1, 254 )
+					surface.SetFont( "xdefm_Font1" )
+					local size, _ = surface.GetTextSize( v[ 2 ] )
+					size = math.Clamp( size, 15, 200 )
+					local mark = markup.Parse( "<color=255,255,255,255><font=xdefm_Font1>"..v[ 2 ].."</color></font>", size*2 )
+					local posx, posy, ler = math.Round( ScrW() -10, 2 ), math.Round( ScrH()/2 +hei, 2 ), v[ 4 ]
+					draw.RoundedBox( 0, posx -mark:GetWidth()*ler -5 -35, posy +1, mark:GetWidth() +20 +20, mark:GetHeight() +10, Color( xdefmod.COLOR_LINE.r, xdefmod.COLOR_LINE.g, xdefmod.COLOR_LINE.b, aaa ) )
+					draw.RoundedBox( 0, posx -mark:GetWidth()*ler -4 -35, posy +2, mark:GetWidth() +18 +20, mark:GetHeight() +8, Color( xdefmod.COLOR_BORDER.r, xdefmod.COLOR_BORDER.g, xdefmod.COLOR_BORDER.b, aaa ) )
+					draw.RoundedBox( 0, posx -mark:GetWidth()*ler -3 -35, posy +3, mark:GetWidth() +16 +20, mark:GetHeight() +6, Color( xdefmod.COLOR_BACKGROUND.r, xdefmod.COLOR_BACKGROUND.g, xdefmod.COLOR_BACKGROUND.b, aaa ) )
+					draw.RoundedBoxEx( 0, posx -mark:GetWidth()*ler -38, posy +3, 22, mark:GetHeight() +6, Color( xdefmod.COLOR_BORDER.r*0.5, xdefmod.COLOR_BORDER.g*0.5, xdefmod.COLOR_BORDER.b*0.5, aaa ), true, false, true, false )
+					mark:Draw( posx -mark:GetWidth()*ler +mark:GetWidth()*0.5 -10, posy +6, TEXT_ALIGN_CENTER, nil, aaa )
+					surface.SetMaterial( v[ 3 ] )
+					surface.SetDrawColor( 255, 255, 255, aaa )
+					surface.DrawTexturedRect( posx -mark:GetWidth()*ler -36, posy +mark:GetHeight()*0.5 -1, 16, 16 )
+					hei = hei +math.Round( ( mark:GetHeight() +15 )*math.Clamp( ler, 0.01, 1 ), 3 )
+				end
 			end
 		end
 		if IsValid( ply ) and IsValid( ply:GetWeapon( "weapon_xdefm_trade" ) ) and !ply:GetNWBool( "XDEFMod_BTD" ) then
 			local tax = ply:GetNWEntity( "XDEFMod_TPL" )
 			for k, v in pairs( player.GetAll() ) do
-				if !IsValid( v ) or !v:Alive() or v:WorldSpaceCenter():DistToSqr( ply:WorldSpaceCenter() ) > 70000 then continue end
-				local tar = v:GetNWEntity( "XDEFMod_TPL" )
-				if tar:IsPlayer() and tar == ply and tax != v then
-					local col, scr = Color( 255, 255, 0 ), v:WorldSpaceCenter():ToScreen()
-					scr.x = math.Round( scr.x )
-					scr.y = math.Round( scr.y )
-					draw.TextShadow( {
-						text = v:Nick(),
-						pos = { scr.x, scr.y },
-						font = "xdefm_Font5",
-						xalign = TEXT_ALIGN_CENTER,
-						yalign = TEXT_ALIGN_CENTER,
-						color = col
-					}, 1, 255 )
-					draw.TextShadow( {
-						text = lang_selected.GetPhrase( "xdefm.Trade10" ),
-						pos = { scr.x, scr.y +20 },
-						font = "xdefm_Font1",
-						xalign = TEXT_ALIGN_CENTER,
-						yalign = TEXT_ALIGN_CENTER,
-						color = col
-					}, 1, 255 )
+				if IsValid( v ) and v:Alive() and v:WorldSpaceCenter():DistToSqr( ply:WorldSpaceCenter() ) <= 70000 then
+					local tar = v:GetNWEntity( "XDEFMod_TPL" )
+					if tar:IsPlayer() and tar == ply and tax ~= v then
+						local col, scr = Color( 255, 255, 0 ), v:WorldSpaceCenter():ToScreen()
+						scr.x = math.Round( scr.x )
+						scr.y = math.Round( scr.y )
+						draw.TextShadow( {
+							text = v:Nick(),
+							pos = { scr.x, scr.y },
+							font = "xdefm_Font5",
+							xalign = TEXT_ALIGN_CENTER,
+							yalign = TEXT_ALIGN_CENTER,
+							color = col
+						}, 1, 255 )
+						draw.TextShadow( {
+							text = lang_selected.GetPhrase( "xdefm.Trade10" ),
+							pos = { scr.x, scr.y +20 },
+							font = "xdefm_Font1",
+							xalign = TEXT_ALIGN_CENTER,
+							yalign = TEXT_ALIGN_CENTER,
+							color = col
+						}, 1, 255 )
+					end
 				end
 			end
 		end
 	end )
 	hook.Add( "DrawOverlay", "xdefm_Info", function()
 		local ply, dat = LocalPlayer(), "_"
-		if !IsValid( xdefmod.util.aim_pan ) and xdefmod.util.marker != nil then
+		if !IsValid( xdefmod.util.aim_pan ) and xdefmod.util.marker ~= nil then
 			xdefmod.util.marker = nil
 		end 
-		if IsValid( xdefmod.util.aim_pan ) and xdefmod.util.marker != nil and vgui.CursorVisible() then
+		if IsValid( xdefmod.util.aim_pan ) and xdefmod.util.marker ~= nil and vgui.CursorVisible() then
 			local pan = xdefmod.util.aim_pan
 			local mat, typ, ite, use, man = ICON_0, pan.S_Type, pan.S_Item, false, xdefmod.util.menus 
-			local k1 = ite != "_" and ( input.IsControlDown() or input.IsButtonDown( KEY_LCONTROL ) or input.IsButtonDown( KEY_RCONTROL ) )
-			local k2 = ite != "_" and !k1 and ( input.IsShiftDown() or input.IsButtonDown( KEY_LSHIFT ) or input.IsButtonDown( KEY_RSHIFT ) )
+			local k1 = ite ~= "_" and ( input.IsControlDown() or input.IsButtonDown( KEY_LCONTROL ) or input.IsButtonDown( KEY_RCONTROL ) )
+			local k2 = ite ~= "_" and !k1 and ( input.IsShiftDown() or input.IsButtonDown( KEY_LSHIFT ) or input.IsButtonDown( KEY_RSHIFT ) )
 			if k1 and typ == "Inventory" then
 				use = true
 				mat = ( xdefm_GetPrice( ite ) > 0 and ICON_3 or ICON_4 )
@@ -851,7 +850,7 @@ if CLIENT then
 				surface.DrawTexturedRect( xx, yy, 24, 24 )
 			end
 		end
-		if IsValid( ply ) and !vgui.CursorVisible() and ply:GetEyeTrace() != nil and IsValid( ply:GetEyeTrace().Entity ) and ply:GetEyeTrace().Entity.xdefm_OnLook
+		if IsValid( ply ) and !vgui.CursorVisible() and ply:GetEyeTrace() ~= nil and IsValid( ply:GetEyeTrace().Entity ) and ply:GetEyeTrace().Entity.xdefm_OnLook
 		and isstring( ply:GetEyeTrace().Entity:GetFMod_DT() ) then
 			dat = ply:GetEyeTrace().Entity:GetFMod_DT()
 		elseif IsValid( ply ) and isstring( xdefmod.util.marker ) and !dragndrop.IsDragging() then
@@ -860,19 +859,19 @@ if CLIENT then
 		local dl = ( dat == "_" )
 		if GetConVar( "xdefmod_animui" ):GetInt() > 0 then
 			local ttt = string.Explode( "|", dat )
-			if xdefmod.util.ls != ttt[ 1 ] then
+			if xdefmod.util.ls ~= ttt[ 1 ] then
 				xdefmod.util.ls = ttt[ 1 ]
-				if dat != "_" then xdefmod.util.ds = dat end
+				if dat ~= "_" then xdefmod.util.ds = dat end
 				xdefmod.util.dl = SysTime() +0.25
 			end
 		end
-		if IsValid( ply ) and ( xdefmod.util.ds != "_" or xdefmod.util.dl > SysTime() ) then
+		if IsValid( ply ) and ( xdefmod.util.ds ~= "_" or xdefmod.util.dl > SysTime() ) then
 		dat = xdefmod.util.ds
 		local aa, bb = xdefm_ItemGet( dat )
 		if istable( aa ) and istable( bb ) then
 			local xx, yy = 0, 0
 			local ent = ply:GetEyeTrace().Entity
-			if xdefmod.util.key_ent != ent then
+			if xdefmod.util.key_ent ~= ent then
 				xdefmod.util.key_ent = ent
 				xdefmod.util.key_ler = 0
 			end
@@ -887,7 +886,7 @@ if CLIENT then
 			end
 			if !dl then
 				xdefmod.util.dx, xdefmod.util.dy = xx, yy
-				if xdefmod.util.ds != dat then
+				if xdefmod.util.ds ~= dat then
 					xdefmod.util.key_ler = 0
 				end
 				xdefmod.util.ds = dat
@@ -902,31 +901,37 @@ if CLIENT then
 				xx, yy = input.GetCursorPos()  xx, yy = math.Round( xx, 1 ), math.Round( yy, 1 )
 				if !istable( xdefmod.util.ings ) then xdefmod.util.ings = {}  xdefmod.util.ing2 = {} else
 					local itt, yes = cft[ #xdefmod.util.ings +1 ], false
-					if isstring( itt ) and #xdefmod.util.ings +1 != #cft then
-						for m, n in pairs( ite ) do if n == "_" or m == 21 then continue end
-							if xdefm_GetClass( n ) == itt and !isbool( xdefmod.util.ing2[ m ] ) then yes = true  xdefmod.util.ing2[ m ] = true break end
+					if isstring( itt ) and #xdefmod.util.ings +1 ~= #cft then
+						for m, n in pairs( ite ) do
+							if n ~= "_" and m ~= 21 then
+								if xdefm_GetClass( n ) == itt and !isbool( xdefmod.util.ing2[ m ] ) then yes = true  xdefmod.util.ing2[ m ] = true break end
+							end
 					end table.insert( xdefmod.util.ings, yes ) end local upp = false  local x2, y2 = xx, yy
 					render.SetScissorRect( xx +16, yy, xx +48 +150, yy +( ( #cft )*24 +48 )*per, true )
-					for k, v in pairs( xdefmod.util.ings ) do if !isbool( v ) or !isstring( cft[ k ] ) then continue end
-						local aa, bb = xdefm_ItemGet( cft[ k ] ) if !istable( bb ) then continue end
-						local col = ( v and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) )
-						local bck = ( v and Color( 100, 100, 100 ) or Color( 55, 55, 55 ) )
-						x2, y2 = xx +20, yy +k*25
-						surface.SetDrawColor( bck ) surface.DrawRect( x2 -4, y2 -4, 28 +150, 26 )
-						surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( x2 -4, y2 -4, 28 +150, 26, 2 )
-						surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( x2 -4, y2 -4, 28 +150, 26, 1 )
-						surface.SetDrawColor( 255, 255, 255, 255 ) surface.SetMaterial( xdefmod.util.ITEM_ICONS[ bb.Type ] )
-						surface.DrawTexturedRect( x2 +2, y2 +1, 16, 16 ) draw.TextShadow( {
-							text = xdefm_ItemMark( cft[ k ], true ), pos = { x2 +4 +19, y2 +2 },
-							font = "xdefm_Font2", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_TOP, color = col
-						}, 1, 255 ) if !upp then upp = true  local ye2 = true
-							for k, v in pairs( xdefmod.util.ings ) do if v == false then ye2 = false break end end
-							x2, y2 = x2 +146, y2 +#cft*25
-							draw.RoundedBoxEx( 0, x2 -4, y2 -27, 32, 25, xdefmod.COLOR_LINE, true, true, false, false )
-							draw.RoundedBoxEx( 0, x2 -4 +1, y2 -27 +1, 32 -2, 25 -2, xdefmod.COLOR_BORDER, true, true, false, false )
-							draw.RoundedBoxEx( 0, x2 -4 +2, y2 -27 +2, 32 -4, 25 -4, ye2 and Color( 0, 100, 0 ) or Color( 100, 0, 0 ), true, true, false, false )
-							surface.SetDrawColor( 255, 255, 255, 255 ) surface.SetMaterial( ye2 and ICON_YES or ICON_NO )
-							surface.DrawTexturedRect( x2 +4, y2 -22, 16, 16 )
+					for k, v in pairs( xdefmod.util.ings ) do
+						if isbool( v ) and isstring( cft[ k ] ) then
+							local aa, bb = xdefm_ItemGet( cft[ k ] )
+							if istable( bb ) then
+								local col = ( v and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) )
+								local bck = ( v and Color( 100, 100, 100 ) or Color( 55, 55, 55 ) )
+								x2, y2 = xx +20, yy +k*25
+								surface.SetDrawColor( bck ) surface.DrawRect( x2 -4, y2 -4, 28 +150, 26 )
+								surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( x2 -4, y2 -4, 28 +150, 26, 2 )
+								surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( x2 -4, y2 -4, 28 +150, 26, 1 )
+								surface.SetDrawColor( 255, 255, 255, 255 ) surface.SetMaterial( xdefmod.util.ITEM_ICONS[ bb.Type ] )
+								surface.DrawTexturedRect( x2 +2, y2 +1, 16, 16 ) draw.TextShadow( {
+									text = xdefm_ItemMark( cft[ k ], true ), pos = { x2 +4 +19, y2 +2 },
+									font = "xdefm_Font2", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_TOP, color = col
+								}, 1, 255 ) if !upp then upp = true  local ye2 = true
+									for k, v in pairs( xdefmod.util.ings ) do if v == false then ye2 = false break end end
+									x2, y2 = x2 +146, y2 +#cft*25
+									draw.RoundedBoxEx( 0, x2 -4, y2 -27, 32, 25, xdefmod.COLOR_LINE, true, true, false, false )
+									draw.RoundedBoxEx( 0, x2 -4 +1, y2 -27 +1, 32 -2, 25 -2, xdefmod.COLOR_BORDER, true, true, false, false )
+									draw.RoundedBoxEx( 0, x2 -4 +2, y2 -27 +2, 32 -4, 25 -4, ye2 and Color( 0, 100, 0 ) or Color( 100, 0, 0 ), true, true, false, false )
+									surface.SetDrawColor( 255, 255, 255, 255 ) surface.SetMaterial( ye2 and ICON_YES or ICON_NO )
+									surface.DrawTexturedRect( x2 +4, y2 -22, 16, 16 )
+								end
+							end
 						end
 					end
 					render.SetScissorRect( 0, 0, 0, 0, false )
@@ -936,10 +941,10 @@ if CLIENT then
 				local rar = ( bb.Rarity + 1 )
 				local col = xdefmod.util.RARITY_COLORS[ rar ]
 				local txt = xdefm_ItemMark( dat )
-				if string.find( string.lower( txt ), "&" ) != nil then
+				if string.find( string.lower( txt ), "&" ) ~= nil then
 					local tab = string.Explode( "&", txt )
 					for k, v in pairs( tab ) do
-						if v != "" and v != " " and string.find( string.lower( v ), "xdefm." ) != nil then
+						if v ~= "" and v ~= " " and string.find( string.lower( v ), "xdefm." ) ~= nil then
 							tab[ k ] = lang_selected.GetPhrase( v )
 						end
 					end
@@ -952,7 +957,7 @@ if CLIENT then
 					str = str.."<font=xdefm_Font2><color=155,155,155,255>["..dat.."]</color></font>\n"
 				end
 				str = str.."<font=xdefm_Font2><color=155,155,155,255>"..lang_selected.GetPhrase( xdefmod.util.RARITY_NAMES[ rar ] ).." "..lang_selected.GetPhrase( "xdefm."..bb.Type ).."</color></font>\n\n"
-				if lang_selected.GetPhrase( bb.Helper ) != "" then
+				if lang_selected.GetPhrase( bb.Helper ) ~= "" then
 					str = str.."<font=xdefm_Font2><color=255,255,255,255>"..lang_selected.GetPhrase( bb.Helper ).."</color></font>\n\n"
 				end
 				local prc = xdefm_GetPrice( dat )
@@ -971,10 +976,10 @@ if CLIENT then
 					local own = ""
 					if IsValid( ent:GetFMod_OW() ) and ent:GetFMod_OW():IsPlayer() then
 						own = ent:GetFMod_OW():Nick()
-					elseif isstring( ent:GetFMod_OI() ) and ent:GetFMod_OI() != "" then
+					elseif isstring( ent:GetFMod_OI() ) and ent:GetFMod_OI() ~= "" then
 						own = ent:GetFMod_OI()
 					end
-					if own != "" then
+					if own ~= "" then
 						str = str.."<font=xdefm_Font2><color=155,155,155,255>"..lang_selected.GetPhrase( "xdefm.Owner" )..": "..own.."</color></font>\n"
 					end
 				end
@@ -1007,13 +1012,13 @@ if CLIENT then
 				surface.DrawTexturedRect( xx -7.5, yy -7.5, 265, math.min( 50, hh ) )
 				mark:Draw( xx, yy, nil, nil, aaa )
 				render.SetScissorRect( 0, 0, 0, 0, false )
-				if IsValid( ent ) and dat != "_" and ent:GetClass() == "xdefm_base" and !vgui.CursorVisible() and per > 0
+				if IsValid( ent ) and dat ~= "_" and ent:GetClass() == "xdefm_base" and !vgui.CursorVisible() and per > 0
 				and ( xdefm_CanInteract( LocalPlayer(), ent ) or ( GetConVar( "xdefmod_animui" ):GetInt() > 0 and xdefmod.util.key_ler > 0 ) ) then
 					local hei = mark:GetHeight()*per +15
 					xdefmod.util.key_ler = Lerp( 0.1, xdefmod.util.key_ler, xdefm_CanInteract( LocalPlayer(), ent ) and 1 or 0 )
 					local alp = GetConVar( "xdefmod_animui" ):GetInt() > 0 and math.Clamp( xdefmod.util.key_ler/1*255, 0, 255 ) or 255
 					local k1 = input.LookupBinding( "+use", true )
-					if isstring( bb.HelperUse ) and isstring( k1 ) and bb.HelperUse != "" then
+					if isstring( bb.HelperUse ) and isstring( k1 ) and bb.HelperUse ~= "" then
 						local kk = string.Explode( "", k1 )
 						if !istable( kk ) then
 							k1 = string.upper( k1 )
@@ -1113,7 +1118,7 @@ if CLIENT then
 							color = Color( 255, 255, 255, alp )
 						}, 1, alp )
 					end
-				elseif xdefmod.util.key_ler != 0 then
+				elseif xdefmod.util.key_ler ~= 0 then
 						xdefmod.util.key_ler = 0
 					end
 				end
@@ -1122,20 +1127,20 @@ if CLIENT then
 	end )
 	hook.Add( "Think", "xdefm_TKCL", function()
 		local ply = LocalPlayer()
-		if xdefmod.util.fov != xdefmod.util.lfov then
+		if xdefmod.util.fov ~= xdefmod.util.lfov then
 			xdefmod.util.fov = Lerp( 0.1, xdefmod.util.fov, xdefmod.util.lfov )
 		end
 		if IsValid( ply ) and istable( xdefmod.util.notes ) and #xdefmod.util.notes > 0 then
 			local hei = 0 
 			for k, v in pairs( xdefmod.util.notes ) do
-				if !istable( v ) or #v != 4 or ( v[ 1 ] < SysTime() and math.Round( v[ 4 ], 2 ) == 0 ) then
-					table.remove( xdefmod.util.notes, k )
-					continue
-				end
-				if v[ 1 ] >= SysTime() and k >= #xdefmod.util.notes -6 then
-					v[ 4 ] = Lerp( 0.2, v[ 4 ], 1 )
+				if istable( v ) and #v == 4 and ( v[ 1 ] >= SysTime() or math.Round( v[ 4 ], 2 ) ~= 0 ) then
+					if v[ 1 ] >= SysTime() and k >= #xdefmod.util.notes -6 then
+						v[ 4 ] = Lerp( 0.2, v[ 4 ], 1 )
+					else
+						v[ 4 ] = Lerp( 0.1, v[ 4 ], 0 )
+					end
 				else
-					v[ 4 ] = Lerp( 0.1, v[ 4 ], 0 )
+					table.remove( xdefmod.util.notes, k )
 				end
 			end
 		end
@@ -1148,7 +1153,7 @@ if CLIENT then
 	end )
 	hook.Add( "PlayerBindPress", "xdefm_WheelView", function( ply, bind, pressed )
 		local wep = ply:GetActiveWeapon()
-		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and GetConVar( "xdefmod_fps" ):GetInt() != 1
+		if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and GetConVar( "xdefmod_fps" ):GetInt() ~= 1
 		and ( string.find( bind, "invprev" ) or string.find( bind, "invnext" ) ) then
 			return true
 		end
@@ -1156,7 +1161,7 @@ if CLIENT then
 
 	net.Receive( "NET_xdefm_Menu", function()
 		local ply, typ, tab = LocalPlayer(), tonumber( net.ReadString() ), util.JSONToTable( net.ReadString() )
-		if typ != nil and tab != nil then
+		if typ ~= nil and tab ~= nil then
 			xdefm_OpenMenu( ply, typ, tab )
 		end
 	end )
@@ -1179,7 +1184,7 @@ if CLIENT then
 	end )
 	net.Receive( "NET_xdefm_SendSnd", function()
 		local ply, snd = LocalPlayer(), net.ReadString()
-		if isstring( snd ) and snd != "" and snd != "!V" then
+		if isstring( snd ) and snd ~= "" and snd ~= "!V" then
 			surface.PlaySound( snd )
 		end
 	end )
@@ -1436,14 +1441,14 @@ if SERVER then -- Server only
 			end
 		elseif file.Exists( path, "DATA" ) then
 			local dat = util.JSONToTable( file.Read( path, "DATA" ) )
-			if !istable( dat ) or !istable( tab[ i2 ] ) or #tab[ i2 ] != 2 then
+			if !istable( dat ) or !istable( tab[ i2 ] ) or #tab[ i2 ] ~= 2 then
 				num = 0
 			else
 				num = tonumber( tab[ i2 ][ 2 ] )
 			end
 		end
 		if !isnumber( num ) then num = tonumber( num ) end
-		if !isnumber( num ) or num != 1 then
+		if !isnumber( num ) or num ~= 1 then
 			return false
 		end
 		return true
@@ -1491,8 +1496,8 @@ if SERVER then -- Server only
 		if file.Exists( path, "DATA" ) then
 			pro = util.JSONToTable( file.Read( path, "DATA" ) )
 			if !pro.UpdG then pro.UpdG = 0 end
-			for k, v in pairs( pro.Items ) do if isstring( v ) and v != "_" and !xdefmod.items[ xdefm_GetClass( v ) ] then pro.Items[ k ] = ( k == 21 and "ba_junk" or "it_error" ) end end
-			for k, v in pairs( pro.Bnk ) do if isstring( v )  and v != "_" and !xdefmod.items[ xdefm_GetClass( v ) ] then pro.Bnk[ k ] = "it_error" end end
+			for k, v in pairs( pro.Items ) do if isstring( v ) and v ~= "_" and !xdefmod.items[ xdefm_GetClass( v ) ] then pro.Items[ k ] = ( k == 21 and "ba_junk" or "it_error" ) end end
+			for k, v in pairs( pro.Bnk ) do if isstring( v )  and v ~= "_" and !xdefmod.items[ xdefm_GetClass( v ) ] then pro.Bnk[ k ] = "it_error" end end
 		else
 			pro = {
 				Level = 0,
@@ -1531,7 +1536,7 @@ if SERVER then -- Server only
 			local dur = math.ceil( math.Rand( bb.Durability/2, bb.Durability ) )  table.insert( aa, 2, dur ) str = table.concat( aa, "|" )
 		end aa, bb = xdefm_ItemGet( str )
 		for k, v in pairs( inv ) do
-			if v == "_" and ( k != 21 or bb.Type == "Bait" ) and ( bb.Type != "Bait" or k != 21 or bb.Level <= ply.xdefm_Profile.Level ) then
+			if v == "_" and ( k ~= 21 or bb.Type == "Bait" ) and ( bb.Type ~= "Bait" or k ~= 21 or bb.Level <= ply.xdefm_Profile.Level ) then
 				ply.xdefm_Profile.Items[ k ] = str
 				xdefm_ProfileUpdate( ply )
 				local cls = xdefm_GetClass( str )
@@ -1658,30 +1663,35 @@ if SERVER then -- Server only
 		if GetConVar( "xdefmod_refund" ):GetInt() <= 0 then return end
 		xdefmod.refund = {}
 		for k, v in pairs( ents.FindByClass( "xdefm_base" ) ) do
-			if !IsValid( v ) or !istable( v.xdefm_T2 ) or !isstring( v:GetFMod_OI() ) or v:GetFMod_OI() == "" or !v:GetFMod_DT() then continue end local id = v:GetFMod_OI() local pc = xdefm_GetPrice( v:GetFMod_DT() ) 
-			if ( xdefm_ItemGet( v ) == "cr_seagull" or xdefm_ItemGet( v ) == "cr_crow" or xdefm_GetClass( v ) == "cr_seagull2" ) and !v.xdefm_Killed then continue end local aa, bb = xdefm_ItemGet( v )
-			if istable( v.xdefm_T3 ) and !table.IsEmpty( v.xdefm_T3 ) then
-				for m, n in pairs( v.xdefm_T3 ) do if isstring( n ) and n != "_" then pc = pc +xdefm_GetPrice( n ) end end
+			if IsValid( v ) and istable( v.xdefm_T2 ) and isstring( v:GetFMod_OI() ) and v:GetFMod_OI() ~= "" and v:GetFMod_DT() then
+				local id = v:GetFMod_OI() local pc = xdefm_GetPrice( v:GetFMod_DT() ) 
+				if ( xdefm_ItemGet( v ) ~= "cr_seagull" and xdefm_ItemGet( v ) ~= "cr_crow" and xdefm_GetClass( v ) ~= "cr_seagull2" ) or v.xdefm_Killed then
+					local aa, bb = xdefm_ItemGet( v )
+					if istable( v.xdefm_T3 ) and !table.IsEmpty( v.xdefm_T3 ) then
+						for m, n in pairs( v.xdefm_T3 ) do if isstring( n ) and n ~= "_" then pc = pc +xdefm_GetPrice( n ) end end
+					end
+					if !isnumber( xdefmod.refund[ id ] ) then
+						xdefmod.refund[ id ] = pc
+					else
+						xdefmod.refund[ id ] = xdefmod.refund[ id ] +pc
+					end
+					v:Remove()
+				end
 			end
-			if !isnumber( xdefmod.refund[ id ] ) then
-				xdefmod.refund[ id ] = pc
-			else
-				xdefmod.refund[ id ] = xdefmod.refund[ id ] +pc
-			end
-			v:Remove()
 		end
 		for k, v in pairs( xdefmod.refund ) do
-			if !isstring( k ) or !isnumber( v ) or v <= 0 then continue end
-			local ply = player.GetBySteamID( k )
-			if IsValid( ply ) and ply:IsPlayer() and !ply:IsBot() and istable( ply.xdefm_Profile ) then
-				xdefm_AddNote( ply, "xdefm.CleanRefund&: "..v, "!V", "coins", 5 ) xdefm_GiveMoney( ply, v )
-			else
-				local fil = "xdefishmod/p_"..k..".txt"
-				if !file.Exists( fil, "DATA" ) then return end
-				local tab = util.JSONToTable( file.Read( fil, "DATA" ) )
-				if !istable( tab ) then return end
-				tab.Money = tonumber( math.Round( tab.Money ) ) +v
-				file.Write( fil, util.TableToJSON( tab, true ) )
+			if isstring( k ) and isnumber( v ) and v > 0 then
+				local ply = player.GetBySteamID( k )
+				if IsValid( ply ) and ply:IsPlayer() and !ply:IsBot() and istable( ply.xdefm_Profile ) then
+					xdefm_AddNote( ply, "xdefm.CleanRefund&: "..v, "!V", "coins", 5 ) xdefm_GiveMoney( ply, v )
+				else
+					local fil = "xdefishmod/p_"..k..".txt"
+					if !file.Exists( fil, "DATA" ) then return end
+					local tab = util.JSONToTable( file.Read( fil, "DATA" ) )
+					if !istable( tab ) then return end
+					tab.Money = tonumber( math.Round( tab.Money ) ) +v
+					file.Write( fil, util.TableToJSON( tab, true ) )
+				end
 			end
 		end
 		xdefmod.refund = nil
@@ -1690,9 +1700,10 @@ if SERVER then -- Server only
 		if !istable( tab ) then return nil end
 		local ite, ttl, tax = "_", 0, {}
 		for k, v in pairs( tab ) do
-			if !isstring( k ) or !isnumber( v ) then continue end
-			ttl = ttl +v
-			tax[ ttl ] = k
+			if isstring( k ) and isnumber( v ) then
+				ttl = ttl +v
+				tax[ ttl ] = k
+			end
 		end
 		if ttl < 1 then return end
 		local ran = math.random( 1, math.ceil( ttl ) )
@@ -1728,7 +1739,7 @@ if SERVER then -- Server only
 	function xdefm_QuestPick( lvl, ply )
 		if !isnumber( lvl ) then return nil end
 		if table.IsEmpty( xdefmod.quests ) then return nil end
-		if lvl != -1 then local tab = {}
+		if lvl ~= -1 then local tab = {}
 			for k, v in RandomPairs( xdefmod.quests ) do
 				if v[ 1 ] <= lvl then tab = v break end
 			end
@@ -1776,24 +1787,25 @@ if SERVER then -- Server only
 	end )
 	hook.Add( "Think", "xdefm_TK", function()
 		for k, v in pairs( ents.FindByClass( "xdefm_base" ) ) do
-			if !IsValid( v ) or !istable( v.xdefm_T2 ) then continue end
-			if !v:IsPlayerHolding() and !constraint.FindConstraint( v, "Weld" ) and v:WaterLevel() > 0 and v.xdefm_T2.KillInWater then
-				SafeRemoveEntity( v )
-				local data = EffectData()
-				data:SetOrigin( v:WorldSpaceCenter() )
-				data:SetScale( math.Round( v:OBBMins():Distance( v:OBBMaxs() )*0.1, 2 ) )
-				util.Effect( "watersplash", data )
+			if IsValid( v ) and istable( v.xdefm_T2 ) then
+				if !v:IsPlayerHolding() and !constraint.FindConstraint( v, "Weld" ) and v:WaterLevel() > 0 and v.xdefm_T2.KillInWater then
+					SafeRemoveEntity( v )
+					local data = EffectData()
+					data:SetOrigin( v:WorldSpaceCenter() )
+					data:SetScale( math.Round( v:OBBMins():Distance( v:OBBMaxs() )*0.1, 2 ) )
+					util.Effect( "watersplash", data )
+				end
 			end
 		end
 		local tim = math.max( math.Round( GetConVar( "xdefmod_salecool" ):GetInt() ), 0 )*60
 		local time = math.Round( os.time()/tim )*tim
-		if tim > 0 and time != xdefmod.util.SaleTime then
+		if tim > 0 and time ~= xdefmod.util.SaleTime then
 			xdefmod.util.SaleTime = time
 			xdefm_UpdateShop()
 		end
 		local ti2 = math.max( math.Round( GetConVar( "xdefmod_lbdelay" ):GetInt() ), 0 )*60
 		time = math.Round( os.time()/ti2 )*ti2
-		if !istable( xdefmod.leader ) or ( ti2 > 0 and time != xdefmod.util.LeadTime ) then
+		if !istable( xdefmod.leader ) or ( ti2 > 0 and time ~= xdefmod.util.LeadTime ) then
 			xdefmod.util.LeadTime = time
 			if !timer.Exists( lbtimer ) then
 				local fil, dir = file.Find( "xdefishmod/p_*.txt", "DATA" )
@@ -1817,16 +1829,18 @@ if SERVER then -- Server only
 							break
 						end
 						local tab = util.JSONToTable( file.Read( "xdefishmod/"..fin, "DATA" ) )
-						if !istable( tab ) then continue end
-						if istable( ctb[ 10 ] ) and ctb[ 10 ][ 1 ] > tab.TExp then continue end
-						for m = 1, 10 do
-							local ttt = ctb[ m ]
-							if ( !istable( ttt ) or ttt[ 1 ] < tab.TExp ) and isstring( tab.SID64 ) then
-								table.insert( ctb, m, { tab.TExp, tab.SID64, tab.Nick, tab.Level, tab.Money } )
-								if #ctb > 10 then
-									table.remove( ctb, 11 )
+						if istable( tab ) then
+							if not istable( ctb[ 10 ] ) or ctb[ 10 ][ 1 ] <= tab.TExp then
+								for m = 1, 10 do
+									local ttt = ctb[ m ]
+									if ( !istable( ttt ) or ttt[ 1 ] < tab.TExp ) and isstring( tab.SID64 ) then
+										table.insert( ctb, m, { tab.TExp, tab.SID64, tab.Nick, tab.Level, tab.Money } )
+										if #ctb > 10 then
+											table.remove( ctb, 11 )
+										end
+										break
+									end
 								end
-								break
 							end
 						end
 					end
@@ -1876,7 +1890,7 @@ if SERVER then -- Server only
 	net.Receive( "NET_xdefm_Cmd", function( len, ply )
 		if !IsValid( ply ) or len > 512 then return end
 		local cmd, dat = net.ReadString(), net.ReadString()
-		if isstring( cmd ) and isstring( dat ) and cmd != "" and dat != "" then
+		if isstring( cmd ) and isstring( dat ) and cmd ~= "" and dat ~= "" then
 			xdefm_Command( ply, cmd, dat )
 		end
 	end )
@@ -1906,7 +1920,7 @@ if SERVER then -- Server only
 	net.Receive( "NET_xdefm_Pickup", function( len, ply )
 		if !IsValid( ply ) or len <= 0 or len >= 128 or !ply:Alive() then return end
 		if isnumber( ply.xdefm_Cool ) and ply.xdefm_Cool > CurTime() then return end
-		local pl2 = net.ReadEntity()  if pl2 != ply then return end ply.xdefm_Cool = CurTime()+0.1
+		local pl2 = net.ReadEntity()  if pl2 ~= ply then return end ply.xdefm_Cool = CurTime()+0.1
 		local ent = ply:GetEyeTrace().Entity
 		if IsValid( ent ) and ent:GetClass() == "xdefm_base" and !ent:IsConstrained() and xdefm_CanInteract( ply, ent ) and !ent.xdefm_Trashed then
 			ply.xdefm_Cool = CurTime() +0.1
@@ -1917,7 +1931,7 @@ if SERVER then -- Server only
 				ply.xdefm_Cool = CurTime() +0.1
 				if xdefm_FriendAllow( ply, owi ) or xdefm_NadAllow( ply, ent ) then
 					if istable( ent.xdefm_T3 ) and !table.IsEmpty( ent.xdefm_T3 ) then local yee = false
-						for k, v in pairs( ent.xdefm_T3 ) do if isstring( v ) and v != "_" then
+						for k, v in pairs( ent.xdefm_T3 ) do if isstring( v ) and v ~= "_" then
 								xdefm_AddNote( ply, xdefm_ItemMark( ent:GetFMod_DT() ).."& &xdefm.NotEmpty", "resource/warning.wav", "cross", 5 ) yee = true break
 							end
 						end
@@ -1958,9 +1972,10 @@ if SERVER then -- Server only
 		ply.xdefm_Cool = 0
 		local id = ply:SteamID()
 		for k, v in pairs( ents.FindByClass( "xdefm_base" ) ) do
-			if !IsValid( v ) then continue end
-			if v:GetFMod_OI() == id then
-				v:SetFMod_OW( ply )
+			if IsValid( v ) then
+				if v:GetFMod_OI() == id then
+					v:SetFMod_OW( ply )
+				end
 			end
 		end
 	end )
@@ -1973,7 +1988,7 @@ if SERVER or CLIENT then -- Shared
 		lvl = isnumber( lvl ) and math.max( 0, math.Round( lvl ) ) or 0
 		prc = isnumber( prc ) and math.max( 0, math.Round( prc ) ) or 0
 		local aa, bb = xdefm_ItemGet( nam )
-		if !istable( bb ) or bb.Type != "Bait" then return end
+		if !istable( bb ) or bb.Type ~= "Bait" then return end
 		xdefmod.shop[ nam ] = { 1, lvl, prc }
 	end
 	function xdefm_GetPrice( ite )
@@ -1993,7 +2008,7 @@ if SERVER or CLIENT then -- Shared
 			return isnumber( tonumber( aa[ 2 ] ) ) and math.ceil( prc*tonumber( aa[ 2 ] )/bb.Durability ) or prc
 		else
 			local cm = xdefm_CookMeter( ite )
-			if cm != 0 then
+			if cm ~= 0 then
 				return cm > 0 and math.ceil( prc +prc*cm*4 ) or math.ceil( prc*math.abs( 1+ cm )*5 )
 			else
 				return prc
@@ -2094,19 +2109,19 @@ if SERVER or CLIENT then -- Shared
 	function xdefm_AddNote( ply, txt, snd, ico, dur )
 		if CLIENT then
 			ply = LocalPlayer()
-			if isstring( snd ) and snd != "" and snd != "!V" then
+			if isstring( snd ) and snd ~= "" and snd ~= "!V" then
 				surface.PlaySound( snd )
 			end
 			dur = isnumber( dur ) and dur or 5
-			if string.find( string.lower( txt ), "&" ) != nil then
+			if string.find( string.lower( txt ), "&" ) ~= nil then
 				local tab = string.Explode( "&", txt )
 				for k, v in pairs( tab ) do
-					if v != "" and v != " " and string.find( string.lower( v ), "xdefm." ) != nil then
+					if v ~= "" and v ~= " " and string.find( string.lower( v ), "xdefm." ) ~= nil then
 						tab[ k ] = language.GetPhrase( v )
 					end
 				end
 				txt = table.concat( tab, "" )
-			elseif txt != "!V" and string.find( string.lower( txt ), "xdefm." ) then
+			elseif txt ~= "!V" and string.find( string.lower( txt ), "xdefm." ) then
 				txt = language.GetPhrase( txt )
 			end
 			if !isstring( ico ) or ico == "" or ico == "!V" then
@@ -2115,7 +2130,7 @@ if SERVER or CLIENT then -- Shared
 			if GetConVar( "xdefmod_printnote" ):GetInt() > 0 then
 				MsgC( Color( 255, 255, 255 ), "[", Color( 0, 255, 255 ), "xdefmod", Color( 255, 255, 255 ), "]"..txt.."\n" )
 			end
-			if txt != "!V" then
+			if txt ~= "!V" then
 				table.insert( xdefmod.util.notes, { SysTime() +tonumber( string.Left( tostring( dur ), 4 ) ), txt, Material( "icon16/"..ico..".png" ), 0 } )
 			end
 		else
@@ -2156,7 +2171,7 @@ if SERVER or CLIENT then -- Shared
 		end
 	end
 	function xdefm_CookAdd( tar, met )
-		if !IsEntity( tar ) and !isstring( tar ) or ( IsEntity( tar ) and tar:GetClass() != "xdefm_base" ) then return nil end
+		if !IsEntity( tar ) and !isstring( tar ) or ( IsEntity( tar ) and tar:GetClass() ~= "xdefm_base" ) then return nil end
 		if !isnumber( met ) then
 			met = 0
 		else
@@ -2197,7 +2212,7 @@ if SERVER or CLIENT then -- Shared
 		if CLIENT then if IsValid( xdefmod.util.menus[ str ] ) then xdefmod.util.menus[ str ]:Remove() end end
 	end
 	function xdefm_OpenMenu( ply, typ, tab )
-		if !isnumber( typ ) and ( tab != nil and !istable( tab ) ) then return end
+		if !isnumber( typ ) and ( tab ~= nil and !istable( tab ) ) then return end
 		if SERVER and IsValid( ply ) and ply:IsPlayer() and !ply:IsBot() then
 			net.Start( "NET_xdefm_Menu" )
 			net.WriteString( tonumber( typ ) )
@@ -2293,16 +2308,30 @@ if typ == 0 then -- Inventory menu
 		pan.P_Menu3 = AddASheetFM( language.GetPhrase( "xdefm.M3" ), "icon16/star.png", language.GetPhrase( "xdefm.M33" ) )
 		if GetConVar( "xdefmod_lbdelay" ):GetInt() > 0 and !game.SinglePlayer() then
 			pan.P_Menu4 = AddASheetFM( language.GetPhrase( "xdefm.M4" ), "icon16/chart_bar.png", language.GetPhrase( "xdefm.M44" ) )
-		end for k, v in pairs( { pan.P_Menu2, pan.P_Menu3, pan.P_Menu4, pan.P_Menu5 } ) do if !IsValid( v ) then continue end
-			function v:Paint( w, h ) surface.SetDrawColor( Color( xdefmod.COLOR_BACKGROUND.r*0.5, xdefmod.COLOR_BACKGROUND.g*0.5, xdefmod.COLOR_BACKGROUND.b*0.5, xdefmod.COLOR_BACKGROUND.a*0.5 ) )
-			surface.DrawRect( 0, 0, w, h ) end end
-		for k, v in pairs( { pan.P_Menu1, pan.P_Menu2, pan.P_Menu3, pan.P_Menu5 } ) do if !IsValid( v ) then continue end
-			v.P_Scroll = v:Add( "DScrollPanel" )  v.P_Scroll:Dock( FILL )  local vba = v.P_Scroll:GetVBar()
-			vba:SetHideButtons( true )  vba:SetSize( 0, 0 )
-			function vba.btnGrip:Paint( w, h )
-				surface.SetDrawColor( 125, 125, 125, 255 ) surface.DrawRect( 0, 0, w, h )
-				surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
-			end function vba:Paint( w, h ) draw.RoundedBox( 0, 0, 0, w, h, Color( 45, 45, 45, 255 ) ) end end
+		end 
+		for k, v in pairs( { pan.P_Menu2, pan.P_Menu3, pan.P_Menu4, pan.P_Menu5 } ) do 
+			if IsValid( v ) then
+				function v:Paint( w, h )
+					surface.SetDrawColor( Color( xdefmod.COLOR_BACKGROUND.r*0.5, xdefmod.COLOR_BACKGROUND.g*0.5, xdefmod.COLOR_BACKGROUND.b*0.5, xdefmod.COLOR_BACKGROUND.a*0.5 ) )
+					surface.DrawRect( 0, 0, w, h ) 
+				end 
+			end
+		end
+		for k, v in pairs( { pan.P_Menu1, pan.P_Menu2, pan.P_Menu3, pan.P_Menu5 } ) do
+			if IsValid( v ) then
+				v.P_Scroll = v:Add( "DScrollPanel" )  v.P_Scroll:Dock( FILL )  local vba = v.P_Scroll:GetVBar()
+				vba:SetHideButtons( true )  vba:SetSize( 0, 0 )
+				
+				function vba.btnGrip:Paint( w, h )
+					surface.SetDrawColor( 125, 125, 125, 255 ) surface.DrawRect( 0, 0, w, h )
+					surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
+				end
+
+				function vba:Paint( w, h )
+					draw.RoundedBox( 0, 0, 0, w, h, Color( 45, 45, 45, 255 ) ) 
+				end
+			end
+		end
 		if true then local pax = pan.P_Menu1 -- Inventory panel
 			pax.P_Hold = pax.P_Scroll:Add( "DIconLayout" )  local pa2 = pax.P_Hold  pa2:Dock( FILL )
 			pa2:SetSpaceX( 1.75 ) pa2:SetSpaceY( 2 ) function pa2:Paint( w, h ) end local inv = pan.T_Data.Items
@@ -2335,12 +2364,12 @@ if typ == 0 then -- Inventory menu
 						O_Store:SetIcon( "icon16/basket_go.png" )
 					end
 					if slo.T_Item.Type == "Bait" then
-						if slo.S_Place != "21" then
+						if slo.S_Place ~= "21" then
 							local O_Equip = dnm:AddOption( "#xdefm.Equip", function()
 							if !slo.B_OnMove then xdefm_Command( LocalPlayer(), "MoveInv", slo.S_Place.."|21" ) end end )
 							O_Equip:SetIcon( "icon16/bug_go.png" ) else
 							local O_Dequip = dnm:AddOption( "#xdefm.Dequip", function() if slo.B_OnMove then return end
-							local num = 0  for k, v in pairs( LocalPlayer().xdefm_Profile.Items ) do if k != 21 and v == "_" then num = k break end end
+							local num = 0  for k, v in pairs( LocalPlayer().xdefm_Profile.Items ) do if k ~= 21 and v == "_" then num = k break end end
 							if num > 0 then xdefm_Command( LocalPlayer(), "MoveInv", "21|"..num ) end end ) O_Dequip:SetIcon( "icon16/bug_go.png" )
 						end
 					end
@@ -2408,7 +2437,7 @@ if typ == 0 then -- Inventory menu
 							xdefm_Command( LocalPlayer(), i == 1 and "Downgrade" or "Upgrade", ski.."|"..1 ) end )
 						local O_X5 = dnm:AddOption( wt.."5", function() if !IsValid( xdefmod.util.menus.Inventory ) then return end
 							xdefm_Command( LocalPlayer(), i == 1 and "Downgrade" or "Upgrade", ski.."|"..5 ) end )
-						if ski != "G" then local O_X10 = dnm:AddOption( wt.."10", function() if !IsValid( xdefmod.util.menus.Inventory ) then return end
+						if ski ~= "G" then local O_X10 = dnm:AddOption( wt.."10", function() if !IsValid( xdefmod.util.menus.Inventory ) then return end
 							xdefm_Command( LocalPlayer(), i == 1 and "Downgrade" or "Upgrade", ski.."|"..10 ) end )
 						local O_X50 = dnm:AddOption( wt.."50", function() if !IsValid( xdefmod.util.menus.Inventory ) then return end
 							xdefm_Command( LocalPlayer(), i == 1 and "Downgrade" or "Upgrade", ski.."|"..50 ) end )
@@ -2457,7 +2486,7 @@ if typ == 0 then -- Inventory menu
 			pa2:SetSpaceX( 3 ) pa2:SetSpaceY( 3 ) pa2:SetPos( 3, 2 ) local MaX = Material( "gui/center_gradient" )
 			for k, v in SortedPairsByMemberValue( xdefmod.shop, 2 ) do
 				local Item = pax.P_Hold:Add( "DButton" ) Item:SetSize( 210, 75 ) Item.N_Clicked = 0  Item:SetCursor( "blank" )
-				local aa, bb = xdefm_ItemGet( k ) if !istable( bb ) or bb.Type != "Bait" then Item:Remove() return end  Item.N_Lerp = 0.3
+				local aa, bb = xdefm_ItemGet( k ) if !istable( bb ) or bb.Type ~= "Bait" then Item:Remove() return end  Item.N_Lerp = 0.3
 				Item.S_Name = bb.Name  Item.N_Rarity = bb.Rarity  Item.S_Item = k  Item.N_Level = v[ 2 ]  Item.N_Cost = math.ceil( v[ 1 ] * v[ 3 ] )
 				function Item:OnCursorEntered() xdefmod.util.aim_pan = Item  xdefmod.util.marker = Item.S_Item  Item.B_OnMove = true  xdefmod.util.lc = false end
 				function Item:OnCursorExited() if xdefmod.util.aim_pan == Item then xdefmod.util.aim_pan = nil  xdefmod.util.marker = nil end Item.B_OnMove = false end
@@ -2641,7 +2670,7 @@ elseif typ == 1 then -- Quest menu
 			for k, v in pairs( pan.T_Require ) do
 				local yes = false
 				for m, n in pairs( dt.Items ) do
-					if m != 21 and !tem[ m ] and xdefm_GetClass( n ) == v then
+					if m ~= 21 and !tem[ m ] and xdefm_GetClass( n ) == v then
 						tem[ m ] = 0
 						yes = true
 						break
@@ -2651,7 +2680,7 @@ elseif typ == 1 then -- Quest menu
 			end
 			local emp = 0
 			for k, v in pairs( dt.Items ) do
-				if k != 21 and ( v == "_" or tem[ k ] ) then emp = emp +1 end
+				if k ~= 21 and ( v == "_" or tem[ k ] ) then emp = emp +1 end
 			end
 			pan.B_2 = ( emp >= #pan.T_Reward )
 		elseif id == 10 then
@@ -2827,12 +2856,12 @@ elseif typ == 4 then -- Structure menu
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
 		local rec, col = "xdefm.Struct", Color( 200, 200, 200 )
-		if isstring( pan.S_Struct ) and pan.S_Struct != "_" then
+		if isstring( pan.S_Struct ) and pan.S_Struct ~= "_" then
 			local aa, bb = xdefm_ItemGet( pan.S_Struct )
 			if istable( aa ) and istable( bb ) then
 				rec = bb.Name  col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]
 				local nam = language.GetPhrase( "xdefm.ST"..pan.N_SType )
-				if pan.N_Num != -1 then nam = nam..( pan.N_Max != -1 and " ( "..pan.N_Num.." / "..pan.N_Max.." )" or " ( "..pan.N_Num.." )" ) end
+				if pan.N_Num ~= -1 then nam = nam..( pan.N_Max ~= -1 and " ( "..pan.N_Num.." / "..pan.N_Max.." )" or " ( "..pan.N_Num.." )" ) end
 				draw.TextShadow( { text = nam, pos = { w/2, 52 }, font = "xdefm_Font7",
 				xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 128, 128, 128 ) }, 1, 255 )
 			end
@@ -2871,12 +2900,13 @@ elseif typ == 4 then -- Structure menu
 		function pax:OnCursorExited() pax.B_Hover = false end
 	end --
 	function pan:XDEFM_Update( id, dt ) if id == 0 then pan.T_Data = dt end
-		if id == 3 then if !istable( dt ) or !istable( pan.T_Items ) or pan.N_SType != 1 then return end
+		if id == 3 then if !istable( dt ) or !istable( pan.T_Items ) or pan.N_SType ~= 1 then return end
 			for k, v in pairs( dt ) do
-				if !isnumber( k ) or !pan.T_Items[ k ] or !pan.T_Slots[ k ] then continue end
-				if pan.T_Items[ k ] == "_" and v != "_" then pan.N_Num = pan.N_Num +1
-				elseif pan.T_Items[ k ] != "_" and v == "_" then pan.N_Num = pan.N_Num -1 end
-				pan.T_Items[ k ] = v  pan.T_Slots[ k ]:F_SetupItem( v )
+				if isnumber( k ) and pan.T_Items[ k ] and pan.T_Slots[ k ] then
+					if pan.T_Items[ k ] == "_" and v ~= "_" then pan.N_Num = pan.N_Num +1
+					elseif pan.T_Items[ k ] ~= "_" and v == "_" then pan.N_Num = pan.N_Num -1 end
+					pan.T_Items[ k ] = v  pan.T_Slots[ k ]:F_SetupItem( v )
+				end
 			end
 		elseif id == 2 then if !istable( dt ) or #dt < 1 then return end local str = dt[ 1 ]
 			local aa, bb = xdefm_ItemGet( str )
@@ -2886,7 +2916,7 @@ elseif typ == 4 then -- Structure menu
 					for k, v in pairs( dt ) do
 						local slo = xdefm_SlotBox( 0, 0, 94, 94, k, tostring( k ) )  pax.P_Hold:Add( slo )
 						pan.T_Slots[ k ] = slo  slo.S_Type = "Storage"  slo:F_SetupItem( v )  pan.N_Max = pan.N_Max +1
-						if v != "_" then pan.N_Num = pan.N_Num +1 end  pan.T_Items[ k ] = v
+						if v ~= "_" then pan.N_Num = pan.N_Num +1 end  pan.T_Items[ k ] = v
 						function slo:DoRightClick( Pnl ) if slo.T_Item == nil or slo:IsDragging() or !IsValid( xdefmod.util.menus[ "Inventory" ] ) then return end
 							if IsValid( pan.P_DMenu ) then pan.P_DMenu:Remove() end pan.P_DMenu = DermaMenu( false, nil )  local dnm = pan.P_DMenu
 							local O_Take = dnm:AddOption( "#xdefm.Take", function() if !slo.B_OnMove and IsValid( xdefmod.util.menus[ "Inventory" ] ) then
@@ -2903,7 +2933,7 @@ elseif typ == 4 then -- Structure menu
 					local slo = vgui.Create( "DButton", pax.P_Hold ) slo:SetSize( 50, 80 ) slo:Dock( TOP ) slo:SetText( "" ) slo:SetCursor( "blank" )
 					local aa, bb = xdefm_ItemGet( cc[ #cc ] ) if !istable( aa ) or !istable( bb ) then slo:Remove() return end
 					local col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]  local icc = xdefmod.util.ITEM_ICONS[ bb.Type ]  slo.S_Item = cc[ #cc ]
-					slo.B_Hover = false  slo.N_Num = pan.N_Num  slo.N_Clk = 0  slo.N_Lerp = 0 if icc != nil then
+					slo.B_Hover = false  slo.N_Num = pan.N_Num  slo.N_Clk = 0  slo.N_Lerp = 0 if icc ~= nil then
 					pax.P_Sprite = vgui.Create( "DPanel", slo ) local spr = pax.P_Sprite  
 					spr:SetPos( 79, 23 ) spr:SetSize( 16, 16 ) spr:SetMouseInputEnabled( false )
 					function spr:Paint( w, h ) surface.SetMaterial( icc )
@@ -3019,19 +3049,22 @@ elseif typ == 5 then -- Bank menu
 			for k, v in pairs( pan.T_Slots ) do
 				if IsValid( v ) and k > pro.UpdF then v:Remove() pan.T_Slots[ k ] = nil end
 			end if pro.UpdF <= 0 then pan.T_Slots = {} return end
-			for i=1, pro.UpdF do local ite = pro.Bnk[ i ]  if !isstring( ite ) then continue end
-				local slo = nil  if IsValid( pan.T_Slots[ i ] ) then slo = pan.T_Slots[ i ] else
-					slo = xdefm_SlotBox( 0, 0, 108, 108, i, tostring( i ) )  pan.P_Hold:Add( slo )
-					pan.T_Slots[ i ] = slo  slo.S_Type = "Bank"
-				end slo:F_SetupItem( ite )  if ite != "_" then pan.N_Store = pan.N_Store + 1 end
-				function slo:DoRightClick( Pnl ) if slo.T_Item == nil or slo:IsDragging() or !IsValid( xdefmod.util.menus[ "Inventory" ] ) then return end
-					if IsValid( pan.P_DMenu ) then pan.P_DMenu:Remove() end pan.P_DMenu = DermaMenu( false, nil )  local dnm = pan.P_DMenu
-					local O_Take = dnm:AddOption( "#xdefm.Take", function() if !slo.B_OnMove and IsValid( xdefmod.util.menus[ "Inventory" ] ) then
-					local num = 0  for k, v in pairs( LocalPlayer().xdefm_Profile.Items ) do
-						if isstring( v ) and v == "_" then num = k break end
-					end if num > 0 then xdefm_Command( LocalPlayer(), "MoveBank", num.."|"..i )
-					else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end end end )
-					O_Take:SetIcon( "icon16/basket_put.png" ) dnm:Open()
+			for i=1, pro.UpdF do 
+				local ite = pro.Bnk[ i ]
+				if isstring( ite ) then
+					local slo = nil  if IsValid( pan.T_Slots[ i ] ) then slo = pan.T_Slots[ i ] else
+						slo = xdefm_SlotBox( 0, 0, 108, 108, i, tostring( i ) )  pan.P_Hold:Add( slo )
+						pan.T_Slots[ i ] = slo  slo.S_Type = "Bank"
+					end slo:F_SetupItem( ite )  if ite ~= "_" then pan.N_Store = pan.N_Store + 1 end
+					function slo:DoRightClick( Pnl ) if slo.T_Item == nil or slo:IsDragging() or !IsValid( xdefmod.util.menus[ "Inventory" ] ) then return end
+						if IsValid( pan.P_DMenu ) then pan.P_DMenu:Remove() end pan.P_DMenu = DermaMenu( false, nil )  local dnm = pan.P_DMenu
+						local O_Take = dnm:AddOption( "#xdefm.Take", function() if !slo.B_OnMove and IsValid( xdefmod.util.menus[ "Inventory" ] ) then
+						local num = 0  for k, v in pairs( LocalPlayer().xdefm_Profile.Items ) do
+							if isstring( v ) and v == "_" then num = k break end
+						end if num > 0 then xdefm_Command( LocalPlayer(), "MoveBank", num.."|"..i )
+						else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end end end )
+						O_Take:SetIcon( "icon16/basket_put.png" ) dnm:Open()
+					end
 				end
 			end
 		end
@@ -3115,11 +3148,14 @@ elseif typ == 6 then -- Friends menu
 		function pan.P_Entry:FindTheFriend() local ply, str = nil, pan.P_Entry.S_Enter
 			if pan.N_Count >= 16 then xdefm_AddNote( ply, "xdefm.FriendAd5", "resource/warning.wav", "cross", 5 ) return end
 			if str == "" then xdefm_AddNote( ply, "xdefm.FriendAd3", "resource/warning.wav", "cross", 5 ) return end
-			for k, v in pairs( player.GetAll() ) do if !IsValid( v ) or v:IsBot() or v == LocalPlayer() or istable( pan.T_Data[ v:SteamID() ] ) then continue end
-				if v:SteamID() == str then ply = v break end
-				local st, ed = string.find( string.lower( v:Nick() ), string.lower( str ) )
-				if st then ply = v break end
-			end if !IsValid( ply ) then xdefm_AddNote( ply, "xdefm.FriendAd3", "resource/warning.wav", "cross", 5 ) return end
+			for k, v in pairs( player.GetAll() ) do
+				if IsValid( v ) and not v:IsBot() and v ~= LocalPlayer() and not istable( pan.T_Data[ v:SteamID() ] ) then
+					if v:SteamID() == str then ply = v break end
+					local st, ed = string.find( string.lower( v:Nick() ), string.lower( str ) )
+					if st then ply = v break end
+				end
+			end
+			if !IsValid( ply ) then xdefm_AddNote( ply, "xdefm.FriendAd3", "resource/warning.wav", "cross", 5 ) return end
 			local pnl = pan.P_List:AddLine( ply:Nick(), language.GetPhrase( "xdefm.Disallow" ), language.GetPhrase( "xdefm.Disallow" ) )  pnl.N_RightStat = 0
 			pnl.S_SteamID = ply:SteamID()  pnl.S_Name = ply:Nick()  pnl:SetToolTip( ply:SteamID() )
 			xdefm_AddNote( ply, language.GetPhrase( "xdefm.FriendAd4" )..": "..ply:Nick(), "buttons/button15.wav", "group_add", 5 ) pnl.S_SteamID = ply:SteamID()
@@ -3202,9 +3238,9 @@ elseif typ == 7 then -- Trade menu
 				text = language.GetPhrase( "xdefm.Money" )..": ", pos = { 8, 285 }, font = "xdefm_Font1",
 				xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
 			}, 1, 255 )
-			if IsValid( pax.P_Entry ) and i != 2 then
+			if IsValid( pax.P_Entry ) and i ~= 2 then
 				local col = ( pax.P_Entry:IsEditing() and Color( 150, 150, 150 ) or Color( 75, 75, 75 ) )
-				if !pax.P_Entry:IsEditing() and ta2[ 11 ] != pax.P_Entry.N_Enter then col = Color( 150, 25, 25 ) end
+				if !pax.P_Entry:IsEditing() and ta2[ 11 ] ~= pax.P_Entry.N_Enter then col = Color( 150, 25, 25 ) end
 				surface.SetDrawColor( Color( xdefmod.COLOR_BACKGROUND.r*0.5, xdefmod.COLOR_BACKGROUND.g*0.5, xdefmod.COLOR_BACKGROUND.b*0.5, xdefmod.COLOR_BACKGROUND.a*0.5 ) ) surface.DrawRect( 80, 272, 215 +6, 30 )
 				surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 80, 272, 215 +6, 30, 2 )
 				surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 80, 272, 215 +6, 30 )
@@ -3214,7 +3250,7 @@ elseif typ == 7 then -- Trade menu
 			local but = vgui.Create( "DButton", pax )  but:SetText( "" )  but.B_Hover = false
 			but:SetSize( 150, 25 )  but:SetPos( 84, 42 )
 			function but:Paint( w, h ) local col, ply = Color( 100, 100, 100 ), LocalPlayer()
-				if !ply:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() or ply:GetNWEntity( "XDEFMod_TPL" ):GetNWEntity( "XDEFMod_TPL" ) != ply then return end
+				if !ply:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() or ply:GetNWEntity( "XDEFMod_TPL" ):GetNWEntity( "XDEFMod_TPL" ) ~= ply then return end
 				local rd = false  if i == 1 then rd = ( LocalPlayer():GetNWFloat( "XDEFMod_RTT" ) == 1 )
 				elseif i == 2 then rd = ( pan.T_PlyB[ 3 ] == 1 ) end
 				col = ( rd and Color( 55, 155, 55 ) or Color( 155, 55, 55 ) )
@@ -3247,10 +3283,10 @@ elseif typ == 7 then -- Trade menu
 			pax.P_Entry:SetPlaceholderText( "#xdefm.PutMoney" )
 			pax.P_Entry:SetToolTip( tab[ 11 ] )
 			function pax.P_Entry:OnEnter() xdefm_Command( LocalPlayer(), "TradeMoney", tostring( pax.P_Entry.N_Enter ) ) end
-			function pax.P_Entry:OnValueChange( val ) local tum, vat, fce = tonumber( val ), 0, false  if val != "" and ( !isnumber( tum ) or string.len( val ) >= 64 or tum < 0 or tum > 2147483647 ) then
+			function pax.P_Entry:OnValueChange( val ) local tum, vat, fce = tonumber( val ), 0, false  if val ~= "" and ( !isnumber( tum ) or string.len( val ) >= 64 or tum < 0 or tum > 2147483647 ) then
 				if isnumber( tum ) and tum > 2147483647 then vat = 2147483647  fce = true elseif isnumber( tum ) and tum < 0 then vat = 0  fce = true else vat = pax.P_Entry.N_Enter
 				pax.P_Entry:SetText( tostring( pax.P_Entry.N_Enter ) ) end surface.PlaySound( "resource/warning.wav" )
-				else vat = tum  if val == "" then vat = 0  fce = true end end if pax.P_Entry.N_Enter != vat then pax.P_Entry.N_Enter = vat end
+				else vat = tum  if val == "" then vat = 0  fce = true end end if pax.P_Entry.N_Enter ~= vat then pax.P_Entry.N_Enter = vat end
 				if fce then pax.P_Entry:SetText( tostring( pax.P_Entry.N_Enter ) ) end
 			end if i == 2 then pax.P_Entry:SetEnabled( false )  pax.P_Entry:SetMouseInputEnabled( false ) else
 				pax.P_Confirm = vgui.Create( "DImageButton", pax.P_Entry ) local pa2 = pax.P_Confirm
@@ -3265,7 +3301,7 @@ elseif typ == 7 then -- Trade menu
 			pa2:SetPos( 8, 8 ) pa2:SetSize( 64, 64 ) pa2:SetMouseInputEnabled( false )
 			pax.P_AFrame = pax:Add( "DPanel" )  pa2 = pax.P_AFrame
 			local tab = ( i == 1 and pan.T_PlyA or pan.T_PlyB )
-			if tab[ 2 ] != nil then pax.P_AIcon:SetSteamID( tab[ 2 ], 128 ) end
+			if tab[ 2 ] ~= nil then pax.P_AIcon:SetSteamID( tab[ 2 ], 128 ) end
 			pa2:SetText( "" ) pa2:SetPos( 8, 8 ) pa2:SetSize( 64, 64 ) pa2:SetMouseInputEnabled( false )
 			function pa2:Paint( w, h ) surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) end end
@@ -3307,7 +3343,7 @@ elseif typ == 7 then -- Trade menu
 			pan.P_PanB.P_Entry.N_Enter = dt[ 11 ]  pan.P_PanB.P_Entry:SetText( tostring( dt[ 11 ] ) ) pan.P_PanB.P_Entry:SetToolTip( dt[ 11 ] )
 		end
 		if id == 6 then pan.T_PlyB = dt  local sid = dt[ 2 ]
-			if sid != nil then
+			if sid ~= nil then
 				pan.P_NoTrade:SetMouseInputEnabled( false ) pan.P_NoTrade:SetAlpha( 0 )
 				pan.P_PanB:SetMouseInputEnabled( true ) pan.P_PanB:SetAlpha( 255 )
 				pan.P_PanB.P_AIcon:SetSteamID( sid, 128 )
@@ -3323,13 +3359,15 @@ elseif typ == 8 then -- Collection menu
 	pan.T_Rars = { true, true, true, true, true }  pan.T_Buts = {}  pan.T_But2 = {}  pan.T_Dats = { PagO = 0, PagT = 0, Num = 0 }
 	local Typs = { "Creature", "Bait", "Useless", "Recipe", "Struct" }
 	local cvar = string.Explode( "", GetConVar( "xdefmod_collection" ):GetString() )
-	if !istable( cvar ) or #cvar != 11 then RunConsoleCommand( "xdefmod_collection", "11111111111" )
+	if !istable( cvar ) or #cvar ~= 11 then RunConsoleCommand( "xdefmod_collection", "11111111111" )
 	else
 		for k, v in pairs( cvar ) do
-			v = tonumber( v )  if !isnumber( v ) then continue end
-			if k <= 5 then pan.T_Typs[ Typs[ k ] ] = ( v != 0 )
-			elseif k != 11 then pan.T_Rars[ k-5 ] = ( v != 0 )
-			else pan.T_Dats.PagO = v end
+			v = tonumber( v )
+			if isnumber( v ) then
+				if k <= 5 then pan.T_Typs[ Typs[ k ] ] = ( v ~= 0 )
+				elseif k ~= 11 then pan.T_Rars[ k-5 ] = ( v ~= 0 )
+				else pan.T_Dats.PagO = v end
+			end
 		end
 	end
 	if istable( xdefmod.bestiary ) then for k, v in pairs( xdefmod.bestiary ) do if xdefmod.items[ k ] then table.insert( pan.T_Items, k ) pan.N_Total = pan.N_Total +1 end end end
@@ -3411,11 +3449,11 @@ elseif typ == 8 then -- Collection menu
 		function but:OnCursorExited() but.B_Hover = false  but.N_Ho = SysTime() +0.5 end
 		function but:DoClick() pan.T_Typs[ typ ] = !pan.T_Typs[ typ ]  but.N_In = SysTime() +0.4
 		if input.IsShiftDown() then local ref = pan.T_Typs[ typ ]
-			for k, v in pairs( pan.T_Typs ) do if k != typ and v != ref then pan.T_Typs[ k ] = ref  pan.T_Buts[ k ].N_In = SysTime() +0.4 end end
+			for k, v in pairs( pan.T_Typs ) do if k ~= typ and v ~= ref then pan.T_Typs[ k ] = ref  pan.T_Buts[ k ].N_In = SysTime() +0.4 end end
 		end pan:RefreshDatItems() end
 		function but:DoRightClick() local ref = false
 			if pan.T_Typs[ typ ] == false then pan.T_Typs[ typ ] = true  but.N_In = SysTime() +0.4  ref = true end
-			for k, v in pairs( pan.T_Typs ) do if k != typ and v == true then pan.T_Typs[ k ] = false  ref = true
+			for k, v in pairs( pan.T_Typs ) do if k ~= typ and v == true then pan.T_Typs[ k ] = false  ref = true
 			if pan.T_Buts[ k ] then pan.T_Buts[ k ].N_In = SysTime() +0.4 end end end
 			if ref then pan:RefreshDatItems() end end
 		local ico = xdefmod.util.ITEM_ICONS[ typ ]  local spr = but:Add( "DImage" ) spr:SetPos( 8, 8 )
@@ -3435,11 +3473,11 @@ elseif typ == 8 then -- Collection menu
 		if pan.T_Rars[ i ] == true then surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) end
 	end function but:DoClick() pan.T_Rars[ i ] = !pan.T_Rars[ i ]
 	if input.IsShiftDown() then local ref = pan.T_Rars[ i ]
-		for k, v in pairs( pan.T_Rars ) do if k != i and v != ref then pan.T_Rars[ k ] = ref end end
+		for k, v in pairs( pan.T_Rars ) do if k ~= i and v ~= ref then pan.T_Rars[ k ] = ref end end
 	end pan:RefreshDatItems( pag ) end
 	function but:DoRightClick() local ref = false
 		if pan.T_Rars[ i ] == false then pan.T_Rars[ i ] = true  ref = true end
-		for k, v in pairs( pan.T_Rars ) do if k != i and v == true then pan.T_Rars[ k ] = false  ref = true end end
+		for k, v in pairs( pan.T_Rars ) do if k ~= i and v == true then pan.T_Rars[ k ] = false  ref = true end end
 	if ref then pan:RefreshDatItems() end end end
 	for i=1, 4 do local but = pan:Add( "DButton" ) but:SetSize( 75, 30 ) but:SetText( "" ) but.B_Hover = false  but.N_Clicked = 0  but.N_Bing = 0
 	but:SetPos( 366 +(i-1)*100, 606 ) function but:Paint( w, h ) local col = xdefmod.util.RARITY_COLORS[ i+1 ]
@@ -3464,36 +3502,48 @@ elseif typ == 8 then -- Collection menu
 	pan.P_Prog = pan:Add( "DPanel" ) pan.P_Prog:SetSize( 734, 40 ) pan.P_Prog:SetPos( 8, 650 ) function pan.P_Prog:Paint( w, h ) end
 	function pan.P_Prog:OnCursorEntered() pan.B_Hover = true end function pan.P_Prog:OnCursorExited() pan.B_Hover = false end
 	function pan:RefreshDatItems() pa2:Clear() local ite = {}
-		local ttl = 0  for k, v in pairs( pan.T_Items ) do
-			local tab = xdefmod.items[ v ]  if !istable( tab ) or !isstring( tab.Type ) then continue end
-			if !pan.T_Typs[ tab.Type ] or pan.T_Typs[ tab.Type ] != true then continue end
-			if !pan.T_Rars[ tab.Rarity ] or pan.T_Rars[ tab.Rarity ] != true then continue end
-			table.insert( ite, v )  ttl = ttl +1
-		end pan.T_Dats.Num = ttl  pan.T_Dats.PagT = math.ceil( ttl/28 )  local pag = pan.T_Dats.PagO
-		if pag > pan.T_Dats.PagT then pan.T_Dats.PagO = pan.T_Dats.PagT
-		elseif pag <= 0 and ttl > 0 then pan.T_Dats.PagO = 1 end pag = pan.T_Dats.PagO  local st = 1 +(pag-1)*28
-		for i=st, st +27 do if !isstring( ite[ i ] ) then break end local cls = ite[ i ]
-			local tab = xdefmod.items[ cls ]  if !istable( tab ) or !isstring( tab.Type ) then continue end
-			if !pan.T_Typs[ tab.Type ] or pan.T_Typs[ tab.Type ] != true then continue end
-			if !pan.T_Rars[ tab.Rarity ] or pan.T_Rars[ tab.Rarity ] != true then continue end
-			local slo = xdefm_SlotBox( 0, 0, 100, 100, 0, nil, xdefmod.util.ITEM_ICONS[ tab.Type ], true )
-			if slo then slo:F_SetupItem( ite[ i ] ) pa2:Add( slo )
-				function slo:DoClick() if !ply:IsAdmin() then return end local it = cls
-					if tab.Type == "Food" then it = it.."|"..tab.BestCook
-					elseif tab.Type == "Creature" then it = it.."|"..tab.MaxSize
-					elseif tab.Type == "Recipe" then it = it.."|"..tab.Durability end
-					surface.PlaySound( "garrysmod/ui_click.wav" )
-					RunConsoleCommand( "xdefmod_spawn", it )
-				end
-				function slo:DoRightClick() if !ply:IsAdmin() then return end local it = cls
-					if tab.Type == "Food" then it = it.."|"..tab.BestCook
-					elseif tab.Type == "Creature" then it = it.."|"..tab.MaxSize
-					elseif tab.Type == "Recipe" then it = it.."|"..tab.Durability end
-					surface.PlaySound( "garrysmod/ui_return.wav" )
-					RunConsoleCommand( "xdefmod_give", it )
+		local ttl = 0
+		for k, v in pairs( pan.T_Items ) do
+			local tab = xdefmod.items[ v ]
+			if istable( tab ) and isstring( tab.Type ) then
+				if pan.T_Typs[ tab.Type ] and pan.T_Typs[ tab.Type ] == true then
+					if pan.T_Rars[ tab.Rarity ] and pan.T_Rars[ tab.Rarity ] == true then
+						table.insert( ite, v )  ttl = ttl +1
+					end
 				end
 			end
-		end local cvar = {}
+		end
+		pan.T_Dats.Num = ttl  pan.T_Dats.PagT = math.ceil( ttl/28 )  local pag = pan.T_Dats.PagO
+		if pag > pan.T_Dats.PagT then pan.T_Dats.PagO = pan.T_Dats.PagT
+		elseif pag <= 0 and ttl > 0 then pan.T_Dats.PagO = 1 end pag = pan.T_Dats.PagO  local st = 1 +(pag-1)*28
+		for i=st, st +27 do
+			if !isstring( ite[ i ] ) then break end local cls = ite[ i ]
+			local tab = xdefmod.items[ cls ]
+			if istable( tab ) and isstring( tab.Type ) then
+				if pan.T_Typs[ tab.Type ] and pan.T_Typs[ tab.Type ] == true then
+					if pan.T_Rars[ tab.Rarity ] and pan.T_Rars[ tab.Rarity ] == true then
+						local slo = xdefm_SlotBox( 0, 0, 100, 100, 0, nil, xdefmod.util.ITEM_ICONS[ tab.Type ], true )
+						if slo then slo:F_SetupItem( ite[ i ] ) pa2:Add( slo )
+							function slo:DoClick() if !ply:IsAdmin() then return end local it = cls
+								if tab.Type == "Food" then it = it.."|"..tab.BestCook
+								elseif tab.Type == "Creature" then it = it.."|"..tab.MaxSize
+								elseif tab.Type == "Recipe" then it = it.."|"..tab.Durability end
+								surface.PlaySound( "garrysmod/ui_click.wav" )
+								RunConsoleCommand( "xdefmod_spawn", it )
+							end
+							function slo:DoRightClick() if !ply:IsAdmin() then return end local it = cls
+								if tab.Type == "Food" then it = it.."|"..tab.BestCook
+								elseif tab.Type == "Creature" then it = it.."|"..tab.MaxSize
+								elseif tab.Type == "Recipe" then it = it.."|"..tab.Durability end
+								surface.PlaySound( "garrysmod/ui_return.wav" )
+								RunConsoleCommand( "xdefmod_give", it )
+							end
+						end
+					end
+				end
+			end
+		end
+		local cvar = {}
 		for k, v in pairs( Typs ) do table.insert( cvar, pan.T_Typs[ v ] == true and 1 or 0 ) end
 		for k, v in pairs( pan.T_Rars ) do table.insert( cvar, v == true and 1 or 0 ) end
 		table.insert( cvar, pan.T_Dats.PagO )
@@ -3518,7 +3568,7 @@ elseif typ == 9 then -- Craft menu
 	function pan:OnRemove()
 		xdefmod.util.lc = false  local num = 0
 		for k, v in pairs( pan.T_Data.Items ) do
-			if v == "_" and k != 21 then num = k break end
+			if v == "_" and k ~= 21 then num = k break end
 		end if num > 0 then xdefm_Command( LocalPlayer(), "MoveCraft", num ) end
 	end
 	if true then -- Close button
@@ -3536,7 +3586,7 @@ elseif typ == 9 then -- Craft menu
 		pax:SetPos( 8, 50 ) pax:SetSize( 582, 490 ) function pax:Paint( w, h ) end pax.N_Type = typ
 		function pax:Paint( w, h ) local rec, slo, dur, yes, col = "xdefm.NeedRecipe", pan.T_Slots[ 1 ], 0, false, Color( 200, 200, 200 )
 			local pro, dum = 0, 0
-			if isstring( pan.T_Slots[ 1 ].S_Item ) and pan.T_Slots[ 1 ].S_Item != "_" then
+			if isstring( pan.T_Slots[ 1 ].S_Item ) and pan.T_Slots[ 1 ].S_Item ~= "_" then
 				local aa, bb = xdefm_ItemGet( pan.T_Slots[ 1 ].S_Item )
 				if istable( aa ) and istable( bb ) and bb.Type == "Recipe" then
 					rec = bb.Name  dur = aa[ 2 ]  yes = true  col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]
@@ -3559,7 +3609,7 @@ elseif typ == 9 then -- Craft menu
 			if IsValid( pan.P_DMenu ) then pan.P_DMenu:Remove() end pan.P_DMenu = DermaMenu( false, nil )  local dnm = pan.P_DMenu
 			local O_Take = dnm:AddOption( "#xdefm.Take", function() if !res.B_OnMove and IsValid( xdefmod.util.menus[ "Inventory" ] ) then
 			local num = 0  for k, v in pairs( LocalPlayer().xdefm_Profile.Items ) do
-				if isstring( v ) and v == "_" and k != 21 then num = k break end
+				if isstring( v ) and v == "_" and k ~= 21 then num = k break end
 			end if num > 0 then xdefm_Command( LocalPlayer(), "MoveCraft", num )
 			else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end end end )
 			O_Take:SetIcon( "icon16/basket_put.png" ) dnm:Open()
@@ -3581,17 +3631,17 @@ elseif typ == 9 then -- Craft menu
 		pax.P_Hold.N_Num = 0
 	end
 	function pan:XDEFM_Update( id, dt )
-		if id == 0 then pan.T_Data = dt end if id != 9 then return end
+		if id == 0 then pan.T_Data = dt end if id ~= 9 then return end
 		pan.P_Slot:F_SetupItem( dt[ 1 ] )  pan.S_Recipe = dt[ 1 ]  local pax = pan.P_Base
 		pax.P_Hold:Clear()  local aa, bb = xdefm_ItemGet( dt[ 1 ] )
-		if !istable( bb ) or bb.Type != "Recipe" or #bb.Crafts <= 0
+		if !istable( bb ) or bb.Type ~= "Recipe" or #bb.Crafts <= 0
 		then xdefmod.util.craft = nil  xdefmod.util.marker = nil return end pax.P_Hold.N_Num = 0
 		local function xdefm_AddCraft( tab ) pax.P_Hold.N_Num = pax.P_Hold.N_Num +1
 			local cc = string.Explode( "&", tab ) if !istable( cc ) or #cc < 2 then return end
 			local slo = vgui.Create( "DButton", pax.P_Hold ) slo:SetSize( 50, 80 ) slo:Dock( TOP ) slo:SetText( "" ) slo:SetCursor( "blank" )
 			local aa, bb = xdefm_ItemGet( cc[ #cc ] ) if !istable( aa ) or !istable( bb ) then slo:Remove() return end
 			local col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]  local icc = xdefmod.util.ITEM_ICONS[ bb.Type ]  slo.S_Item = cc[ #cc ]
-			slo.B_Hover = false  slo.N_Num = pax.P_Hold.N_Num  slo.N_Clk = 0  slo.N_Lerp = 0 if icc != nil then
+			slo.B_Hover = false  slo.N_Num = pax.P_Hold.N_Num  slo.N_Clk = 0  slo.N_Lerp = 0 if icc ~= nil then
 				pax.P_Sprite = vgui.Create( "DPanel", slo ) local spr = pax.P_Sprite  
 				spr:SetPos( 79, 23 ) spr:SetSize( 16, 16 ) spr:SetMouseInputEnabled( false )
 				function spr:Paint( w, h ) surface.SetMaterial( icc )
@@ -3777,12 +3827,12 @@ end end end
 		return true
 	end
 	function xdefm_ItemBased( bas, nam, dat )
-		if !isstring( nam ) or nam == "" or nam == "_" or !istable( dat ) or string.find( nam, "|" ) != nil or string.find( nam, "&" ) != nil then return false end
+		if !isstring( nam ) or nam == "" or nam == "_" or !istable( dat ) or string.find( nam, "|" ) ~= nil or string.find( nam, "&" ) ~= nil then return false end
 		local aa, bb = xdefm_ItemGet( bas )
 		if !istable( bb ) then return false end
 		local inp = {}
 		for k, v in pairs( bb ) do
-			inp[ k ] = ( dat[ k ] != nil and dat[ k ] or v )
+			inp[ k ] = ( dat[ k ] ~= nil and dat[ k ] or v )
 		end
 		if isstring( inp.Model ) then
 			inp.Model = { inp.Model }
@@ -3838,8 +3888,8 @@ if cmd == "StructExit" then local usi = ply.xdefm_Struct  if !IsValid( ply.xdefm
 	end return true
 elseif cmd == "Struct" then local usi = ply.xdefm_Struct  if !IsValid( ply.xdefm_Struct ) then return false end local usi = ply.xdefm_Struct  local cls = xdefm_GetClass( usi )
 	if ( !xdefm_FriendAllow( ply, usi ) and !xdefm_NadAllow( ply, usi ) ) then return end
-	if !isstring( cls ) then return false end local aa, bb = xdefm_ItemGet( cls )  if !istable( bb ) or bb.Type != "Struct" then return false end local stp = bb.SType
-	if stp == 1 then local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	if !isstring( cls ) then return false end local aa, bb = xdefm_ItemGet( cls )  if !istable( bb ) or bb.Type ~= "Struct" then return false end local stp = bb.SType
+	if stp == 1 then local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 		if isfunction( bb.OnInteract ) then if bb:OnInteract( usi, ply, 0, unpack( ab ) ) == false then
 		xdefm_AddNote( ply, "!V", "resource/warning.wav", "cross", 5 ) return end end
 		local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )  if !isnumber( aa ) or !isnumber( bb ) then return false end
@@ -3849,13 +3899,13 @@ elseif cmd == "Struct" then local usi = ply.xdefm_Struct  if !IsValid( ply.xdefm
 		end local a1 = ply.xdefm_Profile.Items[ aa ]  local b1 = usi.xdefm_T3[ bb ]
 		if !isstring( a1 ) or !isstring( b1 ) or ( a1 == "_" and b1 == "_" ) then return false end
 		local a2, a3 = xdefm_ItemGet( a1 )  local b2, b3 = xdefm_ItemGet( b1 )
-		if aa == 21 and b3 and istable( b3 ) and b3.Type != "Bait" then
+		if aa == 21 and b3 and istable( b3 ) and b3.Type ~= "Bait" then
 		xdefm_AddNote( ply, "xdefm.NotBait& "..xdefm_ItemMark( b1 ).." &xdefm.NotBai2", "resource/warning.wav", "cross", 5 ) return false end
 		if ( !istable( a3 ) and !istable( b3 ) ) then return end
 		if istable( b3 ) and b3.Type == "Bait" and aa == 21 and b3.Level > ply.xdefm_Profile.Level then	
 		xdefm_AddNote( ply, "xdefm.NoLevel", "resource/warning.wav", "cross", 5 ) return false end
 		ply.xdefm_Profile.Items[ aa ] = b1  usi.xdefm_T3[ bb ] = a1
-		if isstring( b1 ) and b1 != "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end xdefm_ProfileUpdate( ply )
+		if isstring( b1 ) and b1 ~= "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end xdefm_ProfileUpdate( ply )
 		for k, v in pairs( player.GetHumans() ) do if v.xdefm_Struct and v.xdefm_Struct == usi then xdefm_UpdateMenu( v, 3, { [ bb ] = a1 } ) end end return true
 	elseif stp == 2 then local slo = bb.Crafts[ tonumber( dat ) ]  if !isstring( slo ) then return false end
 		if isfunction( bb.OnInteract ) then if bb:OnInteract( usi, ply, 0, slo ) == false then
@@ -3867,11 +3917,14 @@ elseif cmd == "Struct" then local usi = ply.xdefm_Struct  if !IsValid( ply.xdefm
 		end local ite, ned = ply.xdefm_Profile.Items, {}
 		for k, v in pairs( ing ) do if k == #ing then break end
 			local yes = false
-			for m, n in pairs( ite ) do if n == "_" or ned[ m ] != nil then continue end
-				if xdefm_GetClass( n ) == v then
-					yes = true  ned[ m ] = 0 break
+			for m, n in pairs( ite ) do
+				if n ~= "_" and ned[ m ] == nil then
+					if xdefm_GetClass( n ) == v then
+						yes = true  ned[ m ] = 0 break
+					end
 				end
-			end if !yes then xdefm_AddNote( ply, "xdefm.NeedMat", "resource/warning.wav", "cross", 5 ) return false end
+			end
+			if !yes then xdefm_AddNote( ply, "xdefm.NeedMat", "resource/warning.wav", "cross", 5 ) return false end
 		end
 		for k, v in pairs( ned ) do ply.xdefm_Profile.Items[ k ] = "_" end
 		if xdefm_ItemGive( ply, ing[ #ing ], true ) then aa[ 2 ] = tonumber( aa[ 2 ] )
@@ -3893,24 +3946,24 @@ elseif cmd == "Struct" then local usi = ply.xdefm_Struct  if !IsValid( ply.xdefm
 			ply.xdefm_Profile.TBuy = ply.xdefm_Profile.TBuy+1  xdefm_ProfileUpdate( ply ) return true end
 		end return true
 elseif cmd == "StructOuter" then local usi = ply.xdefm_Struct  if !IsValid( ply.xdefm_Struct ) then return false end local usi = ply.xdefm_Struct  local cls = xdefm_GetClass( usi )
-	if !isstring( cls ) then return false end local aa, bb = xdefm_ItemGet( cls )  if !istable( bb ) or bb.Type != "Struct" then return false end local stp = bb.SType
-	if stp == 1 then local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	if !isstring( cls ) then return false end local aa, bb = xdefm_ItemGet( cls )  if !istable( bb ) or bb.Type ~= "Struct" then return false end local stp = bb.SType
+	if stp == 1 then local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 		if isfunction( bb.OnInteract ) then if bb:OnInteract( usi, ply, 0, unpack( ab ) ) == false then
 		xdefm_AddNote( ply, "!V", "resource/warning.wav", "cross", 5 ) return end end
 		local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )  if !isnumber( aa ) or !isnumber( bb ) then return false end
 		local a1 = usi.xdefm_T3[ aa ]  local b1 = usi.xdefm_T3[ bb ]
 		if !isstring( a1 ) or !isstring( b1 ) or ( a1 == "_" and b1 == "_" ) then return false end
 		usi.xdefm_T3[ aa ] = b1  usi.xdefm_T3[ bb ] = a1
-		if isstring( b1 ) and b1 != "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end xdefm_ProfileUpdate( ply )
+		if isstring( b1 ) and b1 ~= "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end xdefm_ProfileUpdate( ply )
 		for k, v in pairs( player.GetHumans() ) do if v.xdefm_Struct and v.xdefm_Struct == usi then xdefm_UpdateMenu( v, 3, { [ bb ] = a1, [ aa ] = b1 } ) end end return true
 	end
-elseif cmd == "MoveInv" then local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+elseif cmd == "MoveInv" then local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 	local aa, bb = tonumber( ab[1] ), tonumber( ab[2] ) if !isnumber( aa ) or !isnumber( bb ) or aa <= 0 or bb <= 0 then return false end
 	aa = math.Clamp( math.Round( aa ), 1, 21 )  bb = math.Clamp( math.Round( bb ), 1, 21 )  local inv = ply.xdefm_Profile.Items
 	local a1, a2 = inv[ aa ], inv[ bb ]  if a1 == "_" and a2 == "_" or aa == bb or a1 == a2 then return false end
 	local c1, t1 = xdefm_ItemGet( a1 )  local c2, t2 = xdefm_ItemGet( a2 )  if !istable( c1 ) and !istable( c2 ) then return false end
-	if ( istable( t1 ) and t1.Type != "Bait" and bb == 21 ) or ( istable( t2 ) and t2.Type != "Bait" and aa == 21 ) then local bai = ""
-	if istable( t1 ) and t1.Type != "Bait" then bai = a1 elseif istable( t2 ) and t2.Type != "Bait" then bai = a2 end
+	if ( istable( t1 ) and t1.Type ~= "Bait" and bb == 21 ) or ( istable( t2 ) and t2.Type ~= "Bait" and aa == 21 ) then local bai = ""
+	if istable( t1 ) and t1.Type ~= "Bait" then bai = a1 elseif istable( t2 ) and t2.Type ~= "Bait" then bai = a2 end
 	xdefm_AddNote( ply, "xdefm.NotBait& "..xdefm_ItemMark( bai ).." &xdefm.NotBai2", "resource/warning.wav", "cross", 5 ) return false end
 	if istable( t2 ) and t2.Type == "Bait" and aa == 21 and t2.Level > ply.xdefm_Profile.Level then
 	xdefm_AddNote( ply, "xdefm.NoLevel", "resource/warning.wav", "cross", 5 ) return false end
@@ -3973,7 +4026,7 @@ elseif cmd == "Downgrade" then local pro = ply.xdefm_Profile  local skp = pro.Sk
 	xdefm_AddNote( ply, "xdefm.Downgraded&: &xdefm.Upd"..d1, "ui/buttonclick.wav", "lightning_delete", 5 )
 	if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and IsValid( wep.FMod_Rod ) then wep.FMod_Rod:Remove() end return true
 elseif cmd == "MoveBank" then local sls = ply.xdefm_Profile.Bnk
-	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 	local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )  if !isnumber( aa ) or !isnumber( bb ) then return false end
 	local wep = ply:GetWeapon( "weapon_xdefm_rod" )  if aa == 21 and IsValid( wep ) then
 		local rd = wep.FMod_Rod  local bb = wep.FMod_Bobber  local hk = wep.FMod_Hook
@@ -3981,16 +4034,16 @@ elseif cmd == "MoveBank" then local sls = ply.xdefm_Profile.Bnk
 	end local a1 = ply.xdefm_Profile.Items[ aa ]  local b1 = sls[ bb ]
 	if !isstring( a1 ) or !isstring( b1 ) or ( a1 == "_" and b1 == "_" ) then return false end
 	local a2, a3 = xdefm_ItemGet( a1 )  local b2, b3 = xdefm_ItemGet( b1 )
-	if aa == 21 and b3 and istable( b3 ) and b3.Type != "Bait" then
+	if aa == 21 and b3 and istable( b3 ) and b3.Type ~= "Bait" then
 	xdefm_AddNote( ply, "xdefm.NotBait& "..xdefm_ItemMark( b1 ).." &xdefm.NotBai2", "resource/warning.wav", "cross", 5 ) return false end
 	if ( !istable( a3 ) and !istable( b3 ) ) or bb > ply.xdefm_Profile.UpdF then return end
 	if istable( b3 ) and b3.Type == "Bait" and aa == 21 and b3.Level > ply.xdefm_Profile.Level then	
 	xdefm_AddNote( ply, "xdefm.NoLevel", "resource/warning.wav", "cross", 5 ) return false end
 	ply.xdefm_Profile.Items[ aa ] = b1  ply.xdefm_Profile.Bnk[ bb ] = a1
-	if isstring( b1 ) and b1 != "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end
+	if isstring( b1 ) and b1 ~= "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end
 	xdefm_ProfileUpdate( ply ) return true
 elseif cmd == "MoveBankOuter" then local sls = ply.xdefm_Profile.Bnk
-	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 	local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )  if !isnumber( aa ) or !isnumber( bb ) then return false end
 	local a1 = sls[ aa ]  local b1 = sls[ bb ]
 	if !isstring( a1 ) or !isstring( b1 ) or ( a1 == "_" and b1 == "_" ) then return false end
@@ -3999,7 +4052,7 @@ elseif cmd == "MoveBankOuter" then local sls = ply.xdefm_Profile.Bnk
 	ply.xdefm_Profile.Bnk[ aa ] = b1  ply.xdefm_Profile.Bnk[ bb ] = a1
 	xdefm_ProfileUpdate( ply ) return true
 elseif cmd == "MoveTrade" and istable( ply.xdefm_Trade ) then
-	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 	local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )  if !isnumber( aa ) or !isnumber( bb ) then return false end
 	aa = math.Clamp( math.Round( aa ), 1, 21 )  bb = math.Clamp( math.Round( bb ), 1, 10 )
 	local a1 = ply.xdefm_Profile.Items[ aa ]  local b1 = ply.xdefm_Trade[ bb ]
@@ -4013,12 +4066,12 @@ elseif cmd == "MoveTrade" and istable( ply.xdefm_Trade ) then
 	if istable( b3 ) and b3.Type == "Bait" and aa == 21 and b3.Level > ply.xdefm_Profile.Level then	
 	xdefm_AddNote( ply, "xdefm.NoLevel", "resource/warning.wav", "cross", 5 ) return false end
 	ply.xdefm_Profile.Items[ aa ] = b1  ply.xdefm_Trade[ bb ] = a1
-	if isstring( b1 ) and b1 != "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end
+	if isstring( b1 ) and b1 ~= "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end
 	if ply:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() and ply:GetNWEntity( "XDEFMod_TPL" ):GetNWEntity( "XDEFMod_TPL" ) == ply then
 		xdefm_UpdateMenu( ply:GetNWEntity( "XDEFMod_TPL" ), 5, ply.xdefm_Trade )
 	end xdefm_ProfileUpdate( ply ) xdefm_UpdateMenu( ply, 4, ply.xdefm_Trade ) return true
 elseif cmd == "MoveTradeOuter" and istable( ply.xdefm_Trade ) then
-	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 	local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )  if !isnumber( aa ) or !isnumber( bb ) then return false end
 	aa = math.Clamp( math.Round( aa ), 1, 10 )  bb = math.Clamp( math.Round( bb ), 1, 10 )
 	local a1 = ply.xdefm_Trade[ aa ]  local b1 = ply.xdefm_Trade[ bb ]
@@ -4032,7 +4085,7 @@ elseif cmd == "TradeMoney" and istable( ply.xdefm_Trade ) then
 	local ab = tonumber( dat ) if !isnumber( ab ) or ab < 0 or ab > 2147483647 then return false end
 	ab = math.Clamp( math.Round( ab ), 0, 2147483647 )  local mn, dl = ply.xdefm_Profile.Money, ply.xdefm_Trade[ 11 ]
 	ab = ab -ply.xdefm_Trade[ 11 ]  if ab == 0 then return false end
-	if ab > 0 then if !ply:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() or ply:GetNWEntity( "XDEFMod_TPL" ):GetNWEntity( "XDEFMod_TPL" ) != ply then
+	if ab > 0 then if !ply:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() or ply:GetNWEntity( "XDEFMod_TPL" ):GetNWEntity( "XDEFMod_TPL" ) ~= ply then
 		xdefm_AddNote( ply, "xdefm.NotTrading", "resource/warning.wav", "cross", 5 ) return false end
 		ab = math.min( mn, ab )  ply.xdefm_Trade[ 11 ] = ply.xdefm_Trade[ 11 ] +ab
 		ply.xdefm_Profile.Money = ply.xdefm_Profile.Money -ab
@@ -4048,8 +4101,8 @@ elseif cmd == "TradeMoney" and istable( ply.xdefm_Trade ) then
 		end
 	end return true
 elseif cmd == "TradeToggle" and istable( ply.xdefm_Trade ) then local tar = ply:GetNWEntity( "XDEFMod_TPL" )  ply.xdefm_Cool = CurTime() + 0.9
-	if !tar:IsPlayer() or tar:GetNWEntity( "XDEFMod_TPL" ) != ply then ply:SetNWFloat( "XDEFMod_RTT", 0 )
-	else ply:SetNWFloat( "XDEFMod_RTT", ply:GetNWFloat( "XDEFMod_RTT" ) != 1 and 1 or 0 ) end local tpl = ply:GetNWEntity( "XDEFMod_TPL" )
+	if !tar:IsPlayer() or tar:GetNWEntity( "XDEFMod_TPL" ) ~= ply then ply:SetNWFloat( "XDEFMod_RTT", 0 )
+	else ply:SetNWFloat( "XDEFMod_RTT", ply:GetNWFloat( "XDEFMod_RTT" ) ~= 1 and 1 or 0 ) end local tpl = ply:GetNWEntity( "XDEFMod_TPL" )
 	if tpl:IsPlayer() and tpl:GetNWEntity( "XDEFMod_TPL" ) == ply then
 		xdefm_UpdateMenu( tpl, 6, { ply:Nick(), ply:SteamID64(), ply:GetNWFloat( "XDEFMod_RTT" ) } )
 		xdefm_SendSnd( tpl, "buttons/lightswitch2.wav" ) end return true
@@ -4057,9 +4110,14 @@ elseif cmd == "ResetSkp" then ply.xdefm_SkpCool = CurTime() +GetConVar( "xdefmod
 	local pro = ply.xdefm_Profile  local skp = pro.Skp  if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" then
 		local rd = wep.FMod_Rod  local bb = wep.FMod_Bobber  local hk = wep.FMod_Hook
 		if IsValid( rd ) and IsValid( hk ) then xdefm_AddNote( ply, "xdefm.StillFishing", "resource/warning.wav", "cross", 5 ) return false end
-	end for k, v in pairs( xdefmod.util.UPGRADE_COSTS ) do local pts = pro[ "Upd"..k ] if !isnumber( pts ) or pts <= 0 then continue end
-		skp = skp +v*pts  ply.xdefm_Profile[ "Upd"..k ] = 0
-	end xdefm_AddNote( ply, "xdefm.ClearedP", "buttons/button15.wav", "lightning_go", 5 )
+	end
+	for k, v in pairs( xdefmod.util.UPGRADE_COSTS ) do
+		local pts = pro[ "Upd"..k ]
+		if isnumber( pts ) and pts > 0 then
+			skp = skp +v*pts  ply.xdefm_Profile[ "Upd"..k ] = 0
+		end
+	end
+	xdefm_AddNote( ply, "xdefm.ClearedP", "buttons/button15.wav", "lightning_go", 5 )
 	if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and IsValid( wep.FMod_Rod ) then wep.FMod_Rod:Remove() end
 	ply.xdefm_Profile[ "Skp" ] = skp  xdefm_ProfileUpdate( ply ) return true
 elseif cmd == "BuyBait" then
@@ -4079,15 +4137,15 @@ elseif cmd == "MoveCraft" then local aa = tonumber( dat )  if !isnumber( aa ) th
 	end local a1, b1 = ply.xdefm_Profile.Items[ aa ], ply.xdefm_Recipe or "_"
 	if !isstring( a1 ) or ( a1 == "_" and b1 == "_" ) then return end
 	local a2, a3 = xdefm_ItemGet( a1 )
-	if istable( a3 ) and a3.Type != "Recipe" then
+	if istable( a3 ) and a3.Type ~= "Recipe" then
 		xdefm_AddNote( ply, "xdefm.NotRecipe& "..xdefm_ItemMark( a1 ).." &xdefm.NotRecip2", "resource/warning.wav", "cross", 5 ) return false end
 	ply.xdefm_Recipe = a1
 	ply.xdefm_Profile.Items[ aa ] = b1
-	if isstring( b1 ) and b1 != "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end
+	if isstring( b1 ) and b1 ~= "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( b1 ) ) net.Send( ply ) end
 	xdefm_ProfileUpdate( ply ) xdefm_UpdateMenu( ply, 9, { ply.xdefm_Recipe } ) return true
 elseif cmd == "Craft" then
 	local ab = tonumber( dat ) if !isnumber( ab ) then return false end local re = ply.xdefm_Recipe or "_"
-	local aa, bb = xdefm_ItemGet( re )  if !istable( bb ) or bb.Type != "Recipe" or !bb.Crafts or !isstring( bb.Crafts[ ab ] ) then return false end
+	local aa, bb = xdefm_ItemGet( re )  if !istable( bb ) or bb.Type ~= "Recipe" or !bb.Crafts or !isstring( bb.Crafts[ ab ] ) then return false end
 	ply.XDEFM_Cool = CurTime() +0.1  local ing = string.Explode( "&", bb.Crafts[ ab ] )  if !istable( ing ) or #ing < 2 then return false end
 	local wep = ply:GetWeapon( "weapon_xdefm_rod" )  if IsValid( wep ) then
 		local rd = wep.FMod_Rod  local bb = wep.FMod_Bobber  local hk = wep.FMod_Hook
@@ -4095,11 +4153,14 @@ elseif cmd == "Craft" then
 	end local ite, ned = ply.xdefm_Profile.Items, {}
 	for k, v in pairs( ing ) do if k == #ing then break end
 		local yes = false
-		for m, n in pairs( ite ) do if n == "_" or ned[ m ] != nil then continue end
-			if xdefm_GetClass( n ) == v then
-				yes = true  ned[ m ] = 0 break
+		for m, n in pairs( ite ) do
+			if n ~= "_" and ned[ m ] == nil then
+				if xdefm_GetClass( n ) == v then
+					yes = true  ned[ m ] = 0 break
+				end
 			end
-		end if !yes then xdefm_AddNote( ply, "xdefm.NeedMat", "resource/warning.wav", "cross", 5 ) return false end
+		end
+		if !yes then xdefm_AddNote( ply, "xdefm.NeedMat", "resource/warning.wav", "cross", 5 ) return false end
 	end
 	for k, v in pairs( ned ) do ply.xdefm_Profile.Items[ k ] = "_" end
 	if xdefm_ItemGive( ply, ing[ #ing ], true ) then aa[ 2 ] = tonumber( aa[ 2 ] )
@@ -4118,7 +4179,7 @@ elseif cmd == "Quest" then local dt = ply.xdefm_Quest  if !istable( dt ) or tabl
 	for k, v in pairs( rq ) do
 		local yes = false
 		for m, n in pairs( pr ) do
-			if m != 21 and !dl[ m ] and xdefm_GetClass( n ) == v then
+			if m ~= 21 and !dl[ m ] and xdefm_GetClass( n ) == v then
 				dl[ m ] = 0
 				yes = true
 				break
@@ -4126,14 +4187,14 @@ elseif cmd == "Quest" then local dt = ply.xdefm_Quest  if !istable( dt ) or tabl
 		end if !yes then return false end
 	end
 	for k, v in pairs( pr ) do
-		if k != 21 and ( v == "_" or dl[ k ] ) then
+		if k ~= 21 and ( v == "_" or dl[ k ] ) then
 			em = em +1  table.insert( ot, k )
 		end
 	end if em < #rw then return false end
 	for k, v in pairs( dl ) do ply.xdefm_Profile.Items[ k ] = "_" end
 	for k, v in pairs( rw ) do
 		ply.xdefm_Profile.Items[ ot[ k ] ] = v
-		if v != "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( v ) )
+		if v ~= "_" then net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( v ) )
 		net.Send( ply ) end
 	end
 	xdefm_QuestPick( -1, ply ) xdefm_AddNote( ply, "xdefm.Complete", "ui/achievement_earned.wav", "page", 5 )
@@ -4149,9 +4210,9 @@ elseif cmd == "Skip" then local dt = ply.xdefm_Quest  if !istable( dt ) or table
 	ply.xdefm_Profile.TQuest = ( ply.xdefm_Profile.TQuest or 0 )
 	xdefm_ProfileUpdate( ply ) return true
 elseif cmd == "Convert" then if !DarkRP then xdefm_AddNote( ply, "xdefm.NotRP", "resource/warning.wav", "cross", 5 ) return false end
-	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab != 2 then return false end
+	local ab = string.Explode( "|", dat ) if !istable( ab ) or #ab ~= 2 then return false end
 	local aa, bb = tonumber( ab[ 1 ] ), tonumber( ab[ 2 ] )
-	if !isnumber( aa ) or !isnumber( bb ) or ( bb != 1 and bb != 2 ) or aa <= 0 or aa >= 2147483647 then return false end
+	if !isnumber( aa ) or !isnumber( bb ) or ( bb ~= 1 and bb ~= 2 ) or aa <= 0 or aa >= 2147483647 then return false end
 	if ( bb == 1 and ply.xdefm_Profile.Money < aa ) or ( bb == 2 and !ply:canAfford( aa ) ) then return false end
 	local rat = GetConVar( "xdefmod_darkrp" ):GetFloat()
 	local num = math.max( bb == 1 and math.floor( aa*rat*0.99 ) or math.floor( aa/rat*0.99 ), 0 )
@@ -4262,7 +4323,7 @@ end end
 	hook.Add( "StartCommand", "xdefm_Move", function( ply, cmd )
 		if IsValid( ply ) and ply:Alive() and IsValid( ply:GetActiveWeapon() ) and ply:GetActiveWeapon():GetClass() == "weapon_xdefm_rod" then
 			local wep = ply:GetActiveWeapon()
-			if CLIENT and cmd:GetMouseWheel() != 0 then
+			if CLIENT and cmd:GetMouseWheel() ~= 0 then
 				xdefmod.util.lfov = math.Clamp( xdefmod.util.lfov -cmd:GetMouseWheel()/10, 0.25, 5 )
 			end
 		end
@@ -4294,7 +4355,7 @@ end end
 		end
 	end )
 	hook.Add( "CanTool", "xdefm_NoTool", function( ply, tr, toolname, tool, button )
-		if IsValid( tr.Entity ) and ( tr.Entity:GetNWString( "xdefm_Data" ) != "" or string.find( tr.Entity:GetClass():lower(), "xdefm_" ) ) then
+		if IsValid( tr.Entity ) and ( tr.Entity:GetNWString( "xdefm_Data" ) ~= "" or string.find( tr.Entity:GetClass():lower(), "xdefm_" ) ) then
 			return true
 		end
 	end )
@@ -4382,7 +4443,7 @@ if true then -- xdefm_base
 		elseif bb.Type == "Struct" and bb.SType == 1 and bb.Amount > 0 then self.xdefm_T3 = {}
 			for i=1, bb.Amount do self.xdefm_T3[ i ] = "_" end
 		end local tab = string.Explode( "|", self:GetFMod_DT() )
-		if bb.Type != "Bait" and ( !istable( tab ) or #tab != xdefmod.util.ITEM_TYPES[ bb.Type ] ) then self:SetFMod_DT( self:GetFMod_DT().."|0" ) end
+		if bb.Type ~= "Bait" and ( !istable( tab ) or #tab ~= xdefmod.util.ITEM_TYPES[ bb.Type ] ) then self:SetFMod_DT( self:GetFMod_DT().."|0" ) end
 		if bb.Type == "Creature" and istable( tab ) and isnumber( tonumber( tab[ 2 ] ) ) then self:SetModelScale( tonumber( tab[ 2 ] ), 0.01 ) end
 		if isstring( self.xdefm_Mdl ) then self:SetModel( self.xdefm_Mdl ) else
 		self:SetModel( bb.Model[ math.random( #bb.Model ) ] ) end local ovrd = self.xdefm_T2:OnInit( self )
@@ -4411,17 +4472,17 @@ if true then -- xdefm_base
 	end
 	function ENT:Use( ent ) if !IsValid( ent ) or !istable( self.xdefm_T2 ) or !ent:IsPlayer() or ent:KeyDown( IN_RELOAD ) then return end local owi = self:GetFMod_OI()
 		if !xdefm_CanInteract( ent, self ) or ( !xdefm_FriendAllow( ent, owi ) and !xdefm_NadAllow( ent, self ) ) then return end
-		if self.xdefm_T2.Type == "Struct" and self.xdefm_T2.SType != 0 and !ent:IsBot() then
+		if self.xdefm_T2.Type == "Struct" and self.xdefm_T2.SType ~= 0 and !ent:IsBot() then
 			local act = self.xdefm_T2.OnInteract and self.xdefm_T2:OnInteract( self, ent, 1 ) or nil
 			if act == false or IsValid( ent.xdefm_Struct ) then return end local ttt, dat = self.xdefm_T2.SType, {}
 			if !ent:KeyDown( IN_SPEED ) then
 				if ttt == 1 then dat = { xdefm_GetClass( self ), unpack( self.xdefm_T3 ) } else dat = { xdefm_GetClass( self ) } end
 				xdefm_OpenMenu( ent, 0, ent.xdefm_Profile ) xdefm_OpenMenu( ent, 4, dat ) ent.xdefm_Struct = self
-				if self.xdefm_T2.StartSound then self:EmitSound( self.xdefm_T2.StartSound ) end if act != true then return end
+				if self.xdefm_T2.StartSound then self:EmitSound( self.xdefm_T2.StartSound ) end if act ~= true then return end
 			end
 		end
 		local use = self.xdefm_T2:OnUse( self, ent )  local typ = self.xdefm_T2.Type
-		if ( !isbool( use ) or use != false ) and !ent:IsPlayerHolding() then
+		if ( !isbool( use ) or use ~= false ) and !ent:IsPlayerHolding() then
 			if !constraint.FindConstraint( self, "Weld" ) and IsValid( self:GetPhysicsObject() ) and !self:IsPlayerHolding()
 			and self:GetPhysicsObject():IsMotionEnabled() and ( !ent.xdefm_Cool or ent.xdefm_Cool <= CurTime() ) then ent:PickupObject( self ) end
 		end
@@ -4448,7 +4509,7 @@ if true then -- xdefm_base
 	function ENT:Think() if !istable( self.xdefm_T2 ) then return end
 		if CLIENT then local ply = LocalPlayer()  self:NextThink( CurTime() +0.1 )  if !IsValid( ply ) then return end
 			self:NextThink( CurTime() +0.1 )
-			if self.xdefm_OnLook != self:BeingLookedAtByLocalPlayer() then
+			if self.xdefm_OnLook ~= self:BeingLookedAtByLocalPlayer() then
 				self.xdefm_OnLook = self:BeingLookedAtByLocalPlayer()
 				self.xdefm_Cur = SysTime() +0.25
 			end
@@ -4463,11 +4524,11 @@ if true then -- xdefm_base
 		return true
 	end
 	if CLIENT then local Mat = Material( "models/shiny" )
-		function ENT:Draw() if isstring( self:GetFMod_DT() ) and self:GetFMod_DT() != "" and self:GetFMod_DT() != "_" then
+		function ENT:Draw() if isstring( self:GetFMod_DT() ) and self:GetFMod_DT() ~= "" and self:GetFMod_DT() ~= "_" then
 			local aa, bb = xdefm_ItemGet( self:GetFMod_DT() ) if istable( bb ) then local dis = GetConVar( "xdefmod_renderdist" ):GetInt()
 			local ply, wep = LocalPlayer(), LocalPlayer():GetActiveWeapon()
 			if !IsValid( LocalPlayer() ) or dis <= 0 or LocalPlayer():GetPos():DistToSqr( self:GetPos() ) <= dis^2 then self:DrawModel()
-			if bb.Type != "Bait" and !bb.CantCook then local me2, per = xdefm_CookMeter( self:GetFMod_DT() ), 0
+			if bb.Type ~= "Bait" and !bb.CantCook then local me2, per = xdefm_CookMeter( self:GetFMod_DT() ), 0
 				if me2 > 0 then render.SetColorModulation( 1, 1, 0 ) per = me2*0.4 elseif me2 < 0 then per = 0.4 +math.abs( me2 )*0.5
 					local aaa = math.abs( 1 +me2 ) render.SetColorModulation( aaa, aaa, 0 )
 				end if per > 0 then render.SetBlend( per ) render.MaterialOverride( Mat )
@@ -4498,7 +4559,7 @@ if true then -- xdefm_dummy
 		elseif bb.Type == "Struct" and bb.SType == 1 and bb.Amount > 0 then self.xdefm_T3 = {}
 			for i=1, bb.Amount do self.xdefm_T3[ i ] = "_" end
 		end local tab = string.Explode( "|", self:GetFMod_DT() )
-		if bb.Type != "Bait" and ( !istable( tab ) or #tab != xdefmod.util.ITEM_TYPES[ bb.Type ] ) then self:SetFMod_DT( self:GetFMod_DT().."|0" ) end
+		if bb.Type ~= "Bait" and ( !istable( tab ) or #tab ~= xdefmod.util.ITEM_TYPES[ bb.Type ] ) then self:SetFMod_DT( self:GetFMod_DT().."|0" ) end
 		if bb.Type == "Creature" and istable( tab ) and isnumber( tonumber( tab[ 2 ] ) ) then self:SetModelScale( tonumber( tab[ 2 ] ), 0.01 ) end
 		self:SetNotSolid( true ) self:Activate()
 	end
@@ -4515,11 +4576,11 @@ if true then -- xdefm_dummy
 			self:Remove() return ite end self:Remove()
 	end
 	if CLIENT then local Mat = Material( "models/shiny" )
-		function ENT:Draw() if isstring( self:GetFMod_DT() ) and self:GetFMod_DT() != "" and self:GetFMod_DT() != "_" then
+		function ENT:Draw() if isstring( self:GetFMod_DT() ) and self:GetFMod_DT() ~= "" and self:GetFMod_DT() ~= "_" then
 			local aa, bb = xdefm_ItemGet( self:GetFMod_DT() ) if istable( bb ) then local dis = GetConVar( "xdefmod_renderdist" ):GetInt()
 			local ply, wep = LocalPlayer(), LocalPlayer():GetActiveWeapon()  self:DrawModel()
 			if !IsValid( LocalPlayer() ) or dis <= 0 or LocalPlayer():GetPos():DistToSqr( self:GetPos() ) <= dis^2 then
-			if bb.Type != "Bait" and !bb.CantCook then local me2, per = xdefm_CookMeter( self:GetFMod_DT() ), 0
+			if bb.Type ~= "Bait" and !bb.CantCook then local me2, per = xdefm_CookMeter( self:GetFMod_DT() ), 0
 				if me2 > 0 then render.SetColorModulation( 1, 1, 0 ) per = me2*0.4 elseif me2 < 0 then per = 0.4 +math.abs( me2 )*0.5
 					local aaa = math.abs( 1 +me2 ) render.SetColorModulation( aaa, aaa, 0 )
 				end if per > 0 then render.SetBlend( per ) render.MaterialOverride( Mat )
@@ -4550,7 +4611,7 @@ if true then -- xdefm_firespot
 				start = self:WorldSpaceCenter() +Vector( 0, 0, siz ), endpos = self:WorldSpaceCenter() +Vector( 0, 0, siz*3 ),
 				filter = { own, self }, mask = MASK_SHOT, mins = Vector( -siz, -siz, -siz ), maxs = Vector( siz, siz, siz )
 			} ) local ent = tr.Entity  if IsValid( ent ) and !ent:IsWorld() and util.IsValidModel( ent:GetModel() ) then
-				if ent:GetClass() != "xdefm_base" or !istable( ent.xdefm_T2 ) or ent.xdefm_T2.Type == "Bait" or ent:Health() > 0 then
+				if ent:GetClass() ~= "xdefm_base" or !istable( ent.xdefm_T2 ) or ent.xdefm_T2.Type == "Bait" or ent:Health() > 0 then
 					local dmg = DamageInfo() dmg:SetDamage( self.xdefm_Power ) dmg:SetAttacker( Entity( 0 ) )
 					dmg:SetInflictor( self ) dmg:SetDamageType( DMG_BURN ) local vel = VectorRand():GetNormalized()*1000
 					dmg:SetDamageForce( Vector( vel.x, vel.y, 1000 ) ) dmg:SetDamagePosition( tr.HitPos ) ent:TakeDamageInfo( dmg )
@@ -4571,7 +4632,7 @@ if true then -- xdefm_firespot
 				cam.IgnoreZ( false )
 			end
 			if self.xdefm_Emitter == nil then self.xdefm_Emitter = ParticleEmitter( self:WorldSpaceCenter() ) end
-			if self.xdefm_Emitter != nil and self:GetFMod_Enable() and self:GetFMod_Strength() > 0 then
+			if self.xdefm_Emitter ~= nil and self:GetFMod_Enable() and self:GetFMod_Strength() > 0 then
 				local siz, emt = math.Clamp( self:GetFMod_Strength(), 1, 100 ), self.xdefm_Emitter
 				local own = ( IsValid( self:GetParent() ) and self:GetParent() or Entity( 0 ) )
 				if GetConVar( "developer" ):GetInt() > 0 then
