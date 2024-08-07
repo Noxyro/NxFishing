@@ -8,7 +8,7 @@ BASIC LICENSE TERMS: NON-COMMERCIAL USE ONLY; CREDITS TO ORIGINAL AUTHOR REQUIRE
 See "LICENSE.md" and "README.md" in project folder or on GitHub for full license and contact details.
 --]]
 
-AddCSLuaFile() -- 鱼竿
+AddCSLuaFile() -- Fishing rod
 SWEP.PrintName		= "#xdefm.Weapon_Rod"
 SWEP.Author 		= "LemonCola3424"
 SWEP.Purpose 		= "#xdefm.Purpose"
@@ -342,12 +342,12 @@ if true then // xdefm_bobber
 	ENT.RenderGroup = RENDERGROUP_BOTH  ENT.Owner = nil  ENT.FMod_InWater = false  ENT.FMod_NextWave = 0
 	ENT.FMod_S1 = nil  ENT.FMod_S2 = nil  ENT.FMod_Next = 0  ENT.FMod_MaxRS = 0  ENT.FMod_RS = 0  ENT.FMod_RL = 0
 	function ENT:SetupDataTables()
-		self:NetworkVar( "Entity", 0, "FMod_OW" ) --主
-		self:NetworkVar( "Entity", 1, "FMod_RD" ) --杆
-		self:NetworkVar( "Entity", 2, "FMod_HK" ) --钩
-		self:NetworkVar( "Float", 0, "FMod_DP" ) --深度
-		self:NetworkVar( "Float", 2, "FMod_SW" ) -- 弦宽
-		self:NetworkVar( "Float", 3, "FMod_RS" ) --绳韧
+		self:NetworkVar( "Entity", 0, "FMod_OW" ) -- Main entity / Owner entity
+		self:NetworkVar( "Entity", 1, "FMod_RD" ) -- Rod entity
+		self:NetworkVar( "Entity", 2, "FMod_HK" ) -- Hook entity
+		self:NetworkVar( "Float", 0, "FMod_DP" ) -- Depth number
+		self:NetworkVar( "Float", 2, "FMod_SW" ) -- String length number
+		self:NetworkVar( "Float", 3, "FMod_RS" ) -- Rope strength number
 	end
 	function ENT:Initialize()
 		self:DrawShadow( false ) if !SERVER then self:SetRenderBounds( Vector( -8192, -8192, -8192 ), Vector( 8192, 8192, 8192 ) ) return end
@@ -449,10 +449,10 @@ if true then // xdefm_hook
 	ENT.RenderGroup = RENDERGROUP_BOTH  ENT.Owner = nil  ENT.xdefm_Exp = 0
 	ENT.xdefm_Depth = 0  ENT.xdefm_Bait = "_"  ENT.xdefm_BaitEnt = nil  ENT.xdefm_Weld = false
 	function ENT:SetupDataTables()
-		self:NetworkVar( "Entity", 0, "FMod_OW" ) --主
-		self:NetworkVar( "Entity", 1, "FMod_RD" ) --杆
-		self:NetworkVar( "Entity", 2, "FMod_BB" ) --浮
-		self:NetworkVar( "Entity", 3, "FMod_FS" ) --鱼
+		self:NetworkVar( "Entity", 0, "FMod_OW" ) -- Main entity / Owner entity
+		self:NetworkVar( "Entity", 1, "FMod_RD" ) -- Rod entity
+		self:NetworkVar( "Entity", 2, "FMod_BB" ) -- Bobber entity
+		self:NetworkVar( "Entity", 3, "FMod_FS" ) -- Fish entity
 	end
 	function ENT:Initialize()
 		self:DrawShadow( false ) if !SERVER then return end

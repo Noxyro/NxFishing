@@ -69,7 +69,7 @@ xdefm.lin_col = Color( 0, 0, 0 )
 xdefm.bck_col = Color( GetConVar( "xdefmod_bgr" ):GetInt(), GetConVar( "xdefmod_bgg" ):GetInt(), GetConVar( "xdefmod_bgb" ):GetInt(), GetConVar( "xdefmod_bga" ):GetInt() )
 xdefm.ext_col = Color( GetConVar( "xdefmod_brr" ):GetInt(), GetConVar( "xdefmod_brg" ):GetInt(), GetConVar( "xdefmod_brb" ):GetInt(), GetConVar( "xdefmod_bra" ):GetInt() )
 
-if true then --信息集锦
+if true then -- Miscellanous constants
 	xdefm.miscs.Rarity = {
 		Color( 100, 100, 100 ),
 		Color( 255, 255, 255 ),
@@ -118,7 +118,7 @@ sound.Add( { name = "xdefm.Throw", channel = CHAN_WEAPON, volume = 1, level = 75
 sound.Add( { name = "xdefm.Reel", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound = "fishingrod/reel.wav" } )
 sound.Add( { name = "xdefm.Bite", channel = CHAN_WEAPON, volume = 1, level = 75, pitch = 100, sound = "weapons/slam/mine_mode.wav" } )
 
-local SP_URS = "ulx/modules/urs_server.lua" --强行接口URS
+local SP_URS = "ulx/modules/urs_server.lua" -- URS/ULX integration
 if SERVER and file.Exists( SP_URS, "LUA" ) then
 	include( SP_URS )
 end
@@ -140,7 +140,7 @@ if istable( URS ) and URS.types then
 	end
 end
 
-if CLIENT then --客户端
+if CLIENT then -- Client only
 	xdefm.besti = {}
 	xdefm.bestb = {}
 	xdefm.quest = {}
@@ -428,7 +428,7 @@ if CLIENT then --客户端
 				else xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 ) end return
 			end
 		end end
-		pax:Receiver( "XDEFM_MenuDrop", function( own, pan, drp ) --own是B,ppp是A,从A到B
+		pax:Receiver( "XDEFM_MenuDrop", function( own, pan, drp ) --own is B, ppp is A, from A to B
 			if ispanel( own ) and ispanel( pan[1] ) and pan[1].B_OnMove and drp then local ppp = pan[1]
 				if own.S_Type == ppp.S_Type and own.S_Type == "Inventory" then
 					xdefm_Command( LocalPlayer(), "MoveInv", own.S_Place.."|"..ppp.S_Place )
@@ -1204,7 +1204,7 @@ if CLIENT then --客户端
 	end )
 end
 
-if SERVER then --服务端
+if SERVER then -- Server only
 	xdefm.quests = {}
 	xdefm.skips = {}
 	xdefm.pools = {}
@@ -1236,7 +1236,7 @@ if SERVER then --服务端
 	function xdefm_PoolAdd( dat )
 		if !istable( dat ) then return false end
 		local inp = {}
-		inp.Items = {} --上钩物品,可只填字符,不允许留白
+		inp.Items = {} -- For hooked items, only use characters, no spaces allowed
 		if isstring( dat.Items ) then
 			inp.Items = { dat.Items }
 		elseif istable( dat.Items ) then
@@ -1244,12 +1244,12 @@ if SERVER then --服务端
 		else
 			return false
 		end
-		inp.Level	 	= isnumber( dat.Level ) and math.Clamp( math.Round( dat.Level ), 0, 1000 ) or 0 --等级限制,满级1000(不大可能达到的地位)
-		inp.Exp 		= isnumber( dat.Exp ) and math.Clamp( math.Round( dat.Exp ), 0, 2147483647 ) or 0 --成功钓起获得经验
-		inp.DepthMin 	= isnumber( dat.DepthMin ) and math.Clamp( math.Round( dat.DepthMin ), 0, 2147483647 ) or 0 --最低深度(米),0为表面
-		inp.DepthMax 	= isnumber( dat.DepthMax ) and math.Clamp( math.Round( dat.DepthMax ), 0, 2147483647 ) or 2147483647 --最高深度(米)
-		inp.GroundOnly 	= isbool( dat.GroundOnly ) and dat.GroundOnly or false --仅限河床,搭配深度效果更佳
-		inp.Chances 	= {} --上钩几率, 数值越大几率越小,0为必然,裸钩(填数字默认)为"_",全饵通用为"*",不允许留白,效率值会按比例降低该数值
+		inp.Level	 	= isnumber( dat.Level ) and math.Clamp( math.Round( dat.Level ), 0, 1000 ) or 0 -- Level limit, maximum is 1000 (unlikely to be achieved)
+		inp.Exp 		= isnumber( dat.Exp ) and math.Clamp( math.Round( dat.Exp ), 0, 2147483647 ) or 0 -- Successful fishing gains experience
+		inp.DepthMin 	= isnumber( dat.DepthMin ) and math.Clamp( math.Round( dat.DepthMin ), 0, 2147483647 ) or 0 -- Minimum depth in meters, 0 is water surface
+		inp.DepthMax 	= isnumber( dat.DepthMax ) and math.Clamp( math.Round( dat.DepthMax ), inp.DepthMin, 2147483647 ) or 2147483647 -- Maximum depth in meters, can not be smaller than minimum depth
+		inp.GroundOnly 	= isbool( dat.GroundOnly ) and dat.GroundOnly or false -- Limited to riverbeds, works better with depth effects
+		inp.Chances 	= {} -- Hook probability: Higher equals lower chance, 0 is certain. "_" is bare hook, "*" is universal bait. No blank bait allowed. Efficiency proportionally reduces this value.
 		if isnumber( dat.Chances ) then
 			if istable( dat.Baits ) then
 				for k, v in pairs( dat.Baits ) do
@@ -1911,7 +1911,7 @@ if SERVER then --服务端
 	end )
 end
 
-if SERVER or CLIENT then --通用端
+if SERVER or CLIENT then -- Shared
 	local Zom = Material( "vgui/zoom" )
 	function xdefm_AddShop( nam, lvl, prc )
 		if !isstring( nam ) then return end
@@ -2157,7 +2157,7 @@ if SERVER or CLIENT then --通用端
 			if !yes then return end
 			xdefm.bck_col = Color( GetConVar( "xdefmod_bgr" ):GetInt(), GetConVar( "xdefmod_bgg" ):GetInt(), GetConVar( "xdefmod_bgb" ):GetInt(), GetConVar( "xdefmod_bga" ):GetInt() )
 			xdefm.ext_col = Color( GetConVar( "xdefmod_brr" ):GetInt(), GetConVar( "xdefmod_brg" ):GetInt(), GetConVar( "xdefmod_brb" ):GetInt(), GetConVar( "xdefmod_bra" ):GetInt() )
-if typ == 0 then -- 背包
+if typ == 0 then -- Inventory menu
 	if IsValid( xdefm.miscs.Menus[ "Inventory" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Inventory = pan  pan.T_Data = tab  pan.T_Slots = {}
 	pan:SetPos( ScrW()/2 -500, ScrH()/2 -500/2 ) pan:SetSize( 450, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -2179,14 +2179,14 @@ if typ == 0 then -- 背包
 		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
 		draw.TextShadow( { text = language.GetPhrase( "#xdefm.Money" )..": "..tab.Money, pos = { 80, 54 }, font = "xdefm_Font1",
 		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 ) end
-	if true then -- 头像
+	if true then -- Avatar image
 		pan.P_AIcon = pan:Add( "AvatarImage" )  local pax = pan.P_AIcon
 		pax:SetPos( 8, 8 ) pax:SetSize( 64, 64 ) pax:SetPlayer( ply, 128 ) pax:SetMouseInputEnabled( false )
 		pan.P_AFrame = pan:Add( "DPanel" )  pax = pan.P_AFrame
 		pax:SetText( "" ) pax:SetPos( 8, 8 ) pax:SetSize( 64, 64 ) pax:SetMouseInputEnabled( false )
 		function pax:Paint( w, h ) surface.SetDrawColor( xdefm.ext_col ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 0, 0, w, h ) end end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 410, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -2196,7 +2196,7 @@ if typ == 0 then -- 背包
 				color = ( pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 ) )
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end
-	if true then -- 等级框架
+	if true then -- Level panel
 		pan.P_Level = pan:Add( "DPanel" )  local pax = pan.P_Level
 		pax:SetPos( 8, 80 ) pax:SetSize( 434, 75 )
 		function pax:Paint( w, h )  local tab = pan.T_Data
@@ -2218,7 +2218,7 @@ if typ == 0 then -- 背包
 			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
 		end
 		function pax:OnCursorEntered() self.B_Hover = true end function pax:OnCursorExited() self.B_Hover = false end end
-	if true then -- 背包/升级/记录/排行/商店
+	if true then -- Inventory/Upgrade/Collection/Leaderbord/Shop tabs
 		pan.P_Invent = vgui.Create( "DPropertySheet", pan )  local pax = pan.P_Invent
 		pax:SetPos( 8, 165 ) pax:SetSize( 434, 377 ) function pax:Paint( w, h )
 			surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 0, 18, w, h -18, 2 )
@@ -2248,7 +2248,7 @@ if typ == 0 then -- 背包
 				surface.SetDrawColor( 125, 125, 125, 255 ) surface.DrawRect( 0, 0, w, h )
 				surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			end function vba:Paint( w, h ) draw.RoundedBox( 0, 0, 0, w, h, Color( 45, 45, 45, 255 ) ) end end
-		if true then local pax = pan.P_Menu1 --背包栏目
+		if true then local pax = pan.P_Menu1 -- Inventory panel
 			pax.P_Hold = pax.P_Scroll:Add( "DIconLayout" )  local pa2 = pax.P_Hold  pa2:Dock( FILL )
 			pa2:SetSpaceX( 1.75 ) pa2:SetSpaceY( 2 ) function pa2:Paint( w, h ) end local inv = pan.T_Data.Items
 			for i=1, 21 do local siz = ( i == 21 and 64 or 85 )
@@ -2308,7 +2308,7 @@ if typ == 0 then -- 背包
 					dnm:Open()
 				end
 			end end
-		if true then local pax = pan.P_Menu2 --升级栏目
+		if true then local pax = pan.P_Menu2 -- Uprade panel
 			local skp = pax.P_Scroll:Add( "DPanel" ) skp:SetSize( 0, 30 ) skp:Dock( TOP )
 			function skp:Paint( w, h ) local tab = xdefm.miscs.Menus.Inventory.T_Data
 				draw.TextShadow( { text = language.GetPhrase( "xdefm.Skp" )..": "..tab.Skp, pos = { 8, h/2 }, font = "xdefm_Font7",
@@ -2363,7 +2363,7 @@ if typ == 0 then -- 背包
 				end
 			end local MaX = Material( "gui/center_gradient" )
 			AddASkillTab( "A" ) AddASkillTab( "B" ) AddASkillTab( "C" ) AddASkillTab( "D" ) AddASkillTab( "E" ) AddASkillTab( "F" ) AddASkillTab( "G" )
-			if true then --清点按钮
+			if true then -- Inventory button
 				local ppp = pax.P_Scroll:Add( "DPanel" ) ppp:SetSize( 0, 75 ) ppp:Dock( TOP ) function ppp:Paint( w, h ) end ppp.N_Lerp = 0
 				local but = ppp:Add( "DButton" ) but:SetSize( 150, 28 ) but:SetPos( 274, 8 ) but:SetText( "" ) but.B_Hover = false function but:Paint( w, h )
 					ppp.N_Lerp = Lerp( 0.2, ppp.N_Lerp, but.B_Hover and 1 or 0 )
@@ -2384,7 +2384,7 @@ if typ == 0 then -- 背包
 					end end ) O_Yes:SetIcon( "icon16/tick.png" ) dnm:Open()
 				end
 			end end
-		if true then local pax = pan.P_Menu3 --状态栏目
+		if true then local pax = pan.P_Menu3 -- Collection panel
 			local function AddAStatTab( stt, aba )
 				local pan = pax.P_Scroll:Add( "DPanel" ) pan:SetSize( 0, stt == "!V" and 9 or 30 ) pan:Dock( TOP )
 				function pan:Paint( w, h ) if stt == "!V" then return end local tab = xdefm.miscs.Menus.Inventory.T_Data
@@ -2396,7 +2396,7 @@ if typ == 0 then -- 背包
 			end
 			AddAStatTab( "!V" ) AddAStatTab( "TCatch" ) AddAStatTab( "TEarn" ) AddAStatTab( "TExp" )
 			AddAStatTab( "TBuy" ) AddAStatTab( "TCraft" ) AddAStatTab( "TQuest" ) end end
-		if true then local pax = pan.P_Menu5 --商店栏目
+		if true then local pax = pan.P_Menu5 -- Shop panel
 			pax.P_Scroll:Dock( NODOCK ) pax.P_Scroll:SetPos( 2, 2 ) pax.P_Scroll:SetSize( 434, 347 )
 			pax.P_Hold = pax.P_Scroll:Add( "DIconLayout" )  local pa2 = pax.P_Hold  pa2:SetSize( 434, 347 )
 			pa2:SetSpaceX( 3 ) pa2:SetSpaceY( 3 ) pa2:SetPos( 3, 2 ) local MaX = Material( "gui/center_gradient" )
@@ -2439,7 +2439,7 @@ if typ == 0 then -- 背包
 				Item.P_Icon = Item.P_Frame:Add( "ModelImage" ) Item.P_Icon:DockMargin( 5, 5, 5, 5 )
 				Item.P_Icon:Dock( FILL ) Item.P_Icon:SetModel( bb.Model[ 1 ] ) Item.P_Icon:SetMouseInputEnabled( false )
 			end end
-		if GetConVar( "xdefmod_lbdelay" ):GetInt() > 0 and !game.SinglePlayer() then local pax = pan.P_Menu4 --排行栏目
+		if GetConVar( "xdefmod_lbdelay" ):GetInt() > 0 and !game.SinglePlayer() then local pax = pan.P_Menu4 -- Leaderboard menu
 			local ldb = pax:Add( "DPanel" ) ldb:SetSize( 0, 355 ) ldb:Dock( TOP ) pax.T_Leader = xdefm.Leader
 			function ldb:Paint( w, h ) local tab = xdefm.miscs.Menus.Inventory.T_Data
 				if !istable( pax.T_Leader ) or #pax.T_Leader <= 0 then
@@ -2481,7 +2481,7 @@ if typ == 0 then -- 背包
 					end
 				end
 			end pax:UpdateLbd( xdefm.leader ) end
-	if true then -- 鱼饵框架
+	if true then -- Bait slot
 		pan.P_AFrame = pan:Add( "DPanel" )  pax = pan.P_AFrame
 		pax:SetText( "" ) pax:SetPos( 336 -4, 9 -3 ) pax:SetSize( 64 +8, 64 +8 ) pax:SetMouseInputEnabled( false )
 		function pax:Paint( w, h ) surface.SetDrawColor( xdefm.ext_col ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
@@ -2489,7 +2489,7 @@ if typ == 0 then -- 背包
 	function pan:XDEFM_Update( id, dt ) if id == 7 and IsValid( pan.P_Menu4 ) then pan.P_Menu4:UpdateLbd( dt ) end
 		if id == 0 then pan.T_Data = dt  for k, v in pairs( pan.T_Slots ) do v:F_SetupItem( dt.Items[ k ] ) end end
 	end
-elseif typ == 1 then --任务
+elseif typ == 1 then -- Quest menu
 	if IsValid( xdefm.miscs.Menus[ "Quest" ] ) then return end local Aro = Material( "gui/arrow" )
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Quest = pan
 	pan:SetPos( ScrW()/2 -300, ScrH()/2 -300 ) pan:SetSize( 600, 400 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -2517,7 +2517,7 @@ elseif typ == 1 then --任务
 		}, 1, 255 ) surface.SetMaterial( Aro )
 		surface.SetDrawColor( pan.B_2 and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) ) surface.DrawTexturedRectRotated( w/2, h/2 -15, 60, 60, 90 )
 		surface.SetDrawColor( pan.B_1 and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) ) surface.DrawTexturedRectRotated( w/2, h/2 +15, 60, 60, 270 ) end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -2527,7 +2527,7 @@ elseif typ == 1 then --任务
 				color = ( pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 ) )
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end --
-	for i=1, 2 do -- 需求奖励
+	for i=1, 2 do -- Requirements / Reward panel
 		local pax = pan:Add( "DPanel" ) pax:SetPos( 300 -110 -175 +320*( i-1 ), 75 ) pax:SetSize( 250, 250 )
 		function pax:Paint( w, h )
 			surface.SetDrawColor( Color( xdefm.bck_col.r*0.5, xdefm.bck_col.g*0.5, xdefm.bck_col.b*0.5 ) ) surface.DrawRect( 0, 0, w, h )
@@ -2541,7 +2541,7 @@ elseif typ == 1 then --任务
 		pa2:DockMargin( 4, 4, 4, 4 ) pa2:SetSpaceX( 3 ) pa2:SetSpaceY( 3 ) pa2:SetPos( 4, 2 ) function pa2:Paint( w, h ) end
 		if i == 1 then pan.P_1 = pax.P_Hold else pan.P_2 = pax.P_Hold end
 	end
-	for i=1, 2 do -- 跳过结算
+	for i=1, 2 do -- Skip button
 		local but = pan:Add( "DButton" ) but:SetPos( 300 -75 -( i == 1 and -100 or 100 ), 340 ) but:SetSize( 150, 45 )
 		but:SetText( "" )  but.B_Hover = false  but.N_Lerp = 0  but.N_Clicked = 0
 		function but:Paint( w, h ) local col = Color( 0, 155, 0 )
@@ -2616,7 +2616,7 @@ elseif typ == 1 then --任务
 		end
 	end
 	pan:XDEFM_Update( 10, tab )
-elseif typ == 2 then -- 兑换
+elseif typ == 2 then -- Exchange menu
 	if IsValid( xdefm.miscs.Menus[ "Exchange" ] ) then xdefm.miscs.Menus[ "Exchange" ]:Remove() return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Exchange = pan  pan.T_Data = tab  pan.N_Enter = 0
 	pan:SetPos( ScrW()/2 -300, ScrH()/2 -150 ) pan:SetSize( 600, 275 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -2642,14 +2642,14 @@ elseif typ == 2 then -- 兑换
 		surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 8, 115, 582, 150 )
 		surface.SetDrawColor( xdefm.ext_col ) surface.DrawOutlinedRect( 16, 126, 564, 43 )
 		surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 16, 126, 564, 43 ) end
-	if true then -- 头像
+	if true then -- Avatar image
 		pan.P_AIcon = pan:Add( "AvatarImage" )  local pax = pan.P_AIcon
 		pax:SetPos( 8, 10 ) pax:SetSize( 100, 100 ) pax:SetPlayer( ply, 128 ) pax:SetMouseInputEnabled( false )
 		pan.P_AFrame = pan:Add( "DPanel" )  pax = pan.P_AFrame
 		pax:SetText( "" ) pax:SetPos( 8, 10 ) pax:SetSize( 100, 100 ) pax:SetMouseInputEnabled( false )
 		function pax:Paint( w, h ) surface.SetDrawColor( xdefm.ext_col ) surface.DrawOutlinedRect( 0, 0, w, h, 3 )
 		surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 0, 0, w, h, 2 ) end end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -2659,7 +2659,7 @@ elseif typ == 2 then -- 兑换
 				color = ( pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 ) )
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end
-	if true then -- 数值
+	if true then -- Value
 		pan.P_Entry = vgui.Create( "DTextEntry", pan )
 		pan.P_Entry:SetSize( 555, 35 ) pan.P_Entry:SetPos( 20, 130 ) pan.P_Entry:SetFont( "xdefm_Font4" )
 		pan.P_Entry:SetUpdateOnType( true ) pan.P_Entry:SetNumeric( true ) pan.P_Entry:SetMultiline( false )
@@ -2673,7 +2673,7 @@ elseif typ == 2 then -- 兑换
 			end
 			pan.N_Enter = num
 		end end
-	for i=1, 2 do -- 转换按钮
+	for i=1, 2 do -- Convert button
 		if !ply.getDarkRPVar then break end
 		local but = vgui.Create( "DButton", pan )  but:SetText( "" )  but.B_Hover = false  but.N_Lerp = 0
 		but:SetSize( 200, 60 ) but:SetPos( -180 +i*250, 190 ) but.N_Num = 0
@@ -2711,7 +2711,7 @@ elseif typ == 2 then -- 兑换
 			end
 		end end
 	function pan:XDEFM_Update( id, dt ) if id == 0 then pan.T_Data = dt end end
-elseif typ == 3 then -- 渔夫
+elseif typ == 3 then -- NPC menu
 	if IsValid( xdefm.miscs.Menus[ "NPC" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.NPC = pan  pan.T_Data = tab  pan.N_Enter = 0
 	pan:SetPos( ScrW()/2 -250, ScrH()/2 -150 ) pan:SetSize( 500, 345 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -2729,7 +2729,7 @@ elseif typ == 3 then -- 渔夫
 		surface.SetDrawColor( Color( xdefm.bck_col.r*0.5, xdefm.bck_col.g*0.5, xdefm.bck_col.b*0.5, xdefm.bck_col.a*0.5 ) ) surface.DrawRect( 8, 45, 484, 290 )
 		surface.SetDrawColor( xdefm.ext_col ) surface.DrawOutlinedRect( 8, 45, 484, 290, 2 )
 		surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 8, 45, 484, 290 ) end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 460, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -2740,7 +2740,7 @@ elseif typ == 3 then -- 渔夫
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end
 	local icos = { "box", "coins", "basket", "wrench", "camera", "script", "arrow_refresh" }
-	for i=1, 7 do -- 互动按钮
+	for i=1, 7 do -- Interaction buttons
 		local but = vgui.Create( "DButton", pan )  but:SetText( "" )  but.B_Hover = false  but.N_Lerp = 0
 		but:SetSize( 472, 36 ) but:SetPos( 14, 12 +40*i ) but:SetIcon( "icon16/"..icos[ i ]..".png" ) but.N_Clicked = 0
 		function but:Paint( w, h ) local col = Color( 100, 100, 100 )
@@ -2758,7 +2758,7 @@ elseif typ == 3 then -- 渔夫
 			xdefm_Command( LocalPlayer(), "NPC", tostring( i ) )
 		end end
 	function pan:XDEFM_Update( id, dt ) if id == 0 then pan.T_Data = dt end end
-elseif typ == 4 then -- 建筑
+elseif typ == 4 then -- Structure menu
 	if IsValid( xdefm.miscs.Menus[ "Struct" ] ) then return end  local MaR = Material( "gui/gradient" )
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Struct = pan  pan.T_Data = ply.xdefm_Profile  pan.S_Recipe = "_"
 	pan:SetPos( ScrW()/2 -40, ScrH()/2 -550/2 ) pan:SetSize( 600, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -2786,7 +2786,7 @@ elseif typ == 4 then -- 建筑
 		xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
 	end
 	function pan:OnRemove() xdefm_Command( LocalPlayer(), "StructExit", "_" ) xdefm.miscs.LC = false end
-	if true then -- 框架
+	if true then -- Structure panel
 		pan.P_Base = pan:Add( "DPanel" )  local pax = pan.P_Base  pax.N_Type = 0  pan.T_Slots = {}
 		pax:SetPos( 8, 70 ) pax:SetSize( 582, 470 ) function pax:Paint( w, h ) end
 		function pax:Paint( w, h )
@@ -2803,7 +2803,7 @@ elseif typ == 4 then -- 建筑
 		function pax:OnCursorEntered() self.B_Hover = true end function pax:OnCursorExited() self.B_Hover = false end
 		pax.P_Hold.N_Num = 0
 	end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -2920,7 +2920,7 @@ elseif typ == 4 then -- 建筑
 		end
 	end
 	pan:XDEFM_Update( 2, tab )
-elseif typ == 5 then -- 银行
+elseif typ == 5 then -- Bank menu
 	if IsValid( xdefm.miscs.Menus[ "Bank" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Bank = pan  pan.T_Data = tab  pan.T_Slots = {}  pan.N_Store = 0
 	pan:SetPos( ScrW()/2 -40, ScrH()/2 -550/2 ) pan:SetSize( 800, 600 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -2937,7 +2937,7 @@ elseif typ == 5 then -- 银行
 			text = language.GetPhrase( "xdefm.Bank" ).." ( "..pan.N_Store.." / "..pro.UpdF.." )", pos = { w/2, 25 }, font = "xdefm_Font6",
 			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
 		}, 1, 255 ) end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 760, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -2947,7 +2947,7 @@ elseif typ == 5 then -- 银行
 				color = ( pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 ) )
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end --
-	if true then -- 内容
+	if true then -- Bank inventory panel
 		local bck = pan:Add( "DPanel" ) bck:SetSize( 784, 541 ) bck:SetPos( 8, 50 )
 		pan.P_Scroll = pan:Add( "DScrollPanel" )
 		pan.P_Scroll:SetSize( 784, 534 ) pan.P_Scroll:SetPos( 9, 53 )  pan.N_Sto = 0
@@ -2981,7 +2981,7 @@ elseif typ == 5 then -- 银行
 			end
 		end
 	end pan:XDEFM_Update( 0, LocalPlayer().xdefm_Profile )
-elseif typ == 6 then -- 好友列表
+elseif typ == 6 then -- Friends menu
 	if IsValid( xdefm.miscs.Menus[ "Friends" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Friends = pan  pan.T_Data = tab  pan.N_Count = 0  pan.B_Edited = false
 	pan:SetPos( ScrW()/2 -200, ScrH()/2 -550/2 ) pan:SetSize( 400, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -3004,7 +3004,7 @@ elseif typ == 6 then -- 好友列表
 		draw.RoundedBox( 0, 8 +0, 474 +0, 382, 30, xdefm.lin_col )
 		draw.RoundedBox( 0, 8 +1, 474 +1, 382 -2, 30 -2, xdefm.ext_col )
 		draw.RoundedBox( 0, 8 +2, 474 +2, 382 -4, 30 -4, xdefm.bck_col ) end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 360, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -3014,7 +3014,7 @@ elseif typ == 6 then -- 好友列表
 				color = ( pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 ) )
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end --
-	if true then -- 列表
+	if true then -- Friend list
 		pan.P_List = vgui.Create( "DListView", pan )
 		pan.P_List:SetPos( 11, 53 ) pan.P_List:SetSize( 376, 414 )
 		pan.P_List:SetMultiSelect( false )
@@ -3051,7 +3051,7 @@ elseif typ == 6 then -- 好友列表
 			O_cc:SetIcon( "icon16/group_delete.png" ) dnm:Open()
 		end
 		pan.P_List:RefreshPlayerS() end
-	if true then -- 添加
+	if true then -- Add friend
 		pan.P_Entry = vgui.Create( "DTextEntry", pan )
 		pan.P_Entry:SetSize( 376, 24 ) pan.P_Entry:SetPos( 11, 477 )
 		pan.P_Entry:SetUpdateOnType( true ) pan.P_Entry:SetNumeric( false ) pan.P_Entry:SetMultiline( false )
@@ -3079,7 +3079,7 @@ elseif typ == 6 then -- 好友列表
 		pan.P_Search = vgui.Create( "DImageButton", pan.P_Entry ) local pax = pan.P_Search
 		pax:SetImage( "icon16/add.png" ) pax:SetToolTip( "#xdefm.FriendAd2" )
 		pax:SetPos( 356, 4 ) pax:SetSize( 16, 16 ) end function pan.P_Search:DoClick() pan.P_Entry.FindTheFriend() end
-	for i=1, 2 do -- 重置/确认
+	for i=1, 2 do -- Reset / Confirm buttons
 		local but = vgui.Create( "DButton", pan )  but:SetText( "" )  but.B_Hover = false  but.N_Lerp = 0
 		but:SetSize( 120, 30 )  but:SetPos( -100 +i*160, 510 ) but:SetIcon( i == 1 and "icon16/group_go.png" or "icon16/group_edit.png" )
 		function but:Paint( w, h ) local col = Color( 100, 100, 100 )
@@ -3100,7 +3100,7 @@ elseif typ == 6 then -- 好友列表
 		end
 	end
 	function pan:XDEFM_Update( id, dt ) if id == 2 then pan.T_Data = dt  pan.P_List:RefreshPlayerS() end end
-elseif typ == 7 then -- 交易
+elseif typ == 7 then -- Trade menu
 	if IsValid( xdefm.miscs.Menus[ "Trade" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Trade = pan
 	pan.T_PlyA = { LocalPlayer():Nick(), LocalPlayer():SteamID64(), LocalPlayer():GetNWFloat( "XDEFMod_RTT" ) }
@@ -3109,7 +3109,7 @@ elseif typ == 7 then -- 交易
 	pan:SetPos( ScrW()/2 -40, ScrH()/2 -750/2 ) pan:SetSize( 500, 685 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
 	pan:MoveTo( ScrW()/2 -40, ScrH()/2 -700/2, 0.2 )
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 455, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -3130,7 +3130,7 @@ elseif typ == 7 then -- 交易
 			text = language.GetPhrase( "xdefm.Weapon_Trade" ), pos = { w/2, 25 }, font = "xdefm_Font6",
 			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
 		}, 1, 255 ) end
-	for i=1, 2 do -- 已方对方
+	for i=1, 2 do -- Own / Other side panel
 		local pax = vgui.Create( "DPanel", pan ) pax:SetPos( 8, 50 +(i-1)*315 ) pax:SetSize( 484, 310 ) pax.N_Clicked = 0
 		function pax:Paint( w, h ) local bb = ( i == 1 and true or false )
 			local tab = ( i == 1 and pan.T_PlyA or pan.T_PlyB )  local ta2 = ( i == 1 and pan.T_TabA or pan.T_TabB )
@@ -3155,7 +3155,7 @@ elseif typ == 7 then -- 交易
 				surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 80, 272, 215 +6, 30 )
 			end
 		end
-		if true then -- 交易确认
+		if true then -- Confirm button
 			local but = vgui.Create( "DButton", pax )  but:SetText( "" )  but.B_Hover = false
 			but:SetSize( 150, 25 )  but:SetPos( 84, 42 )
 			function but:Paint( w, h ) local col, ply = Color( 100, 100, 100 ), LocalPlayer()
@@ -3175,7 +3175,7 @@ elseif typ == 7 then -- 交易
 			function but:DoClick() if pax.N_Clicked > CurTime() then return end
 				pax.N_Clicked = CurTime() +1  xdefm_Command( LocalPlayer(), "TradeToggle", "_" ) 
 			end end
-		if true then -- 钱数
+		if true then -- Money amount
 			pax.P_Entry = vgui.Create( "DTextEntry", pax ) 
 			pax.P_Entry:SetSize( 215, 24 )
 			pax.P_Entry:SetPos( 85, 275 )
@@ -3205,7 +3205,7 @@ elseif typ == 7 then -- 交易
 				pa3:SetImage( "icon16/coins.png" ) pa3:SetToolTip( "#xdefm.PutMone3" )
 				pa3:SetPos( 193, 4 ) pa3:SetSize( 16, 16 ) function pa3:DoClick() xdefm_Command( LocalPlayer(), "TradeMoney", "0" ) end
 			end end
-		if true then -- 头像
+		if true then -- Avatar image
 			pax.P_AIcon = pax:Add( "AvatarImage" )  local pa2 = pax.P_AIcon
 			pa2:SetPos( 8, 8 ) pa2:SetSize( 64, 64 ) pa2:SetMouseInputEnabled( false )
 			pax.P_AFrame = pax:Add( "DPanel" )  pa2 = pax.P_AFrame
@@ -3214,7 +3214,7 @@ elseif typ == 7 then -- 交易
 			pa2:SetText( "" ) pa2:SetPos( 8, 8 ) pa2:SetSize( 64, 64 ) pa2:SetMouseInputEnabled( false )
 			function pa2:Paint( w, h ) surface.SetDrawColor( xdefm.lin_col ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefm.ext_col ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) end end
-		if true then -- 物品框架
+		if true then -- Item panel
 			pax.P_Hold = pax:Add( "DIconLayout" )  pax.P_Hold:SetPos( 13, 80 ) pax.P_Hold:SetSize( 484-16, 180 )
 			pax.P_Hold:SetSpaceX( 2 ) pax.P_Hold:SetSpaceY( 2 ) local tab = nil
 			if i == 1 then tab = pan.T_Slo1 else tab = pan.T_Slo2 end
@@ -3231,7 +3231,7 @@ elseif typ == 7 then -- 交易
 				end
 			end pax.P_Hold:Add( slo ) table.insert( tab, slo ) end end
 		if i == 1 then pan.P_PanA = pax else pan.P_PanB = pax end end
-	if true then -- 无交易对象时遮住下头
+	if true then -- Hide bottom panel, while there is no trade partner
 		pan.P_NoTrade = vgui.Create( "DPanel", pan ) pan.P_NoTrade:SetPos( 8, 365 ) pan.P_NoTrade:SetSize( 484, 310 )
 		function pan.P_NoTrade:Paint( w, h )
 			surface.SetDrawColor( Color( xdefm.bck_col.r*0.5, xdefm.bck_col.g*0.5, xdefm.bck_col.b*0.5, 255 ) ) surface.DrawRect( 0, 0, w, h )
@@ -3260,7 +3260,7 @@ elseif typ == 7 then -- 交易
 			pan.P_PanB:SetMouseInputEnabled( false ) pan.P_PanB:SetAlpha( 0 ) end
 		end
 	end pan:XDEFM_Update( 4, tab )
-elseif typ == 8 then -- 图鉴
+elseif typ == 8 then -- Collection menu
 	if IsValid( xdefm.miscs.Menus[ "Bestiary" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Bestiary = pan  pan.T_Items = {}  pan.N_Total = 0  pan.N_All = 0
 	for k, v in pairs( xdefm.items ) do pan.N_All = pan.N_All +1 end pan.N_Bing = -1
@@ -3283,7 +3283,7 @@ elseif typ == 8 then -- 图鉴
 	pan:MoveTo( ScrW()/2 -750/2, ScrH()/2 -750/2, 0.2 ) pan.B_Hover = false
 	if ply:IsSuperAdmin() then pan:SetIcon( "icon16/shield.png" ) end
 	local Ma2 = Material( "vgui/gradient_up" )
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 710, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -3444,7 +3444,7 @@ elseif typ == 8 then -- 图鉴
 		table.insert( cvar, pan.T_Dats.PagO )
 		RunConsoleCommand( "xdefmod_collection", table.concat( cvar, "" ) )
 	end pan:RefreshDatItems()
-elseif typ == 9 then -- 制作
+elseif typ == 9 then -- Craft menu
 	if IsValid( xdefm.miscs.Menus[ "Craft" ] ) then return end  local MaR = Material( "gui/gradient" )
 	local pan = vgui.Create( "DFrame" )  xdefm.miscs.Menus.Craft = pan  pan.T_Data = ply.xdefm_Profile  pan.S_Recipe = "_"
 	pan:SetPos( ScrW()/2 -40, ScrH()/2 -550/2 ) pan:SetSize( 600, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
@@ -3466,7 +3466,7 @@ elseif typ == 9 then -- 制作
 			if v == "_" and k != 21 then num = k break end
 		end if num > 0 then xdefm_Command( LocalPlayer(), "MoveCraft", num ) end
 	end
-	if true then -- 关闭按钮
+	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
@@ -3476,7 +3476,7 @@ elseif typ == 9 then -- 制作
 				color = ( pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 ) )
 		}, 2, 255 ) end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end --
-	if true then -- 框架
+	if true then -- Crafting panel
 		pan.P_Base = pan:Add( "DPanel" )  local pax = pan.P_Base  pax.N_Type = 0  pan.T_Slots = {}
 		pax:SetPos( 8, 50 ) pax:SetSize( 582, 490 ) function pax:Paint( w, h ) end pax.N_Type = typ
 		function pax:Paint( w, h ) local rec, slo, dur, yes, col = "xdefm.NeedRecipe", pan.T_Slots[ 1 ], 0, false, Color( 200, 200, 200 )
@@ -3652,68 +3652,70 @@ end end end
 	function xdefm_ItemRegister( nam, dat )
 		if !isstring( nam ) or nam == "" or nam == "_" or nam == "!V" or !istable( dat ) then return false end
 		local inp = {}
-		inp.Name 		= isstring( dat.Name ) and dat.Name or language.GetPhrase( "xdefm.BaseItem" ) --物品名称
-		inp.Type 		= ( isstring( dat.Type ) and isnumber( xdefm.miscs.Types[ dat.Type ] ) ) and dat.Type or "Useless" --种类,参考xdefm.miscs.Types
-		inp.Model 		= { "models/props_junk/popcan01a.mdl" } --模型,可用集合,注意图标只选择集合第一个模型,填入非模型路径会导致报错
-		inp.Helper 		= isstring( dat.Helper ) and dat.Helper or "" --注释
-		inp.Rarity 		= isnumber( dat.Rarity ) and math.Clamp( math.Round( dat.Rarity ), 1, 5 ) or 1 --稀有度,白绿蓝紫橙
-		inp.Price 		= isnumber( dat.Price ) and math.max( math.Round( dat.Price ), 0 ) or 0 --价格,出售价格另算
-		inp.Carryable 	= true  if isbool( dat.Carryable ) then inp.Carryable = dat.Carryable end --可放入背包
-		inp.Secret 		= true  if isbool( dat.Secret ) then inp.Secret = dat.Secret end --设置此项使该物品无法用指令刷出
-		inp.TickRate 	= isnumber( dat.TickRate ) and math.max( dat.TickRate, 0 ) or 60 --实体Think间隔(秒)
-		inp.KillInWater = false  if isbool( dat.KillInWater ) then inp.KillInWater = dat.KillInWater end --入水消失,默认关闭
-		inp.Constants 	= {}  if istable( dat.Constants ) then inp.Constants = dat.Constants end --常量集合
-		inp.PhysSound	= isstring( dat.PhysSound ) and dat.PhysSound or nil --碰撞音效
-		inp.CantCook	= isbool( dat.CantCook ) and dat.CantCook or nil --不允许该物品烹饪增值,用于炉子一类物品
+		inp.Name 		= isstring( dat.Name ) and dat.Name or language.GetPhrase( "xdefm.BaseItem" ) -- Item name
+		inp.Type 		= ( isstring( dat.Type ) and isnumber( xdefm.miscs.Types[ dat.Type ] ) ) and dat.Type or "Useless" -- Category, refer to xdefm.miscs.Types
+		inp.Model 		= { "models/props_junk/popcan01a.mdl" } -- Model, only pick choose from available content, first model is selected for icon, non-model paths will cause errors
+		inp.Helper 		= isstring( dat.Helper ) and dat.Helper or "" -- Help text
+		inp.Rarity 		= isnumber( dat.Rarity ) and math.Clamp( math.Round( dat.Rarity ), 1, 5 ) or 1 -- Rarity: 1 = White, 2 = Green, 3 = Blue, 4 = Purple, 5 = Orange
+		inp.Price 		= isnumber( dat.Price ) and math.max( math.Round( dat.Price ), 0 ) or 0 -- Price, selling price is calculated separately
+		inp.Carryable 	= true  if isbool( dat.Carryable ) then inp.Carryable = dat.Carryable end -- Can be put into inventory
+		inp.Secret 		= true  if isbool( dat.Secret ) then inp.Secret = dat.Secret end -- Set to disable spawning item with commands
+		inp.TickRate 	= isnumber( dat.TickRate ) and math.max( dat.TickRate, 0 ) or 60 -- Items tick interval (in seconds)
+		inp.KillInWater = false  if isbool( dat.KillInWater ) then inp.KillInWater = dat.KillInWater end -- Disappears in water, default is false
+		inp.Constants 	= {}  if istable( dat.Constants ) then inp.Constants = dat.Constants end -- Item specific constants
+		inp.PhysSound	= isstring( dat.PhysSound ) and dat.PhysSound or nil -- Collision sound
+		inp.CantCook	= isbool( dat.CantCook ) and dat.CantCook or nil -- Disables ability to cook item with furnace type structures
 		if SERVER then
-			inp.OnTouch = function( inp, ent, usr, typ ) end if isfunction( dat.OnTouch ) then inp.OnTouch = dat.OnTouch end --触摸,usr触碰实体,typ1开始,0持续,-1结束
-			inp.OnUse = function( inp, ent, usr ) return true end if isfunction( dat.OnUse ) then inp.OnUse = dat.OnUse end --使用,return false来阻止捡起物品
+			inp.OnTouch = function( inp, ent, usr, typ ) end if isfunction( dat.OnTouch ) then inp.OnTouch = dat.OnTouch end -- Touch, usr: entity that touched, typ: 1 starts, 0 continues, -1 stops
+			inp.OnUse = function( inp, ent, usr ) return true end if isfunction( dat.OnUse ) then inp.OnUse = dat.OnUse end -- Use, usr: entity that used, return false prevents picking up item
 			inp.OnThink = function( inp, ent ) end if isfunction( dat.OnThink ) then inp.OnThink = dat.OnThink end
-			inp.OnCollide = function( inp, ent, dat ) end if isfunction( dat.OnCollide ) then inp.OnCollide = dat.OnCollide end --碰撞,dat数据
-			inp.OnInit = function( inp, ent ) return false end if isfunction( dat.OnInit ) then inp.OnInit = dat.OnInit end --生成,于OnDrop后,return false取消默认实体设定
-			inp.OnReady = function( inp, ent ) end if isfunction( dat.OnReady ) then inp.OnReady = dat.OnReady end --生成后0.1秒
-			inp.OnDamaged = function( inp, ent, dmg ) return true end if isfunction( dat.OnDamaged ) then inp.OnDamaged = dat.OnDamaged end --受伤,return false不受伤害影响
-			inp.OnDrop = function( inp, ent, usr, typ ) end if isfunction( dat.OnDrop ) then inp.OnDrop = dat.OnDrop end --按E捡起丢在地上或丢出,typ false为丢在地上,true为丢出
-			inp.OnStore = function( inp, ent, usr ) return true end if isfunction( dat.OnStore ) then inp.OnStore = dat.OnStore end --R键存储,return false拒绝或inp.Carryable反选
-			inp.OnPhysSimulate = function( inp, ent, phy, del ) end if isfunction( dat.OnPhysSimulate ) then inp.OnPhysSimulate = dat.OnPhysSimulate end --物理操控
-			inp.OnRemove = function( inp, ent ) end if isfunction( dat.OnRemove ) then inp.OnRemove = dat.OnRemove end --删除
-			inp.OnPlayerDrop = function( inp, ent ) end if isfunction( dat.OnPlayerDrop ) then inp.OnPlayerDrop = dat.OnPlayerDrop end --被玩家丢弃
-			inp.OnCaught = function( inp, ent, ply ) end if isfunction( dat.OnCaught ) then inp.OnCaught = dat.OnCaught end --被钓出水面(钓鱼成功加经验时)
+			inp.OnCollide = function( inp, ent, dat ) end if isfunction( dat.OnCollide ) then inp.OnCollide = dat.OnCollide end -- Collision, dat: data
+			inp.OnInit = function( inp, ent ) return false end if isfunction( dat.OnInit ) then inp.OnInit = dat.OnInit end -- Init, executed after OnDrop, return false to cancel default settings
+			inp.OnReady = function( inp, ent ) end if isfunction( dat.OnReady ) then inp.OnReady = dat.OnReady end -- Ready, 0.1 seconds after OnInit
+			inp.OnDamaged = function( inp, ent, dmg ) return true end if isfunction( dat.OnDamaged ) then inp.OnDamaged = dat.OnDamaged end -- Damage, return false to prevent any damage
+			inp.OnDrop = function( inp, ent, usr, typ ) end if isfunction( dat.OnDrop ) then inp.OnDrop = dat.OnDrop end -- E picks up items, typ: false for items on ground, true for items ejected.
+			inp.OnStore = function( inp, ent, usr ) return true end if isfunction( dat.OnStore ) then inp.OnStore = dat.OnStore end -- R stores items, return false to prevent, inp.Carryable toggles option
+			inp.OnPhysSimulate = function( inp, ent, phy, del ) end if isfunction( dat.OnPhysSimulate ) then inp.OnPhysSimulate = dat.OnPhysSimulate end -- Physics simulation
+			inp.OnRemove = function( inp, ent ) end if isfunction( dat.OnRemove ) then inp.OnRemove = dat.OnRemove end -- Deletion
+			inp.OnPlayerDrop = function( inp, ent ) end if isfunction( dat.OnPlayerDrop ) then inp.OnPlayerDrop = dat.OnPlayerDrop end -- Dropped by player
+			inp.OnCaught = function( inp, ent, ply ) end if isfunction( dat.OnCaught ) then inp.OnCaught = dat.OnCaught end -- Caught (out of water), fishing successful and experience gained
 		else
-			inp.OnDraw = function( inp, ent ) end if isfunction( dat.OnDraw ) then inp.OnDraw = dat.OnDraw end --实体渲染
-			inp.HelperUse = "xdefm.U1"  if isstring( dat.HelperUse ) then inp.HelperUse = dat.HelperUse end --使用键注释,默认"捡起"
+			inp.OnDraw = function( inp, ent ) end if isfunction( dat.OnDraw ) then inp.OnDraw = dat.OnDraw end -- Entity rendering
+			inp.HelperUse = "xdefm.U1"  if isstring( dat.HelperUse ) then inp.HelperUse = dat.HelperUse end -- Use key text, default is "Pick up"
 		end
 		if isstring( dat.Model ) then inp.Model = { dat.Model } elseif istable( dat.Model ) and #dat.Model > 0 then inp.Model = dat.Model end local typ = dat.Type
 		if typ == "Creature" then
-			inp.MaxSize = ( isnumber( dat.MaxSize ) and math.max( math.Round( dat.MaxSize, 1 ), 0 ) or 1 ) --生物最高大小
-			inp.MinSize = ( isnumber( dat.MinSize ) and math.max( math.Round( dat.MinSize, 1 ), 0 ) or 1 ) --生物最低大小
+			inp.MaxSize = ( isnumber( dat.MaxSize ) and math.max( math.Round( dat.MaxSize, 1 ), 0 ) or 1 ) -- Maximum creature size
+			inp.MinSize = ( isnumber( dat.MinSize ) and math.max( math.Round( dat.MinSize, 1 ), 0 ) or 1 ) -- Minimum creature size
 			if inp.MinSize > inp.MaxSize then inp.MinSize = inp.MaxSize end
 		elseif typ == "Bait" then
-			inp.Consume = ( isnumber( dat.Consume ) and math.max( dat.Consume, 0 ) or 0 ) --鱼饵消耗几率,数值越大越不容易被消耗,1为一次消耗,0为不消耗
-			inp.Level = ( isnumber( dat.Level ) and math.Clamp( dat.Level, 0, 1000 ) or 0 ) --鱼饵等级限制
+			inp.Consume = ( isnumber( dat.Consume ) and math.max( dat.Consume, 0 ) or 0 ) -- Bait consumption probability, higher value = less chance, 1 = single-use, 0 = never consumed
+			inp.Level = ( isnumber( dat.Level ) and math.Clamp( dat.Level, 0, 1000 ) or 0 ) -- Bait level requirement
 		elseif typ == "Recipe" then
-			inp.Durability = ( isnumber( dat.Durability ) and math.max( math.Round( dat.Durability ), 1 ) or 1 ) --图纸能用几次
-			if istable( dat.Crafts ) or isstring( dat.Crafts ) then inp.Crafts = dat.Crafts else return false end --图纸材料&产品,可填集合
+			inp.Durability = ( isnumber( dat.Durability ) and math.max( math.Round( dat.Durability ), 1 ) or 1 ) -- Durability, equals how many times a blueprint can be used
+			if istable( dat.Crafts ) or isstring( dat.Crafts ) then inp.Crafts = dat.Crafts else return false end -- Blueprint materials & results, can be a table of multiple
 			if isstring( inp.Crafts ) then inp.Crafts = { inp.Crafts } end for k, v in pairs( inp.Crafts ) do if !isstring( v ) then return false end
 			local dec = string.Explode( "&", v ) if !istable( dec ) or #dec < 2 then return false end end
-			--图纸格式:"材料A&材料B&材料C&产品",可填集合,产品为&分割开的最后一个物品,材料种类可重合,物品类别不做要求
-			--注意生物大小不受限制,但烹饪后的物品无法参与制作
+			-- Required blueprint format: "material_a&material_b&material_c&product_item"
+			-- Can be a table of multiple strings. The "product_item" must be the last item separated by leading '&'.
+			-- Material types can be crossed, and there are no restrictions on item categories.
+			-- Creature size is not restricted, but cooked / burned items can not be used in crafting.
 		elseif typ == "Struct" then
-			inp.SType = isnumber( dat.SType ) and math.Clamp( math.Round( dat.SType ), 0, 3 ) or 0 --建筑类型,其他、存储、合成、商店
+			inp.SType = isnumber( dat.SType ) and math.Clamp( math.Round( dat.SType ), 0, 3 ) or 0 -- Structure types: 0 = Other, 1 = Storage, 2 = Crafting, 3 = Shop
 			if inp.SType == 1 then
-				inp.Accepted = istable( dat.Accepted ) and dat.Accepted or nil --存储物品类型限制,留白为不限
-				inp.Amount = isnumber( dat.Amount ) and math.max( 0, math.Round( dat.Amount ) ) or 0 --存储容量
+				inp.Accepted = istable( dat.Accepted ) and dat.Accepted or nil -- Storage restriction to specific item types, leave blank for no restriction
+				inp.Amount = isnumber( dat.Amount ) and math.max( 0, math.Round( dat.Amount ) ) or 0 -- Storage capacity (item amount)
 			elseif inp.SType == 2 then
-				if istable( dat.Crafts ) or isstring( dat.Crafts ) then inp.Crafts = dat.Crafts else return false end --合成格式同图纸,但是可以无限使用
+				if istable( dat.Crafts ) or isstring( dat.Crafts ) then inp.Crafts = dat.Crafts else return false end -- Crafting format is the same as blueprints, but with unlimited uses
 				if isstring( inp.Crafts ) then inp.Crafts = { inp.Crafts } end for k, v in pairs( inp.Crafts ) do if !isstring( v ) then return false end
 				local dec = string.Explode( "&", v ) if !istable( dec ) or #dec < 2 then return false end end
 			elseif inp.SType == 3 then
-				if istable( dat.Shop ) then inp.Shop = dat.Shop else return false end --物品&价格,可填集合,不会降价
+				if istable( dat.Shop ) then inp.Shop = dat.Shop else return false end -- Items & prices, can be a table of multiple. Prices will not decrease.
 				for k, v in pairs( inp.Shop ) do if !istable( v ) then return false end end
 			end
-			inp.OnInteract =  isfunction( dat.OnInteract ) and dat.OnInteract or nil --typ1,0,-1对应进入,互动,退出
-			inp.StartSound = isstring( dat.StartSound ) and dat.StartSound or nil --开始使用音效
-			inp.ExitSound  = isstring( dat.ExitSound ) and dat.ExitSound or nil --结束使用音效
+			inp.OnInteract =  isfunction( dat.OnInteract ) and dat.OnInteract or nil -- typ: 1 = enter, 0 = interact, -1 = exit
+			inp.StartSound = isstring( dat.StartSound ) and dat.StartSound or nil -- Starts sound effect
+			inp.ExitSound  = isstring( dat.ExitSound ) and dat.ExitSound or nil -- Ends sound effect
 		end
 		nam = string.Replace( nam, " ", "_" )
 		xdefm.items[ nam ] = inp

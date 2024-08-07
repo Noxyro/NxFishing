@@ -8,7 +8,7 @@ BASIC LICENSE TERMS: NON-COMMERCIAL USE ONLY; CREDITS TO ORIGINAL AUTHOR REQUIRE
 See "LICENSE.md" and "README.md" in project folder or on GitHub for full license and contact details.
 --]]
 
-AddCSLuaFile() -- 交易,极度赘余警告
+AddCSLuaFile() -- Trade, extreme redundancy warning
 SWEP.PrintName		= "#xdefm.Weapon_Trade"
 SWEP.Author 		= "LemonCola3424"
 SWEP.Purpose 		= "#xdefm.Purpose"

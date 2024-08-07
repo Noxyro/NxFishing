@@ -8,7 +8,7 @@ BASIC LICENSE TERMS: NON-COMMERCIAL USE ONLY; CREDITS TO ORIGINAL AUTHOR REQUIRE
 See "LICENSE.md" and "README.md" in project folder or on GitHub for full license and contact details.
 --]]
 
-AddCSLuaFile() -- 背包
+AddCSLuaFile() -- Inventory
 SWEP.PrintName		= "#xdefm.Weapon_Inventory"
 SWEP.Author 		= "LemonCola3424"
 SWEP.Purpose 		= "#xdefm.Purpose"
