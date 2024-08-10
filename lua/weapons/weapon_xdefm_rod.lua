@@ -61,7 +61,7 @@ if CLIENT then
 		surface.SetDrawColor( 0, 255, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 1 )
 		self.InfoMarkup:Draw( x + 5, y + 5, nil, nil, alpha )
 		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Version" )..": "..xdefmod.util.Version, pos = { xx, yy + hh + 16 },
+			text = language.GetPhrase( "xdefm.Version" )..": "..xdefmod.util.VERSION, pos = { xx, yy + hh + 16 },
 			font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
 		}, 1, 255 ) self.InfoMarkup = nil
 	end

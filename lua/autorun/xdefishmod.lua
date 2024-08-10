@@ -76,9 +76,11 @@ xdefmod.util.ROD_ANG = Angle(0, 90, 135)
 xdefmod.util.RIFLE_POS = Vector(22, -1, 0)
 xdefmod.util.RIFLE_ANG = Angle(-20, 180, 180)
 
-xdefmod.COLOR_LINE = Color(0, 0, 0)
-xdefmod.COLOR_BACKGROUND = Color(GetConVar("xdefmod_bgr"):GetInt(), GetConVar("xdefmod_bgg"):GetInt(), GetConVar("xdefmod_bgb"):GetInt(), GetConVar("xdefmod_bga"):GetInt())
-xdefmod.COLOR_BORDER = Color(GetConVar("xdefmod_brr"):GetInt(), GetConVar("xdefmod_brg"):GetInt(), GetConVar("xdefmod_brb"):GetInt(), GetConVar("xdefmod_bra"):GetInt())
+if CLIENT then
+	xdefmod.COLOR_LINE = Color(0, 0, 0)
+	xdefmod.COLOR_BACKGROUND = Color(GetConVar("xdefmod_bgr"):GetInt(), GetConVar("xdefmod_bgg"):GetInt(), GetConVar("xdefmod_bgb"):GetInt(), GetConVar("xdefmod_bga"):GetInt())
+	xdefmod.COLOR_BORDER = Color(GetConVar("xdefmod_brr"):GetInt(), GetConVar("xdefmod_brg"):GetInt(), GetConVar("xdefmod_brb"):GetInt(), GetConVar("xdefmod_bra"):GetInt())
+end
 
 xdefmod.util.RARITY_COLORS = {
 	Color(100, 100, 100),
@@ -372,14 +374,14 @@ if CLIENT then
 
 	-- Check if language has translation, otherwise use "en" as default
 	local lang_detected = GetConVar("gmod_language"):GetString()
-	local lang_selected = "en"
+	local language_selected = "en"
 	local bestiary_path = "xdefishmod/bestiary.txt"
 	if lang_detected ~= nil and istable(xdefmod.lang[lang_detected]) then
-		lang_selected = lang_detected
+		language_selected = lang_detected
 	end
 
 	-- Add all entries from used language table to language strings
-	for holder, text in pairs(xdefmod.lang[lang_selected]) do
+	for holder, text in pairs(xdefmod.lang[language_selected]) do
 		language.Add("xdefm." .. holder, text)
 	end
 
@@ -1109,7 +1111,7 @@ if CLIENT then
 						}, 1, 255)
 
 						draw.TextShadow({
-							text = lang_selected.GetPhrase("xdefm.Trade10"),
+							text = language.GetPhrase("xdefm.Trade10"),
 							pos = { scr.x, scr.y + 20 },
 							font = "xdefm_Font1",
 							xalign = TEXT_ALIGN_CENTER,
@@ -1325,13 +1327,13 @@ if CLIENT then
 
 						for k, v in pairs(tab) do
 							if v ~= "" and v ~= " " and string.find(string.lower(v), "xdefm.") ~= nil then
-								tab[k] = lang_selected.GetPhrase(v)
+								tab[k] = language.GetPhrase(v)
 							end
 						end
 
 						txt = table.concat(tab, "")
 					elseif string.find(string.lower(txt), "xdefm.") then
-						txt = lang_selected.GetPhrase(txt)
+						txt = language.GetPhrase(txt)
 					end
 
 					local markup_string = "<font=xdefm_Font1>" .. string.Replace(txt, "&", "") .. "</font>\n"
@@ -1339,22 +1341,22 @@ if CLIENT then
 						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>[" .. item_data .. "]</color></font>\n"
 					end
 
-					markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase(xdefmod.util.RARITY_NAMES[rar]) .. " " .. lang_selected.GetPhrase("xdefm." .. bb.Type) .. "</color></font>\n\n"
+					markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase(xdefmod.util.RARITY_NAMES[rar]) .. " " .. language.GetPhrase("xdefm." .. bb.Type) .. "</color></font>\n\n"
 
-					if lang_selected.GetPhrase(bb.Helper) ~= "" then
-						markup_string = markup_string .. "<font=xdefm_Font2><color=255,255,255,255>" .. lang_selected.GetPhrase(bb.Helper) .. "</color></font>\n\n"
+					if language.GetPhrase(bb.Helper) ~= "" then
+						markup_string = markup_string .. "<font=xdefm_Font2><color=255,255,255,255>" .. language.GetPhrase(bb.Helper) .. "</color></font>\n\n"
 					end
 
 					local prc = xdefm_GetPrice(item_data)
 					if bb.Type == "Bait" and isnumber(bb.Consume) then
 						local per = tostring(math.Round((1 / bb.Consume) * 100)) .. "%"
-						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase("xdefm.Consume") .. ": " .. per .. "</color></font>\n"
-						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase("xdefm.Level") .. ": " .. bb.Level .. "</color></font>\n"
+						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase("xdefm.Consume") .. ": " .. per .. "</color></font>\n"
+						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase("xdefm.Level") .. ": " .. bb.Level .. "</color></font>\n"
 					elseif bb.Type == "Recipe" and isnumber(bb.Durability) then
 						if aa[2] then
-							markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase("xdefm.Durability") .. ": " .. aa[2] .. "/" .. bb.Durability .. "</color></font>\n"
+							markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase("xdefm.Durability") .. ": " .. aa[2] .. "/" .. bb.Durability .. "</color></font>\n"
 						else
-							markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase("xdefm.Durability") .. ": " .. bb.Durability .. "</color></font>\n"
+							markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase("xdefm.Durability") .. ": " .. bb.Durability .. "</color></font>\n"
 						end
 					end
 
@@ -1366,12 +1368,12 @@ if CLIENT then
 							own = ent:GetFMod_OI()
 						end
 						if own ~= "" then
-							markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase("xdefm.Owner") .. ": " .. own .. "</color></font>\n"
+							markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase("xdefm.Owner") .. ": " .. own .. "</color></font>\n"
 						end
 					end
 
 					if prc > 0 then
-						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. lang_selected.GetPhrase("xdefm.Price") .. ": " .. prc .. "</color></font>"
+						markup_string = markup_string .. "<font=xdefm_Font2><color=155,155,155,255>" .. language.GetPhrase("xdefm.Price") .. ": " .. prc .. "</color></font>"
 					end
 
 					local markup_obj = markup.Parse(markup_string, 250)
@@ -1385,7 +1387,7 @@ if CLIENT then
 					local color_alpha = animation_state * 255
 					if GetConVar("xdefmod_collect"):GetInt() > 0 and not isnumber(xdefmod.bestiary[xdefm_GetClass(item_data)]) then
 						draw.TextShadow({
-							text = lang_selected.GetPhrase("xdefm.Besti2"),
+							text = language.GetPhrase("xdefm.Besti2"),
 							pos = { xx + 256, yy + hh * animation_state + 20 },
 							font = "xdefm_Font1",
 							xalign = TEXT_ALIGN_RIGHT,
@@ -1455,7 +1457,7 @@ if CLIENT then
 							}, 1, alp)
 
 							draw.TextShadow({
-								text = lang_selected.GetPhrase(bb.HelperUse),
+								text = language.GetPhrase(bb.HelperUse),
 								pos = { xx + x1 + 12, yy + hei + y1 / 2 },
 								font = "xdefm_Font2",
 								xalign = TEXT_ALIGN_LEFT,
@@ -1534,7 +1536,7 @@ if CLIENT then
 							}, 1, alp)
 
 							draw.TextShadow({
-								text = lang_selected.GetPhrase(dst),
+								text = language.GetPhrase(dst),
 								pos = { xx + x1 + x2 + 40, yy + hei + y1 / 2 },
 								font = "xdefm_Font2",
 								xalign = TEXT_ALIGN_LEFT,
