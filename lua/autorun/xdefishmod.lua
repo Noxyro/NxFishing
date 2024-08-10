@@ -1051,9 +1051,9 @@ if CLIENT then
 	end)
 
 	hook.Add("RenderScene", "xdefm_MoveRod", function()
-		for _, fishing_entity in pairs(ents.FindByClass("xdefm_*")) do
-			if IsValid(fishing_entity) and fishing_entity:GetClass() ~= "xdefm_firespot" and IsValid(fishing_entity:GetFMod_OW()) and isfunction(fishing_entity.xdefm_Move) then
-				fishing_entity:xdefm_Move()
+		for _, ent_fishing in pairs(ents.FindByClass("xdefm_*")) do
+			if IsValid(ent_fishing) and ent_fishing:GetClass() ~= "xdefm_firespot" and IsValid(ent_fishing:GetFMod_OW()) and isfunction(ent_fishing.xdefm_Move) then
+				ent_fishing:xdefm_Move()
 			end
 		end
 	end)
@@ -1179,11 +1179,11 @@ if CLIENT then
 		end
 
 		if IsValid(ply) and not vgui.CursorVisible() and ply:GetEyeTrace() ~= nil then
-			local entity = ply:GetEyeTrace().Entity
-			if IsValid(entity) and entity.xdefm_OnLook then
-				local entity_data = ply:GetEyeTrace().Entity:GetFMod_DT()
-				if isstring(entity_data) then
-					item_data = entity_data
+			local ent = ply:GetEyeTrace().Entity
+			if IsValid(ent) and ent.xdefm_OnLook then
+				local ent_data = ply:GetEyeTrace().Entity:GetFMod_DT()
+				if isstring(ent_data) then
+					item_data = ent_data
 				end
 			end
 		elseif IsValid(ply) and isstring(xdefmod.util.marker) and not dragndrop.IsDragging() then
@@ -1651,7 +1651,7 @@ if CLIENT then
 		end
 	end)
 
-	-- Receives and updates the menu data of specified menu type
+	--- Receives and updates the menu data of specified menu type
 	net.Receive("NET_xdefm_MenuUpdate", function()
 		local menu_type = net.ReadFloat()
 		local menu_data_json = net.ReadString()
@@ -1777,42 +1777,45 @@ if SERVER then -- Server only
 	util.AddNetworkString("NET_xdefm_BestiaryAll")
 	util.AddNetworkString("NET_xdefm_Quest")
 
-	function xdefm_PoolAdd(data)
-		if not istable(data) then
+	--- Adds an item group to the pools, assigning it to pools based on the baits specified in the chances data.
+	--- @param item_group_data table: Defines the item group with attributes including Items, Level, Exp, DepthMin, DepthMax, GroundOnly, and Chances.
+	--- @return boolean: True if the item group was successfully added to the pool, false otherwise.
+	function xdefm_PoolAdd(item_group_data)
+		if not istable(item_group_data) then
 			return false
 		end
 
 		local item_group = {}
 		item_group.Items = {} -- For hooked items, only use characters, no spaces allowed
 
-		if isstring(data.Items) then
-			item_group.Items = { data.Items }
-		elseif istable(data.Items) then
-			item_group.Items = data.Items
+		if isstring(item_group_data.Items) then
+			item_group.Items = { item_group_data.Items }
+		elseif istable(item_group_data.Items) then
+			item_group.Items = item_group_data.Items
 		else
 			return false
 		end
 
-		item_group.Level      = isnumber(data.Level) and math.Clamp(math.Round(data.Level), 0, 1000) or 0 -- Level limit, maximum is 1000 (unlikely to be achieved)
-		item_group.Exp        = isnumber(data.Exp) and math.Clamp(math.Round(data.Exp), 0, 2147483647) or 0 -- Successful fishing gains experience
-		item_group.DepthMin   = isnumber(data.DepthMin) and math.Clamp(math.Round(data.DepthMin), 0, 2147483647) or 0 -- Minimum depth in meters, 0 is water surface
-		item_group.DepthMax   = isnumber(data.DepthMax) and math.Clamp(math.Round(data.DepthMax), item_group.DepthMin, 2147483647) or 2147483647 -- Maximum depth in meters, can not be smaller than minimum depth
-		item_group.GroundOnly = isbool(data.GroundOnly) and data.GroundOnly or false -- Limited to riverbeds, works better with depth effects
+		item_group.Level      = isnumber(item_group_data.Level) and math.Clamp(math.Round(item_group_data.Level), 0, 1000) or 0 -- Level limit, maximum is 1000 (unlikely to be achieved)
+		item_group.Exp        = isnumber(item_group_data.Exp) and math.Clamp(math.Round(item_group_data.Exp), 0, 2147483647) or 0 -- Successful fishing gains experience
+		item_group.DepthMin   = isnumber(item_group_data.DepthMin) and math.Clamp(math.Round(item_group_data.DepthMin), 0, 2147483647) or 0 -- Minimum depth in meters, 0 is water surface
+		item_group.DepthMax   = isnumber(item_group_data.DepthMax) and math.Clamp(math.Round(item_group_data.DepthMax), item_group.DepthMin, 2147483647) or 2147483647 -- Maximum depth in meters, can not be smaller than minimum depth
+		item_group.GroundOnly = isbool(item_group_data.GroundOnly) and item_group_data.GroundOnly or false -- Limited to riverbeds, works better with depth effects
 
 		-- TODO: Check if this can be replaced with an easier method of supplying different bait chances to an item group
 		item_group.Chances    = {} -- Hook probability: Higher equals lower chance, 0 is certain. "_" is bare hook, "*" is universal bait. No blank bait allowed. Efficiency proportionally reduces this value.
-		if isnumber(data.Chances) then
-			if istable(data.Baits) then
-				for index, bait in pairs(data.Baits) do
-					item_group.Chances[bait] = math.max(0, math.Round(data.Chances))
+		if isnumber(item_group_data.Chances) then
+			if istable(item_group_data.Baits) then
+				for _, bait in pairs(item_group_data.Baits) do
+					item_group.Chances[bait] = math.max(0, math.Round(item_group_data.Chances))
 				end
-			elseif isstring(data.Baits) then
-				item_group.Chances = { [data.Baits] = math.max(0, math.Round(data.Chances)) }
+			elseif isstring(item_group_data.Baits) then
+				item_group.Chances = { [item_group_data.Baits] = math.max(0, math.Round(item_group_data.Chances)) }
 			else
-				item_group.Chances = { ["_"] = math.max(0, math.Round(data.Chances)) }
+				item_group.Chances = { ["_"] = math.max(0, math.Round(item_group_data.Chances)) }
 			end
-		elseif istable(data.Chances) then
-			for bait, chance in pairs(data.Chances) do
+		elseif istable(item_group_data.Chances) then
+			for bait, chance in pairs(item_group_data.Chances) do
 				if isstring(bait) and isnumber(chance) then
 					item_group.Chances[bait] = math.max(0, math.Round(chance))
 				end
@@ -1828,7 +1831,7 @@ if SERVER then -- Server only
 		end
 
 		local chances = item_group.Chances
-		for bait, chance in pairs(item_group.Chances) do
+		for bait, _ in pairs(item_group.Chances) do
 			if not istable(xdefmod.pools[bait]) then
 				xdefmod.pools[bait] = {}
 			end
@@ -1841,12 +1844,13 @@ if SERVER then -- Server only
 	end
 
 	--- Selects an item from a pool based on input parameters.
-	-- @param depth (number) Fishing depth, at least 0.
-	-- @param level (number) Player level, between 0 and 1000.
-	-- @param bait (string) Bait used, defaults to "_".
-	-- @param efficiency (number) Efficiency (0-100%).
-	-- @param ground (boolean) True if ground-only.
-	-- @return (any, any) An item and optional experience, or nil, nil.
+	--- @param depth number: Fishing depth, at least 0.
+	--- @param level number: Player level, between 0 and 1000.
+	--- @param bait string: Bait used, defaults to "_".
+	--- @param efficiency number: Efficiency (0-100%).
+	--- @param ground boolean: True if ground-only.
+	--- @return string|nil: The selected item name, or nil.
+	--- @return number|nil: Optional experience, or nil.
 	function xdefm_PoolGet(depth, level, bait, efficiency, ground)
 		local no_depth = (GetConVar("xdefmod_nodepth"):GetInt() > 0)
 		-- REVIEW: Introduce a max value for depth?
@@ -1939,47 +1943,50 @@ if SERVER then -- Server only
 	end
 
 	--- Creates a fire spot entity at `pos` with `size` and `power`. Optionally attaches to `parent`.
-	-- @param pos (Vector): Position of the fire spot.
-	-- @param size (number): Size (0-100, default 5).
-	-- @param power (number): Power (default is size).
-	-- @param parent (Entity): Optional parent entity.
-	-- @return (Entity): The created fire spot entity.
+	--- @param pos Vector: Position of the fire spot.
+	--- @param size number: Size (0-100, default 5).
+	--- @param power number: Power (default is size).
+	--- @param parent Entity: Optional parent entity.
+	--- @return Entity: The created fire spot entity.
 	function xdefm_FireSpot(pos, size, power, parent)
 		if not isvector(pos) then return end
 
 		size = isnumber(size) and math.Clamp(size, 0, 100) or 5
 		power = isnumber(power) and math.max(power, 0) or size
 
-		local entity = ents.Create("xdefm_firespot")
-		entity:SetPos(pos)
-		entity:SetAngles(Angle(0, 0, 0))
-		entity.Owner = Entity(0)
+		local ent = ents.Create("xdefm_firespot")
+		ent:SetPos(pos)
+		ent:SetAngles(Angle(0, 0, 0))
+		ent.Owner = Entity(0)
 
 		if IsEntity(parent) then
-			entity:SetParent(parent)
-			entity:SetAngles(parent:GetAngles())
+			ent:SetParent(parent)
+			ent:SetAngles(parent:GetAngles())
 		end
 
-		entity:Spawn()
-		entity:Activate()
-		entity:SetFMod_Strength(size)
-		entity:SetFMod_Enable(false)
-		parent:DeleteOnRemove(entity)
+		ent:Spawn()
+		ent:Activate()
+		ent:SetFMod_Strength(size)
+		ent:SetFMod_Enable(false)
+		parent:DeleteOnRemove(ent)
 
 		timer.Simple(0, function()
-			if IsValid(entity) then
-				entity.xdefm_Power = power
+			if IsValid(ent) then
+				ent.xdefm_Power = power
 			end
 		end)
 
-		return entity
+		return ent
 	end
 
-	function xdefm_SetupFriends(ply, tab)
+	--- Updates a player's friend list from a file or provided data.
+	--- @param ply Entity: The player whose friends list is updated.
+	--- @param friends_data table?: Table of friends data, loads from file if nil.
+	function xdefm_SetupFriends(ply, friends_data)
 		if not IsValid(ply) or not ply:IsPlayer() or not isstring(ply:SteamID()) or ply:IsBot() then return end
 
 		local friends_file = "xdefishmod/f_" .. string.Replace(ply:SteamID(), ":", "_") .. ".txt"
-		if not istable(tab) then
+		if not istable(friends_data) then
 			if file.Exists(friends_file, "DATA") then
 				ply.xdefm_Friends = util.JSONToTable(file.Read(friends_file, "DATA"))
 			else
@@ -1987,96 +1994,159 @@ if SERVER then -- Server only
 				file.Write(friends_file, util.TableToJSON({}, true))
 			end
 		else
-			local ta2, num = {}, 0
-			for k, v in pairs(tab) do
-				if num > 16 then break end
-				if isnumber(tonumber(v[2])) and (tonumber(v[2]) == 1 or tonumber(v[2]) == 0) then
-					ta2[k] = v
-					num = num + 1
+			-- Limit maximum number of friends to 16
+			local updated_friends_data = {}
+			local friends_count = 0
+			for friend_id, friend_info in pairs(friends_data) do
+				if friends_count > 16 then break end
+				if isnumber(tonumber(friend_info[2])) and (tonumber(friend_info[2]) == 1 or tonumber(friend_info[2]) == 0) then
+					updated_friends_data[friend_id] = friend_info
+					friends_count = friends_count + 1
 				end
 			end
 
-			ply.xdefm_Friends = ta2
-			file.Write(friends_file, util.TableToJSON(ta2, true))
+			-- Overwrite existing friend data
+			ply.xdefm_Friends = updated_friends_data
+			file.Write(friends_file, util.TableToJSON(updated_friends_data, true))
 
 			xdefm_UpdateMenu(ply, 2, ply.xdefm_Friends)
 			xdefm_AddNote(ply, "xdefm.FriendAd5", "buttons/combine_button1.wav", "group", 5)
 		end
 	end
 
-	function xdefm_FriendAllow( ply, id )
-		if not IsValid( ply ) or not ply:IsPlayer() or ply:IsBot() or not isstring( ply:SteamID() ) then return false end
-		if ply:IsAdmin() or not isstring( id ) or ( id == "" or ply:SteamID() == id ) then return true end
-		local path, num, i2, own = "xdefishmod/f_" .. string.Replace( id, ":", "_" ) .. ".txt", 0, ply:SteamID(), player.GetBySteamID( id )
-		if IsValid( own ) and istable( own.xdefm_Friends ) then
-			if istable( own.xdefm_Friends[ i2 ] ) then
-				num = own.xdefm_Friends[ i2 ][ 2 ]
-			end
-		elseif file.Exists( path, "DATA" ) then
-			local dat = util.JSONToTable( file.Read( path, "DATA" ) )
-			if not istable( dat ) or not istable( tab[ i2 ] ) or #tab[ i2 ] ~= 2 then
-				num = 0
-			else
-				num = tonumber( tab[ i2 ][ 2 ] )
-			end
-		end
-		if not isnumber( num ) then num = tonumber( num ) end
-		if not isnumber( num ) or num ~= 1 then
+	--- Checks if a player is allowed to interact with items owned by another player.
+	--- @param ply Entity: The player attempting to interact.
+	--- @param other_id string: The SteamID of the owner of the items to interact with.
+	--- @return boolean: True if interaction is allowed, false otherwise.
+	function xdefm_FriendAllow(ply, other_id)
+		if not IsValid(ply) or not ply:IsPlayer() or ply:IsBot() or not isstring(ply:SteamID()) then
 			return false
 		end
+
+		if ply:IsAdmin() or not isstring(other_id) or (other_id == "" or ply:SteamID() == other_id) then
+			return true
+		end
+
+		local friends_file_path = "xdefishmod/f_" .. string.Replace(other_id, ":", "_") .. ".txt"
+		local permission_value = 0
+		local ply_id = ply:SteamID()
+		local other = player.GetBySteamID(other_id)
+		if IsValid(other) and istable(other.xdefm_Friends) then
+			if istable(other.xdefm_Friends[ply_id]) then
+				permission_value = other.xdefm_Friends[ply_id][2]
+			end
+		elseif file.Exists(friends_file_path, "DATA") then
+			local dat = util.JSONToTable(file.Read(friends_file_path, "DATA"))
+			if not istable(dat) or not istable(tab[ply_id]) or #tab[ply_id] ~= 2 then
+				permission_value = 0
+			else
+				permission_value = tonumber(tab[ply_id][2])
+			end
+		end
+
+		if not isnumber(permission_value) then
+			permission_value = tonumber(permission_value)
+		end
+		
+		if not isnumber(permission_value) or permission_value ~= 1 then
+			return false
+		end
+
 		return true
 	end
-	function xdefm_NadAllow( ply, ent )
-		if not NADMOD or not IsValid( ply ) or not IsValid( ent ) then return false end
-		return NADMOD.PlayerCanTouch( ply, ent )
+	
+	--- NADMOD integration. Checks if a player can interact with an entity.
+	--- @param ply Entity: The player.
+	--- @param ent Entity: The entity.
+	--- @return boolean: True if allowed, false otherwise.
+	function xdefm_NadAllow(ply, ent)
+		if not NADMOD or not IsValid(ply) or not IsValid(ent) then
+			return false
+		end
+
+		return NADMOD.PlayerCanTouch(ply, ent)
 	end
-	function xdefm_SendSnd( ply, snd )
-		if not IsValid( ply ) or not ply:IsPlayer() or not isstring( snd ) or snd == "" or snd == "!V" then return end
-		net.Start( "NET_xdefm_SendSnd" )
-		net.WriteString( snd )
-		net.Send( ply )
+
+	--- Sends a sound to a player.
+	--- @param ply Entity: The target player.
+	--- @param snd string: The sound file path.
+	function xdefm_SendSnd(ply, snd)
+		if not IsValid(ply) or not ply:IsPlayer() or not isstring(snd) or snd == "" or snd == "!V" then return end
+
+		net.Start("NET_xdefm_SendSnd")
+		net.WriteString(snd)
+		net.Send(ply)
 	end
-	function xdefm_NoTool( ent, inv )
-		if not IsValid( ent ) then return end
-		if isbool( inv ) and inv == true then
+
+	--- Restricts tool access / pickup ability on an entity.
+	--- @param ent Entity: The target entity.
+	--- @param revert boolean: If true, reverts the restriction.
+	function xdefm_NoTool(ent, revert)
+		if not IsValid(ent) then return end
+		
+		if isbool(revert) and revert == true then
 			ent.xdefm_NoTool = false
 		else
 			ent.xdefm_NoTool = true
 		end
-		if inv then
-			ent:SetUnFreezable( false )
-			if IsValid( ent:GetPhysicsObject() ) then
-				ent:GetPhysicsObject():ClearGameFlag( FVPHYSICS_NO_PLAYER_PICKUP )
+
+		if revert then
+			ent:SetUnFreezable(false)
+
+			if IsValid(ent:GetPhysicsObject()) then
+				ent:GetPhysicsObject():ClearGameFlag(FVPHYSICS_NO_PLAYER_PICKUP)
 			end
+
 			return
 		end
-		ent:SetUnFreezable( true )
-		if IsValid( ent:GetPhysicsObject() ) then
-			ent:GetPhysicsObject():AddGameFlag( FVPHYSICS_NO_PLAYER_PICKUP )
+
+		ent:SetUnFreezable(true)
+
+		if IsValid(ent:GetPhysicsObject()) then
+			ent:GetPhysicsObject():AddGameFlag(FVPHYSICS_NO_PLAYER_PICKUP)
 		end
 	end
-	function xdefm_ProfileLoad( ply )
-		if not IsValid( ply ) or not ply:IsPlayer() or not isstring( ply:SteamID() ) or ply:IsBot() then return end
-		local name = string.lower( string.Replace( ply:SteamID(), ":", "_" ) )
-		if not file.IsDir( "xdefishmod", "DATA" ) then
-			file.CreateDir( "xdefishmod" )
+
+	--- Loads or initializes a player's profile data.
+	--- @param ply Entity: The target player.
+	function xdefm_ProfileLoad(ply)
+		if not IsValid(ply) or not ply:IsPlayer() or not isstring(ply:SteamID()) or ply:IsBot() then return end
+
+		local ply_file_name = string.lower(string.Replace(ply:SteamID(), ":", "_"))
+		if not file.IsDir("xdefishmod", "DATA") then
+			file.CreateDir("xdefishmod")
 		end
-		local path = ( "xdefishmod/p_" .. name .. ".txt" )
-		local pro = {}
-		if not istable( ply.xdefm_Friends ) then
-			xdefm_SetupFriends( ply )
+
+		local ply_file_path = ("xdefishmod/p_" .. ply_file_name .. ".txt")
+		local ply_profile = {}
+		if not istable(ply.xdefm_Friends) then
+			xdefm_SetupFriends(ply)
 		end
-		if file.Exists( path, "DATA" ) then
-			pro = util.JSONToTable( file.Read( path, "DATA" ) )
-			if not pro.UpdG then pro.UpdG = 0 end
-			for k, v in pairs( pro.Items ) do if isstring( v ) and v ~= "_" and not xdefmod.items[ xdefm_GetClass( v ) ] then pro.Items[ k ] = ( k == 21 and "ba_junk" or "it_error" ) end end
-			for k, v in pairs( pro.Bnk ) do if isstring( v )  and v ~= "_" and not xdefmod.items[ xdefm_GetClass( v ) ] then pro.Bnk[ k ] = "it_error" end end
+
+		if file.Exists(ply_file_path, "DATA") then
+			ply_profile = util.JSONToTable(file.Read(ply_file_path, "DATA"))
+			if not ply_profile.UpdG then
+				ply_profile.UpdG = 0
+			end
+			
+			for slot_index, item_info in pairs(ply_profile.Items) do
+				if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
+					ply_profile.Items[slot_index] = (slot_index == 21 and "ba_junk" or "it_error")
+				end
+			end
+
+			for slot_index, item_info in pairs(ply_profile.Bnk) do
+				if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
+					ply_profile.Bnk[slot_index] = "it_error"
+				end
+			end
 		else
-			pro = {
+			ply_profile = {
 				Level = 0,
 				Money = 0,
 				Exp = 0,
-				Items = { "it_bait1","re_basic|25","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_", "_" },
+				-- TODO: Replace hard-coded default inventory with configurable one
+				Items = { "it_bait1", "re_basic|25", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_" },
 				UpdA = 0,
 				UpdB = 0,
 				UpdC = 0,
@@ -2094,244 +2164,411 @@ if SERVER then -- Server only
 				TQuest = 0,
 			}
 		end
-		ply.xdefm_Profile = pro
-		xdefm_ProfileUpdate( ply, pro )
+
+		ply.xdefm_Profile = ply_profile
+		xdefm_ProfileUpdate(ply, ply_profile)
 	end
-	function xdefm_ItemGive( ply, str, non )
-		if not IsValid( ply ) or not isstring( str ) or not istable( ply.xdefm_Profile ) then return false end
-		local aa, bb = xdefm_ItemGet( str )
-		if not istable( aa ) or not istable( bb ) then return false end
-		local inv = ply.xdefm_Profile.Items
-		if not istable( inv ) then return false end
-		if bb.Type == "Creature" and isnumber( bb.MinSize ) and isnumber( bb.MaxSize ) and ( not istable( aa ) or #aa < 2 or aa[ 2 ] == 0 ) then
-			local siz = math.Round( math.Rand( bb.MinSize, bb.MaxSize ), 1 )  table.insert( aa, 2, siz ) str = table.concat( aa, "|" )
-		elseif bb.Type == "Recipe" and isnumber( bb.Durability ) and ( not istable( aa ) or #aa < 2 or aa[ 2 ] == 0 ) then
-			local dur = math.ceil( math.Rand( bb.Durability / 2, bb.Durability ) )  table.insert( aa, 2, dur ) str = table.concat( aa, "|" )
-		end aa, bb = xdefm_ItemGet( str )
-		for k, v in pairs( inv ) do
-			if v == "_" and ( k ~= 21 or bb.Type == "Bait" ) and ( bb.Type ~= "Bait" or k ~= 21 or bb.Level <= ply.xdefm_Profile.Level ) then
-				ply.xdefm_Profile.Items[ k ] = str
-				xdefm_ProfileUpdate( ply )
-				local cls = xdefm_GetClass( str )
-				net.Start( "NET_xdefm_BestiaryRecord" )
-				net.WriteString( cls )
-				net.Send( ply )
-				if not isbool( non ) or non == false then
-					xdefm_AddNote( ply, "xdefm.Pickup&: " .. xdefm_ItemMark( str ), "items/ammo_pickup.wav", "basket_put", 5 )
+
+	--- Gives an item to a player, updating their inventory and profile.
+	--- @param ply Player: The player receiving the item.
+	--- @param item_info string: Information about the item to give.
+	--- @param no_message boolean?: If true, suppresses notification.
+	--- @return boolean: True if the item was successfully given, false otherwise.
+	function xdefm_ItemGive(ply, item_info, no_message)
+		if not IsValid(ply) or not isstring(item_info) or not istable(ply.xdefm_Profile) then
+			return false
+		end
+
+		local item_info_table, item = xdefm_ItemGet(item_info)
+		if not istable(item_info_table) or not istable(item) then
+			return false
+		end
+
+		local ply_inventory = ply.xdefm_Profile.Items
+		if not istable(ply_inventory) then
+			return false
+		end
+
+		if item.Type == "Creature" and isnumber(item.MinSize) and isnumber(item.MaxSize) and (not istable(item_info_table) or #item_info_table < 2 or item_info_table[2] == 0) then
+			local creature_size = math.Round(math.Rand(item.MinSize, item.MaxSize), 1)
+			table.insert(item_info_table, 2, creature_size)
+			item_info = table.concat(item_info_table, "|")
+		elseif item.Type == "Recipe" and isnumber(item.Durability) and (not istable(item_info_table) or #item_info_table < 2 or item_info_table[2] == 0) then
+			local dur = math.ceil(math.Rand(item.Durability / 2, item.Durability))
+			table.insert(item_info_table, 2, dur)
+			item_info = table.concat(item_info_table, "|")
+		end
+
+		item_info_table, item = xdefm_ItemGet(item_info)
+
+		for slot_index, slot_info in pairs(ply_inventory) do
+			if slot_info == "_" and (slot_index ~= 21 or item.Type == "Bait") and (item.Type ~= "Bait" or slot_index ~= 21 or item.Level <= ply.xdefm_Profile.Level) then
+				ply.xdefm_Profile.Items[slot_index] = item_info
+				xdefm_ProfileUpdate(ply)
+
+				local cls = xdefm_GetClass(item_info)
+				net.Start("NET_xdefm_BestiaryRecord")
+				net.WriteString(cls)
+				net.Send(ply)
+
+				if not isbool(no_message) or no_message == false then
+					xdefm_AddNote(ply, "xdefm.Pickup&: " .. xdefm_ItemMark(item_info), "items/ammo_pickup.wav", "basket_put", 5)
 				end
+
 				return true
 			end
 		end
-		xdefm_AddNote( ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5 )
+
+		xdefm_AddNote(ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5)
+		
 		return false
 	end
-	function xdefm_ItemSpawn( nam, pos, ang, own, mdl )
-		if not isstring( nam ) or nam == "" or nam == "_" then return nil end
-		if not isvector( pos ) then pos = Vector( 0, 0, 0 ) end
-		if not isangle( ang ) then ang = Angle( 0, 0, 0 ) end
-		local aa, bb = xdefm_ItemGet( nam )
-		if not istable( aa ) or not istable( bb ) then return nil end
-		local ent = ents.Create( "xdefm_base" )
-		ent:SetPos( pos )
-		ent:SetAngles( ang )
-		ent:SetFMod_DT( tostring( nam ) )
-		if isstring( mdl ) and util.IsValidModel( mdl ) then
-			ent.xdefm_Mdl = mdl
+	
+	--- Spawns an item entity at a specified position and angle.
+	--- @param item_name string: The name of the item to spawn.
+	--- @param pos Vector: The position where the item will be spawned.
+	--- @param ang Angle: The angle/rotation of the spawned item.
+	--- @param owner Player|Entity: The owner of the item (player or default entity if invalid).
+	--- @param model string?: The model for the item, if provided and valid.
+	--- @return Entity|nil: The spawned item entity, or nil if spawning failed.
+	function xdefm_ItemSpawn(item_name, pos, ang, owner, model)
+		if not isstring(item_name) or item_name == "" or item_name == "_" then
+			return nil
 		end
-		if not IsValid( own ) or not own:IsPlayer() then
-			own = Entity( 0 )
+
+		if not isvector(pos) then
+			pos = Vector(0, 0, 0)
+		end
+
+		if not isangle(ang) then
+			ang = Angle(0, 0, 0)
+		end
+
+		local item_info_table, item = xdefm_ItemGet(item_name)
+		if not istable(item_info_table) or not istable(item) then
+			return nil
+		end
+
+		local ent = ents.Create("xdefm_base")
+		ent:SetPos(pos)
+		ent:SetAngles(ang)
+		ent:SetFMod_DT(tostring(item_name))
+
+		if isstring(model) and util.IsValidModel(model) then
+			ent.xdefm_Mdl = model
+		end
+
+		if not IsValid(owner) or not owner:IsPlayer() then
+			owner = Entity(0)
 		else
-			ent:SetFMod_OI( own:SteamID() )
+			ent:SetFMod_OI(owner:SteamID())
 			if NADMOD then
-				NADMOD.PlayerMakePropOwner( own, ent )
+				NADMOD.PlayerMakePropOwner(owner, ent)
 			end
 		end
-		ent:SetNWEntity( "Owner", own )
-		ent:SetFMod_OW( own )
-		ent.Owner = own
-		local hk = hook.Run( "XDEFM_ItemSpawn", ent, nam, own )
-		if isbool( hk ) and hk == false then
+
+		ent:SetNWEntity("Owner", owner)
+		ent:SetFMod_OW(owner)
+		ent.Owner = owner
+
+		local hook_result = hook.Run("XDEFM_ItemSpawn", ent, item_name, owner)
+		if isbool(hook_result) and hook_result == false then
+			ent:Remove()
+			return nil
+		end
+
+		ent:Spawn()
+		ent:Activate()
+
+		return ent
+	end
+
+	--- Spawns a dummy entity with specified attributes.
+	--- @param item_name string: The name of the item for the dummy entity.
+	--- @param pos Vector: The position where the dummy entity will be spawned.
+	--- @param ang Angle: The angle/rotation of the dummy entity.
+	--- @param owner Player|Entity: The owner of the dummy entity (player or default entity if invalid).
+	--- @param model string?: Optional model for the dummy entity, if valid.
+	--- @return Entity|nil: The spawned dummy entity, or nil if spawning failed.
+	function xdefm_DummySpawn(item_name, pos, ang, owner, model)
+		if not isstring(item_name) or item_name == "" or item_name == "_" then
+			return nil
+		end
+
+		if not isvector(pos) then
+			pos = Vector(0, 0, 0)
+		end
+
+		if not isangle(ang) then
+			ang = Angle(0, 0, 0)
+		end
+
+		local item_info_table, item = xdefm_ItemGet(item_name)
+		if not istable(item_info_table) or not istable(item) then
+			return nil
+		end
+
+		local ent = ents.Create("xdefm_dummy")
+		ent:SetPos(pos)
+		ent:SetAngles(ang)
+		ent:SetFMod_DT(tostring(item_name))
+		
+		if isstring(model) and util.IsValidModel(model) then
+			ent:SetModel(model)
+			ent.xdefm_Mdl = model
+		else
+			ent:SetModel(item.Model[math.random(#item.Model)])
+		end
+
+		if not IsValid(owner) or not owner:IsPlayer() then
+			owner = Entity(0)
+		else
+			ent:SetFMod_OI(owner:SteamID())
+		end
+
+		local hook_result = hook.Run("XDEFM_DummySpawn", ent, item_name, owner)
+		if isbool(hook_result) and hook_result == false then
 			ent:Remove()
 			return
 		end
+
+		ent:SetFMod_OW(owner)
+		ent.Owner = owner
 		ent:Spawn()
 		ent:Activate()
+
 		return ent
 	end
-	function xdefm_DummySpawn( nam, pos, ang, own, mdl )
-		if not isstring( nam ) or nam == "" or nam == "_" then return nil end
-		if not isvector( pos ) then pos = Vector( 0, 0, 0 ) end
-		if not isangle( ang ) then ang = Angle( 0, 0, 0 ) end
-		local aa, bb = xdefm_ItemGet( nam )
-		if not istable( aa ) or not istable( bb ) then return nil end
-		local ent = ents.Create( "xdefm_dummy" )
-		ent:SetPos( pos )
-		ent:SetAngles( ang )
-		ent:SetFMod_DT( tostring( nam ) )
-		if isstring( mdl ) and util.IsValidModel( mdl ) then
-			ent:SetModel( mdl )
-			ent.xdefm_Mdl = mdl
-		else
-			ent:SetModel( bb.Model[ math.random( #bb.Model ) ] )
-		end
-		if not IsValid( own ) or not own:IsPlayer() then
-			own = Entity( 0 )
-		else
-			ent:SetFMod_OI( own:SteamID() )
-		end
-		local hk = hook.Run( "XDEFM_DummySpawn", ent, nam, own )
-		if isbool( hk ) and hk == false then
-			ent:Remove()
-			return
-		end
-		ent:SetFMod_OW( own )
-		ent.Owner = own
-		ent:Spawn()
-		ent:Activate()
-		return ent
-	end
-	function xdefm_GiveExp( ply, amo )
-		if not IsValid( ply ) or not istable( ply.xdefm_Profile ) or not isnumber( amo ) or amo <= 0 then return end
-		amo = math.max( 0, math.Round( amo ) )
-		local fex, lex = ply.xdefm_Profile.Exp, xdefm_LevelExp( ply.xdefm_Profile.Level )
-		ply.xdefm_Profile.Exp = ply.xdefm_Profile.Exp + amo
+
+	--- Adds experience points to a player and handles level-ups.
+	--- @param ply Player: The player receiving experience points.
+	--- @param amount number: The amount of experience points to add.
+	--- @return nil: No return value.
+	function xdefm_GiveExp(ply, amount)
+		if not IsValid(ply) or not istable(ply.xdefm_Profile) or not isnumber(amount) or amount <= 0 then return end
+		amount = math.max(0, math.Round(amount))
+
+		local fex, lex = ply.xdefm_Profile.Exp, xdefm_LevelExp(ply.xdefm_Profile.Level)
+		ply.xdefm_Profile.Exp = ply.xdefm_Profile.Exp + amount
+
 		if ply.xdefm_Profile.Level >= 1000 then
 			ply.xdefm_Profile.Exp = 0
-			xdefm_ProfileUpdate( ply )
-			ply.xdefm_Profile.TExp = ply.xdefm_Profile.TExp + amo
+			xdefm_ProfileUpdate(ply)
+			ply.xdefm_Profile.TExp = ply.xdefm_Profile.TExp + amount
 			return
 		end
+
 		if ply.xdefm_Profile.Exp >= lex then
 			ply.xdefm_Profile.Exp = 0
 			ply.xdefm_Profile.Level = ply.xdefm_Profile.Level + 1
+
 			if ply.xdefm_Profile.Level <= 1000 then
 				ply.xdefm_Profile.Skp = ply.xdefm_Profile.Skp + 1
 			end
-			xdefm_AddNote( ply, "xdefm.Uplevel", "garrysmod/save_load4.wav", "arrow_up", 5 )
-			ply.xdefm_Profile.TExp = ply.xdefm_Profile.TExp + math.max( 0, lex -fex )
+
+			xdefm_AddNote(ply, "xdefm.Uplevel", "garrysmod/save_load4.wav", "arrow_up", 5)
+			ply.xdefm_Profile.TExp = ply.xdefm_Profile.TExp + math.max(0, lex - fex)
 		else
-			xdefm_SendSnd( ply, "garrysmod/content_downloaded.wav" )
-			ply.xdefm_Profile.TExp = ply.xdefm_Profile.TExp + amo
+			xdefm_SendSnd(ply, "garrysmod/content_downloaded.wav")
+			ply.xdefm_Profile.TExp = ply.xdefm_Profile.TExp + amount
 		end
-		xdefm_ProfileUpdate( ply )
+
+		xdefm_ProfileUpdate(ply)
 	end
-	function xdefm_GiveMoney( ply, amo, nor )
-		if not IsValid( ply ) or not istable( ply.xdefm_Profile ) or not isnumber( amo ) or amo <= 0 then return end
-		amo = math.max( 0, math.Round( amo ) )
-		ply.xdefm_Profile.Money = ply.xdefm_Profile.Money + amo
-		if not nor then
-			ply.xdefm_Profile.TEarn = ply.xdefm_Profile.TEarn + amo
+
+	--- Adds money to a player's profile and optionally updates total earnings.
+	--- @param ply Player: The player receiving the money.
+	--- @param amount number: The amount of money to give.
+	--- @param dont_update_total boolean?: If true, total earnings are not updated.
+	--- @return nil
+	function xdefm_GiveMoney(ply, amount, dont_update_total)
+		if not IsValid(ply) or not istable(ply.xdefm_Profile) or not isnumber(amount) or amount <= 0 then return end
+
+		amount = math.max(0, math.Round(amount))
+		ply.xdefm_Profile.Money = ply.xdefm_Profile.Money + amount
+
+		if not dont_update_total then
+			ply.xdefm_Profile.TEarn = ply.xdefm_Profile.TEarn + amount
 		end
-		xdefm_ProfileUpdate( ply )
-		xdefm_SendSnd( ply, "physics/metal/chain_impact_soft" .. math.random( 1, 3 ) .. ".wav" )
+
+		xdefm_ProfileUpdate(ply)
+		xdefm_SendSnd(ply, "physics/metal/chain_impact_soft" .. math.random(1, 3) .. ".wav")
 	end
-	function xdefm_UpdateMenu( ply, typ, dat )
-		if not IsValid( ply ) or not istable( ply.xdefm_Profile ) or not isnumber( typ ) or not istable( dat ) then return end
-		net.Start( "NET_xdefm_MenuUpdate" )
-		net.WriteFloat( math.Round( typ ) )
-		net.WriteString( util.TableToJSON( dat ) )
-		net.Send( ply )
+
+	--- Sends a menu update to the player.
+	--- @param ply Player: The player receiving the update.
+	--- @param menu_type number: Type of menu to update.
+	--- @param menu_specific_data table: Data specific to the menu.
+	--- @return nil
+	function xdefm_UpdateMenu(ply, menu_type, menu_specific_data)
+		if not IsValid(ply) or not istable(ply.xdefm_Profile) or not isnumber(menu_type) or not istable(menu_specific_data) then return end
+
+		net.Start("NET_xdefm_MenuUpdate")
+		net.WriteFloat(math.Round(menu_type))
+		net.WriteString(util.TableToJSON(menu_specific_data))
+		net.Send(ply)
 	end
+
+	--- Cleans up entities and refunds their value to players.
+	--- @return nil
 	function xdefm_CleanupRefund()
-		if GetConVar( "xdefmod_refund" ):GetInt() <= 0 then return end
+		if GetConVar("xdefmod_refund"):GetInt() <= 0 then return end
+
 		xdefmod.refund = {}
-		for k, v in pairs( ents.FindByClass( "xdefm_base" ) ) do
-			if IsValid( v ) and istable( v.xdefm_T2 ) and isstring( v:GetFMod_OI() ) and v:GetFMod_OI() ~= "" and v:GetFMod_DT() then
-				local id = v:GetFMod_OI() local pc = xdefm_GetPrice( v:GetFMod_DT() )
-				if ( xdefm_ItemGet( v ) ~= "cr_seagull" and xdefm_ItemGet( v ) ~= "cr_crow" and xdefm_GetClass( v ) ~= "cr_seagull2" ) or v.xdefm_Killed then
-					--local aa, bb = xdefm_ItemGet( v ) -- Unused?
-					if istable( v.xdefm_T3 ) and not table.IsEmpty( v.xdefm_T3 ) then
-						for m, n in pairs( v.xdefm_T3 ) do if isstring( n ) and n ~= "_" then pc = pc + xdefm_GetPrice( n ) end end
+
+		for _, ent in pairs(ents.FindByClass("xdefm_base")) do
+			if IsValid(ent) and istable(ent.xdefm_T2) and isstring(ent:GetFMod_OI()) and ent:GetFMod_OI() ~= "" and ent:GetFMod_DT() then
+				local ply_id = ent:GetFMod_OI()
+				local price = xdefm_GetPrice(ent:GetFMod_DT())
+				if (xdefm_ItemGet(ent) ~= "cr_seagull" and xdefm_ItemGet(ent) ~= "cr_crow" and xdefm_GetClass(ent) ~= "cr_seagull2") or ent.xdefm_Killed then
+					-- local aa, bb = xdefm_ItemGet( v ) -- Unused?
+					if istable(ent.xdefm_T3) and not table.IsEmpty(ent.xdefm_T3) then
+						for _, item_info in pairs(ent.xdefm_T3) do
+							if isstring(item_info) and item_info ~= "_" then
+								price = price + xdefm_GetPrice(item_info)
+							end
+						end
 					end
-					if not isnumber( xdefmod.refund[ id ] ) then
-						xdefmod.refund[ id ] = pc
+
+					if not isnumber(xdefmod.refund[ply_id]) then
+						xdefmod.refund[ply_id] = price
 					else
-						xdefmod.refund[ id ] = xdefmod.refund[ id ] + pc
+						xdefmod.refund[ply_id] = xdefmod.refund[ply_id] + price
 					end
-					v:Remove()
+
+					ent:Remove()
 				end
 			end
 		end
-		for k, v in pairs( xdefmod.refund ) do
-			if isstring( k ) and isnumber( v ) and v > 0 then
-				local ply = player.GetBySteamID( k )
-				if IsValid( ply ) and ply:IsPlayer() and not ply:IsBot() and istable( ply.xdefm_Profile ) then
-					xdefm_AddNote( ply, "xdefm.CleanRefund&: " .. v, "!V", "coins", 5 ) xdefm_GiveMoney( ply, v )
+
+		for ply_id, amount in pairs(xdefmod.refund) do
+			if isstring(ply_id) and isnumber(amount) and amount > 0 then
+				local ply = player.GetBySteamID(ply_id)
+				if IsValid(ply) and ply:IsPlayer() and not ply:IsBot() and istable(ply.xdefm_Profile) then
+					xdefm_AddNote(ply, "xdefm.CleanRefund&: " .. amount, "!V", "coins", 5)
+					xdefm_GiveMoney(ply, amount)
 				else
-					local fil = "xdefishmod/p_" .. k .. ".txt"
-					if not file.Exists( fil, "DATA" ) then return end
-					local tab = util.JSONToTable( file.Read( fil, "DATA" ) ) -- FIXME: "tab" shadows existing binding!
-					if not istable( tab ) then return end
-					tab.Money = tonumber( math.Round( tab.Money ) ) + v
-					file.Write( fil, util.TableToJSON( tab, true ) )
+					local ply_file_path = "xdefishmod/p_" .. ply_id .. ".txt"
+					if not file.Exists(ply_file_path, "DATA") then return end
+
+					local ply_data = util.JSONToTable(file.Read(ply_file_path, "DATA"))
+					if not istable(ply_data) then return end
+
+					ply_data.Money = tonumber(math.Round(ply_data.Money)) + amount
+					file.Write(ply_file_path, util.TableToJSON(ply_data, true))
 				end
 			end
 		end
+
 		xdefmod.refund = nil
 	end
-	function xdefm_LootDrop( tab, ent ) -- FIXME: "tab" shadows existing binding!
-		if not istable( tab ) then return nil end
-		local ite, ttl, tax = "_", 0, {}
-		for k, v in pairs( tab ) do
-			if isstring( k ) and isnumber( v ) then
-				ttl = ttl + v
-				tax[ ttl ] = k
+
+	--- Drops a loot item based on weighted chances.
+	--- @param loot_table table: Loot names with their chances.
+	--- @param ent Entity: Entity to drop loot from.
+	--- @return Entity|string|nil: Spawned loot entity, loot name, or nil.
+	function xdefm_LootDrop(loot_table, ent)
+		if not istable(loot_table) then return
+			nil
+		end
+
+		-- Maps cumulative chances to loot names for weighted random selection.
+		local total_chance = 0
+		local chance_map = {}
+		for loot_name, loot_chance in pairs(loot_table) do
+			if isstring(loot_name) and isnumber(loot_chance) then
+				total_chance = total_chance + loot_chance
+				chance_map[total_chance] = loot_name
 			end
 		end
-		if ttl < 1 then return end
-		local ran = math.random( 1, math.ceil( ttl ) )
-		for k, v in SortedPairs( tax ) do
-			if ran <= k then
-				ite = v
+
+		if total_chance < 1 then return end
+
+		-- Selects a loot item based on a weighted random roll using cumulative chances.
+		local item_name = "_"
+		local roll = math.random(1, math.ceil(total_chance))
+		for cumulative_chance, loot_name in SortedPairs(chance_map) do
+			if roll <= cumulative_chance then
+				item_name = loot_name
 				break
 			end
 		end
-		if IsEntity( ent ) and not IsUselessModel( ent:GetModel() ) then
-			--local cen = ent:OBBCenter() -- Unused?
-			local aa, bb = ent:OBBMins() * 0.5, ent:OBBMaxs() * 0.5
-			local ang = Angle( math.Rand( 0, 360 ), math.Rand( 0, 360 ), 0 )
-			local xx, yy, zz = math.Rand( aa.x, bb.x ), math.Rand( aa.y, bb.y ), math.Rand( aa.z, bb.z )
-			local own = Entity( 0 )
+
+		if IsEntity(ent) and not IsUselessModel(ent:GetModel()) then
+			-- local cen = ent:OBBCenter() -- Unused?
+			local pos_min = ent:OBBMins() * 0.5
+			local pos_max = ent:OBBMaxs() * 0.5
+			local ang = Angle(math.Rand(0, 360), math.Rand(0, 360), 0)
+			local pos = Vector(math.Rand(pos_min.x, pos_max.x), math.Rand(pos_min.y, pos_max.y), math.Rand(pos_min.z, pos_max.z))
+			local own = Entity(0)
 			if ent:GetClass() == "xdefm_base" then
 				own = ent:GetFMod_OW()
 			end
-			local ite = xdefm_ItemSpawn( ite, ent:LocalToWorld( Vector( xx, yy, zz ) / 4 ), ang, own ) -- FIXME: "ite" shadows existing binding!
-			if IsValid( ite ) then
-				ite:SetFMod_OI( ent:GetFMod_OI() )
-				return ite
+
+			local item_ent = xdefm_ItemSpawn(item_name, ent:LocalToWorld(pos / 4), ang, own)
+			if item_ent and IsValid(item_ent) then
+				item_ent:SetFMod_OI(ent:GetFMod_OI())
+				return item_ent
 			end
 		end
-		return ite
+
+		return item_name
 	end
-	function xdefm_QuestRegister( lvl, ned, rew )
-		if not isstring( ned ) or ned == "_" or ned == "" then return end
-		if not isstring( rew ) or rew == "_" or rew == "" then return end
-		lvl = isnumber( lvl ) and math.max( math.Round( lvl ), 0 ) or 0
-		table.insert( xdefmod.quests, { lvl, ned, rew } )
+
+	--- Registers a new quest with level, requirement, and reward.
+	--- @param level number: Quest level, defaults to 0 if invalid.
+	--- @param needed string: Requirement for the quest, must be a non-empty string.
+	--- @param reward string: Reward for completing the quest, must be a non-empty string.
+	function xdefm_QuestRegister(level, needed, reward)
+		if not isstring(needed) or needed == "_" or needed == "" then return end
+		if not isstring(reward) or reward == "_" or reward == "" then return end
+
+		level = isnumber(level) and math.max(math.Round(level), 0) or 0
+		table.insert(xdefmod.quests, { level, needed, reward })
 	end
-	function xdefm_QuestPick( lvl, ply )
-		if not isnumber( lvl ) then return nil end
-		if table.IsEmpty( xdefmod.quests ) then return nil end
-		if lvl ~= -1 then
-			local tab = {} -- FIXME: "tab" shadows existing binding!
-			for k, v in RandomPairs( xdefmod.quests ) do
-				if v[ 1 ] <= lvl then tab = v break end
+
+	--- Picks a quest based on player level or clears the quest if level is -1.
+	--- @param level number: Player level or -1 to clear quest.
+	--- @param ply Player: The player to receive the quest.
+	--- @return table|nil: Selected quest or nil.
+	function xdefm_QuestPick(level, ply)
+		if not isnumber(level) then
+			return nil
+		end
+
+		if table.IsEmpty(xdefmod.quests) then
+			return nil
+		end
+
+		-- If level is -1, it clears the quest instead
+		if level ~= -1 then
+			local quest = {} -- FIXME: "tab" shadows existing binding!
+			for _, random_quest in RandomPairs(xdefmod.quests) do
+				if random_quest[1] <= level then
+					quest = random_quest
+					break
+				end
 			end
-			if IsValid( ply ) and ply:IsPlayer() and not ply:IsBot() then
-				net.Start( "NET_xdefm_Quest" )
-				net.WriteString( util.TableToJSON( tab ) )
-				net.Send( ply )
-				ply.xdefm_Quest = tab
+
+			if IsValid(ply) and ply:IsPlayer() and not ply:IsBot() then
+				net.Start("NET_xdefm_Quest")
+				net.WriteString(util.TableToJSON(quest))
+				net.Send(ply)
+				ply.xdefm_Quest = quest
 			end
-			return tab
-		elseif IsValid( ply ) and ply:IsPlayer() and not ply:IsBot() then
-			net.Start( "NET_xdefm_Quest" )
-			net.WriteString( util.TableToJSON( {} ) )
-			net.Send( ply )
+
+			return quest
+		elseif IsValid(ply) and ply:IsPlayer() and not ply:IsBot() then
+			net.Start("NET_xdefm_Quest")
+			net.WriteString(util.TableToJSON({}))
+			net.Send(ply)
 			ply.xdefm_Quest = {}
 		end
+
 		return nil
 	end
+
+	-- Hooks
 
 	hook.Add( "PhysgunPickup", "xdefm_NoTool", function( ply, ent )
 		if ent.xdefm_NoTool then return false end
@@ -2458,6 +2695,8 @@ if SERVER then -- Server only
 			end
 		end
 	end )
+
+	-- Net messages
 
 	net.Receive( "NET_xdefm_Cmd", function( len, ply )
 		if not IsValid( ply ) or len > 512 then return end
@@ -4498,6 +4737,10 @@ end end end
 		return true
 	end
 
+	--- Retrieves item information and its associated data.
+	--- @param obj string|Entity: The item identifier or entity.
+	--- @return string[]|nil: The item info (string table) if valid, otherwise nil.
+	--- @return table|nil: The item object (table) if valid, otherwise nil.
 	function xdefm_ItemGet(obj)
 		if IsEntity(obj) and obj:GetClass() == "xdefm_base" then
 			obj = obj:GetFMod_DT()
