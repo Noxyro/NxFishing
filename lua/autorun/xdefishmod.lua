@@ -1755,7 +1755,7 @@ if SERVER then -- Server only
 	xdefmod.util.ShutDown = false
 	xdefmod.util.LeadTime = 0
 
-	local lbtimer = "xdefm_leaderboardupdate"
+	local leaderboard_timer = "xdefm_leaderboardupdate"
 
 	util.AddNetworkString("NET_xdefm_Anim")
 	util.AddNetworkString("NET_xdefm_Profile")
@@ -1946,10 +1946,12 @@ if SERVER then -- Server only
 	--- @param pos Vector: Position of the fire spot.
 	--- @param size number: Size (0-100, default 5).
 	--- @param power number: Power (default is size).
-	--- @param parent Entity: Optional parent entity.
-	--- @return Entity: The created fire spot entity.
+	--- @param parent Entity?: Parent entity.
+	--- @return Entity|nil: The created fire spot entity.
 	function xdefm_FireSpot(pos, size, power, parent)
-		if not isvector(pos) then return end
+		if not isvector(pos) then
+			return nil
+		end
 
 		size = isnumber(size) and math.Clamp(size, 0, 100) or 5
 		power = isnumber(power) and math.max(power, 0) or size
@@ -2047,14 +2049,14 @@ if SERVER then -- Server only
 		if not isnumber(permission_value) then
 			permission_value = tonumber(permission_value)
 		end
-		
+
 		if not isnumber(permission_value) or permission_value ~= 1 then
 			return false
 		end
 
 		return true
 	end
-	
+
 	--- NADMOD integration. Checks if a player can interact with an entity.
 	--- @param ply Entity: The player.
 	--- @param ent Entity: The entity.
@@ -2083,7 +2085,7 @@ if SERVER then -- Server only
 	--- @param revert boolean: If true, reverts the restriction.
 	function xdefm_NoTool(ent, revert)
 		if not IsValid(ent) then return end
-		
+
 		if isbool(revert) and revert == true then
 			ent.xdefm_NoTool = false
 		else
@@ -2128,7 +2130,7 @@ if SERVER then -- Server only
 			if not ply_profile.UpdG then
 				ply_profile.UpdG = 0
 			end
-			
+
 			for slot_index, item_info in pairs(ply_profile.Items) do
 				if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
 					ply_profile.Items[slot_index] = (slot_index == 21 and "ba_junk" or "it_error")
@@ -2220,10 +2222,10 @@ if SERVER then -- Server only
 		end
 
 		xdefm_AddNote(ply, "xdefm.FullInv", "resource/warning.wav", "cross", 5)
-		
+
 		return false
 	end
-	
+
 	--- Spawns an item entity at a specified position and angle.
 	--- @param item_name string: The name of the item to spawn.
 	--- @param pos Vector: The position where the item will be spawned.
@@ -2312,7 +2314,7 @@ if SERVER then -- Server only
 		ent:SetPos(pos)
 		ent:SetAngles(ang)
 		ent:SetFMod_DT(tostring(item_name))
-		
+
 		if isstring(model) and util.IsValidModel(model) then
 			ent:SetModel(model)
 			ent.xdefm_Mdl = model
@@ -2570,224 +2572,357 @@ if SERVER then -- Server only
 
 	-- Hooks
 
-	hook.Add( "PhysgunPickup", "xdefm_NoTool", function( ply, ent )
+	-- Prevents flagged fishing entities to be interacted with by phys gun
+	hook.Add("PhysgunPickup", "xdefm_NoTool", function(ply, ent)
 		if ent.xdefm_NoTool then return false end
 		if ent:GetClass() == "xdefm_base" then return false end
-	end )
-	hook.Add( "CanProperty", "xdefm_NoTool", function( ply, property, ent )
+	end)
+
+	-- Prevents flagged fishing entities to have their properties changed
+	hook.Add("CanProperty", "xdefm_NoTool", function(ply, property, ent)
 		if ent.xdefm_NoTool then return false end
 		if ent:GetClass() == "xdefm_base" then return false end
-	end )
-	hook.Add( "CanTool", "xdefm_NoTool", function( ply, tr, toolname, tool, button )
-		if IsValid( tr.Entity ) and tr.Entity.xdefm_NoTool then return false end
-		if IsValid( tr.Entity ) and tr.Entity:GetClass() == "xdefm_base" then return false end
-	end )
-	hook.Add( "AllowPlayerPickup", "xdefm_NoTool", function( ply, ent )
+	end)
+
+	-- Prevents flagged fishing entities to be targeted by tools
+	hook.Add("CanTool", "xdefm_NoTool", function(ply, trace_table, toolname, tool, button)
+		if IsValid(trace_table.Entity) and trace_table.Entity.xdefm_NoTool then return false end
+		if IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" then return false end
+	end)
+
+	-- Prevents flagged fishing entities to be picked up by players
+	hook.Add("AllowPlayerPickup", "xdefm_NoTool", function(ply, ent)
 		if ent.xdefm_NoTool then return false end
-	end )
-	hook.Add( "GravGunPickupAllowed", "xdefm_NoTool", function( ply, ent )
+	end)
+
+	-- Prevents flagged fishing entities to be picked up by gravity gun
+	hook.Add("GravGunPickupAllowed", "xdefm_NoTool", function(ply, ent)
 		if ent.xdefm_NoTool then return false end
-	end )
-	hook.Add( "PlayerCanPickupWeapon", "xdefm_NoPickup", function( ply, wep )
-		if IsValid( wep ) and isstring( wep:GetClass() ) then
-			local st, _ = string.find( wep:GetClass():lower(), "weapon_xdefm_" )
-			if st and ply:HasWeapon( wep:GetClass() ) then
+	end)
+
+	-- Prevents players from picking up fishing weapons they already have on them
+	hook.Add("PlayerCanPickupWeapon", "xdefm_NoPickup", function(ply, weapon)
+		if IsValid(weapon) and isstring(weapon:GetClass()) then
+			local find_index, _ = string.find(weapon:GetClass():lower(), "weapon_xdefm_")
+			if find_index and ply:HasWeapon(weapon:GetClass()) then
 				return false
 			end
 		end
-	end )
-	hook.Add( "Think", "xdefm_TK", function()
-		for k, v in pairs( ents.FindByClass( "xdefm_base" ) ) do
-			if IsValid( v ) and istable( v.xdefm_T2 ) and not v:IsPlayerHolding() and not constraint.FindConstraint( v, "Weld" ) and v:WaterLevel() > 0 and v.xdefm_T2.KillInWater then
-				SafeRemoveEntity( v )
-				local data = EffectData()
-				data:SetOrigin( v:WorldSpaceCenter() )
-				data:SetScale( math.Round( v:OBBMins():Distance( v:OBBMaxs() ) * 0.1, 2 ) )
-				util.Effect( "watersplash", data )
+	end)
+
+	-- Hook for regular updates:
+	-- 1. Removes certain entities if submerged in water.
+	-- 2. Manages sale cooldown and triggers shop updates.
+	-- 3. Periodically updates the leaderboard based on player files, saving and broadcasting it. 
+	hook.Add("Think", "xdefm_TK", function()
+		-- Check all props that should be killed in water if they are submerged and delete them with small splash effect if they are
+		for _, fishing_ent in pairs(ents.FindByClass("xdefm_base")) do
+			if IsValid(fishing_ent) and istable(fishing_ent.xdefm_T2) and not fishing_ent:IsPlayerHolding() and not constraint.FindConstraint(fishing_ent, "Weld") and fishing_ent:WaterLevel() > 0 and fishing_ent.xdefm_T2.KillInWater then
+				SafeRemoveEntity(fishing_ent)
+				local effect = EffectData()
+				effect:SetOrigin(fishing_ent:WorldSpaceCenter())
+				effect:SetScale(math.Round(fishing_ent:OBBMins():Distance(fishing_ent:OBBMaxs()) * 0.1, 2))
+				util.Effect("watersplash", effect)
 			end
 		end
-		local tim = math.max( math.Round( GetConVar( "xdefmod_salecool" ):GetInt() ), 0 ) * 60
-		local time = math.Round( os.time() / tim ) * tim
-		if tim > 0 and time ~= xdefmod.util.SaleTime then
-			xdefmod.util.SaleTime = time
+
+		-- Calculates if the next sale started, by comparing the current time rounded to the closest interval of cooldown in seconds,
+		-- and if the interval is not the same as the current sale time, set it as the new sale time and update the shop with a new sale.
+		local sale_cooldown = math.max(math.Round(GetConVar("xdefmod_salecool"):GetInt()), 0) * 60
+		local sale_time = math.Round(os.time() / sale_cooldown) * sale_cooldown
+		if sale_cooldown > 0 and sale_time ~= xdefmod.util.SaleTime then
+			xdefmod.util.SaleTime = sale_time
 			xdefm_UpdateShop()
 		end
-		local ti2 = math.max( math.Round( GetConVar( "xdefmod_lbdelay" ):GetInt() ), 0 ) * 60
-		time = math.Round( os.time() / ti2 ) * ti2
-		if not istable( xdefmod.leader ) or ( ti2 > 0 and time ~= xdefmod.util.LeadTime ) then
-			xdefmod.util.LeadTime = time
-			if not timer.Exists( lbtimer ) then
-				local fil, _ = file.Find( "xdefishmod/p_*.txt", "DATA" )
-				if not istable( fil ) or #fil <= 0 then return end
-				local cfr = 0
-				--local cto = #fil -- Unused?
-				local ctb = { }
-				timer.Create( lbtimer, 0, 0, function()
+
+		-- Do the same with the leaderboard delay and update leaderboard, if interval changed or leaderboard is empty yet.
+		-- If leaderboard delay is set to 0, it will only updated once every restart / map change.
+		local leaderboard_delay = math.max(math.Round(GetConVar("xdefmod_lbdelay"):GetInt()), 0) * 60
+		local leaderboard_time = math.Round(os.time() / leaderboard_delay) * leaderboard_delay
+
+		if not istable(xdefmod.leader) or (leaderboard_delay > 0 and leaderboard_time ~= xdefmod.util.LeadTime) then
+			xdefmod.util.LeadTime = leaderboard_time
+
+			if not timer.Exists(leaderboard_timer) then
+				local all_ply_files, _ = file.Find("xdefishmod/p_*.txt", "DATA")
+				if not istable(all_ply_files) or #all_ply_files <= 0 then return end
+
+				local ply_file_index = 0
+				-- local ply_file_count = #all_ply_files -- REVIEW: Unused?
+				local updated_leaderboard = {}
+				-- Repeating timer for updating the leaderboard not with all player files at once
+				timer.Create(leaderboard_timer, 0, 0, function()
+					-- Run for 5 player files on each tick
 					for i = 1, 5 do
-						cfr = cfr + 1
-						local fin = fil[ cfr ]
-						if not isstring( fin ) then
-							local jso = util.TableToJSON( ctb, true )
-							file.Write( "xdefishmod/leaderboard.txt", jso )
-							xdefmod.leader = ctb
-							net.Start( "NET_xdefm_Leaderboard" )
-							net.WriteString( jso )
+						ply_file_index = ply_file_index + 1
+
+						local ply_file = all_ply_files[ply_file_index]
+						-- Check if all player files have been processed
+						if not isstring(ply_file) then
+							-- Write updated leaderboard to disk
+							local leaderboard_json = util.TableToJSON(updated_leaderboard, true)
+							file.Write("xdefishmod/leaderboard.txt", leaderboard_json)
+							xdefmod.leader = updated_leaderboard
+
+							-- Broadcast updated leaderboard to players
+							net.Start("NET_xdefm_Leaderboard")
+							net.WriteString(leaderboard_json)
 							net.Broadcast()
-							for k, v in pairs( player.GetAll() ) do
-								xdefm_UpdateMenu( v, 7, ctb )
+
+							-- Update menu view of all online players
+							for _, ply in pairs(player.GetAll()) do
+								xdefm_UpdateMenu(ply, 7, updated_leaderboard)
 							end
-							timer.Remove( lbtimer )
+
+							-- Remove timer to finishg update process
+							timer.Remove(leaderboard_timer)
 							break
 						end
-						local tab = util.JSONToTable( file.Read( "xdefishmod/" .. fin, "DATA" ) ) -- FIXME: "tab" shadows existing binding!
-						if istable( tab ) and not istable( ctb[ 10 ] ) or ctb[ 10 ][ 1 ] <= tab.TExp then
-							for m = 1, 10 do
-								local ttt = ctb[ m ]
-								if ( not istable( ttt ) or ttt[ 1 ] < tab.TExp ) and isstring( tab.SID64 ) then
-									table.insert( ctb, m, { tab.TExp, tab.SID64, tab.Nick, tab.Level, tab.Money } )
-									if #ctb > 10 then
-										table.remove( ctb, 11 )
+
+						-- Check players experience against the current leaderboard, by checking the experience against each leader top-to-bottom,
+						-- and inserts player into list, if a leader has less experience than the player, removes the pushed out player and breaks the loop.
+						local ply_data = util.JSONToTable(file.Read("xdefishmod/" .. ply_file, "DATA"))
+						if istable(ply_data) and not istable(updated_leaderboard[10]) or updated_leaderboard[10][1] <= ply_data.TExp then
+							for leader_index = 1, 10 do
+								local leader_data = updated_leaderboard[leader_index]
+								if (not istable(leader_data) or leader_data[1] < ply_data.TExp) and isstring(ply_data.SID64) then
+									table.insert(updated_leaderboard, leader_index, { ply_data.TExp, ply_data.SID64, ply_data.Nick, ply_data.Level, ply_data.Money })
+									if #updated_leaderboard > 10 then
+										table.remove(updated_leaderboard, 11)
 									end
+
 									break
 								end
 							end
 						end
 					end
-				end )
+				end)
 			end
 		end
-	end )
-	hook.Add( "EntityTakeDamage", "xdefm_Hurt", function( tar, dmg )
-		if IsValid( dmg:GetInflictor() ) and dmg:GetInflictor():GetNWBool( "XDEFM_HO" ) and IsValid( dmg:GetInflictor():GetOwner() ) then
-			dmg:SetInflictor( dmg:GetInflictor():GetOwner() )
-			if IsValid( dmg:GetInflictor():GetOwner() ) then
-				dmg:SetAttacker( dmg:GetInflictor():GetOwner() )
+	end)
+
+	-- Custom damage handling logic:
+	-- 1. Corrects damage from specific projectiles (like rocket launchers) to their owner and restricts it to living entities (players, NPCs, nextbots).
+	-- 2. Bypasses damage restrictions for fishing entities if "xdefmod_noprophurt" convar is set to 0 (or less).
+	-- 3. Ensures that creatures can always be damaged by players and can damage players without restrictions.
+	-- 4. Prevents players from damaging fishing entities owned by others unless they have permission.
+	-- 5. Prevents fishing entities from damaging players unless permission is granted.
+	hook.Add("EntityTakeDamage", "xdefm_Hurt", function(target, dmg)
+		-- Correct projectile / indirect damage for rocket launcher items to only be able to target living entities
+		if IsValid(dmg:GetInflictor()) and dmg:GetInflictor():GetNWBool("XDEFM_HO") and IsValid(dmg:GetInflictor():GetOwner()) then
+			dmg:SetInflictor(dmg:GetInflictor():GetOwner())
+
+			if IsValid(dmg:GetInflictor():GetOwner()) then
+				dmg:SetAttacker(dmg:GetInflictor():GetOwner())
 			end
-			if not tar:IsPlayer() and not tar:IsNPC() and not tar:IsNextBot() then return true end
+
+			if not target:IsPlayer() and not target:IsNPC() and not target:IsNextBot() then
+				return true
+			end
 		end
-		local _, atk = dmg:GetInflictor(), dmg:GetAttacker()
-		if not IsValid( atk ) or GetConVar( "xdefmod_noprophurt" ):GetInt() <= 0 then return end
-		if tar:GetClass() == "xdefm_base" then
-			local _, bb = xdefm_ItemGet( tar:GetFMod_DT() )
-			if istable( bb ) and bb.Type == "Creature" then return end
+
+		-- Always allow damage to / from fishing entities if convar is set to <= 0 (skips permission checks)
+		--local inflictor = dmg:GetInflictor() -- REVIEW: Unused?
+		local attacker = dmg:GetAttacker()
+		if not IsValid(attacker) or GetConVar("xdefmod_noprophurt"):GetInt() <= 0 then
+			return false
 		end
-		if atk:IsPlayer() and tar:GetClass() == "xdefm_base" and not xdefm_FriendAllow( atk, tar:GetFMod_OI() ) and not xdefm_NadAllow( atk, tar ) then return true end
-		if atk:GetClass() == "xdefm_base" and tar:IsPlayer() and not xdefm_FriendAllow( atk:GetFMod_OW(), tar:SteamID() ) and not xdefm_NadAllow( tar, atk ) then return true end
-	end )
-	hook.Add( "PreCleanupMap", "xdefm_Refund", function()
+
+		-- Always allow creatures to be damaged by other players / to damage other players
+		if target:GetClass() == "xdefm_base" then
+			local _, item = xdefm_ItemGet(target:GetFMod_DT())
+			if istable(item) and item.Type == "Creature" then
+				return false
+			end
+		end
+
+		-- Prevent players damage to fishing entities of other players they do not have permissions from
+		if attacker:IsPlayer() and target:GetClass() == "xdefm_base" and not xdefm_FriendAllow(attacker, target:GetFMod_OI()) and not xdefm_NadAllow(attacker, target) then
+			return true
+		end
+
+		-- Prevent fishing entities damage to other players which they do not have permissions from
+		if attacker:GetClass() == "xdefm_base" and target:IsPlayer() and not xdefm_FriendAllow(attacker:GetFMod_OW(), target:SteamID()) and not xdefm_NadAllow(target, attacker) then
+			return true
+		end
+	end)
+
+	-- Runs refund for all items currently on map, if a cleanup is executed
+	hook.Add("PreCleanupMap", "xdefm_Refund", function()
 		xdefm_CleanupRefund()
-	end )
-	hook.Add( "ShutDown", "xdefm_Refund", function()
+	end)
+
+	-- Sets the shutdown state and refunds all items currently still on map
+	hook.Add("ShutDown", "xdefm_Refund", function()
 		if xdefmod.util.ShutDown then return end
 		xdefmod.util.ShutDown = true
 		xdefm_CleanupRefund()
-	end )
-	hook.Add( "OnPlayerPhysicsPickup", "xdefm_LastTake", function( ply, ent )
-		if IsValid( ply ) and IsValid( ent ) and ent:GetClass() == "xdefm_base" then
-			ent:SetFMod_LU( ply )
+	end)
+
+	-- Sets the network variable for the entity of who is currently carrying it, when picked up by a player
+	hook.Add("OnPlayerPhysicsPickup", "xdefm_LastTake", function(ply, ent)
+		if IsValid(ply) and IsValid(ent) and ent:GetClass() == "xdefm_base" then
+			ent:SetFMod_LU(ply)
 		end
-	end )
-	hook.Add( "OnPlayerPhysicsDrop", "xdefm_LastDrop", function( ply, ent, thr )
-		if IsValid( ply ) and IsValid( ent ) and ent:GetClass() == "xdefm_base" then
-			ent:SetFMod_LU( nil )
-			if istable( ent.xdefm_T2 ) then
-				ent.xdefm_T2:OnDrop( ent, ply, thr )
+	end)
+
+	-- Unsets the network variable for the entity of who is carrying it and runs OnDrop(), when being dropped or thrown by a player
+	hook.Add("OnPlayerPhysicsDrop", "xdefm_LastDrop", function(ply, ent, thrown)
+		if IsValid(ply) and IsValid(ent) and ent:GetClass() == "xdefm_base" then
+			ent:SetFMod_LU(nil)
+			if istable(ent.xdefm_T2) then
+				ent.xdefm_T2:OnDrop(ent, ply, thrown)
 			end
 		end
-	end )
+	end)
 
 	-- Net messages
 
-	net.Receive( "NET_xdefm_Cmd", function( len, ply )
-		if not IsValid( ply ) or len > 512 then return end
-		local cmd, dat = net.ReadString(), net.ReadString()
-		if isstring( cmd ) and isstring( dat ) and cmd ~= "" and dat ~= "" then
-			xdefm_Command( ply, cmd, dat )
+	-- Receives command from a player and runs it with specified command data
+	net.Receive("NET_xdefm_Cmd", function(length, ply)
+		if not IsValid(ply) or length > 512 then return end
+
+		local cmd = net.ReadString()
+		local cmd_data = net.ReadString()
+		if isstring(cmd) and isstring(cmd_data) and cmd ~= "" and cmd_data ~= "" then
+			xdefm_Command(ply, cmd, cmd_data)
 		end
-	end )
-	net.Receive( "NET_xdefm_SendFriends", function( len, ply )
-		if not IsValid( ply ) or len > 8192 then return end
-		if isnumber( ply.xdefm_Cool ) and ply.xdefm_Cool > CurTime() then return end
+	end)
+
+	-- Receives and setups / updates player friends data
+	net.Receive("NET_xdefm_SendFriends", function(len, ply)
+		if not IsValid(ply) or len > 8192 then return end
+		if isnumber(ply.xdefm_Cool) and ply.xdefm_Cool > CurTime() then return end
+
 		ply.xdefm_Cool = CurTime() + 0.9
-		local tab = {} -- FIXME: "tab" shadows existing binding!
+
+		local friends_data = {}
 		if len > 0 then
 			local str = net.ReadString()
-			if not isstring( str ) or str == "" then return end
-			tab = util.JSONToTable( str )
-			if not istable( tab ) then return end
+			if not isstring(str) or str == "" then return end
+
+			friends_data = util.JSONToTable(str)
+
+			if not istable(friends_data) then
+				return
+			end
 		else
-			tab = ply.xdefm_Friends
+			friends_data = ply.xdefm_Friends
 		end
-		xdefm_SetupFriends( ply, tab )
-	end )
-	net.Receive( "NET_xdefm_ConsoleCmd", function( len, ply )
-		if not IsValid( ply ) or len > 1024 or len <= 0 then return end
-		if isnumber( ply.xdefm_Cool ) and ply.xdefm_Cool > CurTime() then return end
+
+		xdefm_SetupFriends(ply, friends_data)
+	end)
+
+	-- Receives console command from player and executes it with specified paremeters
+	net.Receive("NET_xdefm_ConsoleCmd", function(length, ply)
+		if not IsValid(ply) or length > 1024 or length <= 0 then return end
+		if isnumber(ply.xdefm_Cool) and ply.xdefm_Cool > CurTime() then return end
+
 		ply.xdefm_Cool = CurTime() + 0.1
-		local cmd, var = net.ReadString(), net.ReadString()
-		local tab = util.JSONToTable( var ) -- FIXME: "tab" shadows existing binding!
-		xdefm_ConsoleCmd( cmd, tab, ply )
-	end )
-	net.Receive( "NET_xdefm_Pickup", function( len, ply )
-		if not IsValid( ply ) or len <= 0 or len >= 128 or not ply:Alive() then return end
-		if isnumber( ply.xdefm_Cool ) and ply.xdefm_Cool > CurTime() then return end
-		local pl2 = net.ReadEntity()  if pl2 ~= ply then return end ply.xdefm_Cool = CurTime() + 0.1
+
+		local cmd = net.ReadString()
+		local cmd_json = net.ReadString()
+		local cmd_data = util.JSONToTable(cmd_json)
+		xdefm_ConsoleCmd(cmd, cmd_data, ply)
+	end)
+
+	-- Handles item pickup requests from players:
+	-- 1. Validates the player and checks for action cooldown.
+	-- 2. Check if the player is allowed to interact with the entity and it is not already flagged trashed.
+	-- 3. Depending on the item type and if "tempmode" is enabled, either add it to the player's inventory or sell it directly.
+	-- 4. Notifies the player if the item can't be picked up or isn't theirs.
+	net.Receive("NET_xdefm_Pickup", function(length, ply)
+		if not IsValid(ply) or length <= 0 or length >= 128 or not ply:Alive() then return end
+		if isnumber(ply.xdefm_Cool) and ply.xdefm_Cool > CurTime() then return end
+
+		local ply_received = net.ReadEntity()
+		if ply_received ~= ply then return end
+
+		ply.xdefm_Cool = CurTime() + 0.1
+
 		local ent = ply:GetEyeTrace().Entity
-		if IsValid( ent ) and ent:GetClass() == "xdefm_base" and not ent:IsConstrained() and xdefm_CanInteract( ply, ent ) and not ent.xdefm_Trashed then
+		if IsValid(ent) and ent:GetClass() == "xdefm_base" and not ent:IsConstrained() and xdefm_CanInteract(ply, ent) and not ent.xdefm_Trashed then
 			ply.xdefm_Cool = CurTime() + 0.1
-			local aa, bb = xdefm_ItemGet( ent:GetFMod_DT() )
-			if istable( aa ) and istable( bb ) then
-				local _, owi = ent:GetFMod_OW(), ent:GetFMod_OI()
-				if bb:OnStore( ent, ply ) == false then return end
+
+			local item_info, item = xdefm_ItemGet(ent:GetFMod_DT())
+			if istable(item_info) and istable(item) then
+				--local ent_owner = ent:GetFMod_OW() -- REVIEW: Unused?
+				local ent_owner_id = ent:GetFMod_OI()
+				if item:OnStore(ent, ply) == false then return end
+
 				ply.xdefm_Cool = CurTime() + 0.1
-				if xdefm_FriendAllow( ply, owi ) or xdefm_NadAllow( ply, ent ) then
-					if istable( ent.xdefm_T3 ) and not table.IsEmpty( ent.xdefm_T3 ) then local yee = false
-						for k, v in pairs( ent.xdefm_T3 ) do if isstring( v ) and v ~= "_" then
-								xdefm_AddNote( ply, xdefm_ItemMark( ent:GetFMod_DT() ) .. "& &xdefm.NotEmpty", "resource/warning.wav", "cross", 5 ) yee = true break
+
+				-- Check permissions for entity
+				if xdefm_FriendAllow(ply, ent_owner_id) or xdefm_NadAllow(ply, ent) then
+					-- Check if entity is a storage and if there is still items inside
+					if istable(ent.xdefm_T3) and not table.IsEmpty(ent.xdefm_T3) then
+						local result = false
+						for _, stored_item in pairs(ent.xdefm_T3) do
+							if isstring(stored_item) and stored_item ~= "_" then
+								xdefm_AddNote(ply, xdefm_ItemMark(ent:GetFMod_DT()) .. "& &xdefm.NotEmpty", "resource/warning.wav", "cross", 5)
+								result = true
+								break
 							end
 						end
-						if yee then return end
+
+						if result then
+							return
+						end
 					end
-					local hk = hook.Run( "XDEFM_PlayerTake", ply, ent )
-					if isbool( hk ) and hk == false then return end
-					if bb.Carryable and ( GetConVar( "xdefmod_tempmode" ):GetInt() <= 0 or bb.Type == "Bait" or bb.Type == "Recipe" ) then
-						if xdefm_ItemGive( ply, ent:GetFMod_DT() ) then
+
+					local hook_result = hook.Run("XDEFM_PlayerTake", ply, ent)
+					if isbool(hook_result) and hook_result == false then return end
+
+					-- Check if items is carryable or a bait or a recipe, insert it into players inventory and delete the entity
+					-- If "xdefmod_tempmode" is 1 (or greater), then all items will be immediately sold instead
+					if item.Carryable and (GetConVar("xdefmod_tempmode"):GetInt() <= 0 or item.Type == "Bait" or item.Type == "Recipe") then
+						if xdefm_ItemGive(ply, ent:GetFMod_DT()) then
 							ent.xdefm_Trashed = true
 							ent:Remove()
 						end
 					else
 						ent.xdefm_Trashed = true
 						ent:Remove()
-						local prc = xdefm_GetPrice( ent )
-						net.Start( "NET_xdefm_BestiaryRecord" )
-						net.WriteString( xdefm_GetClass( ent ) )
-						net.Send( ply )
-						if prc > 0 then
-							xdefm_GiveMoney( ply, prc, true )
-							xdefm_AddNote( ply, "xdefm.GetMoney&: " .. prc, "!V", "coins", 5 )
+
+						local price = xdefm_GetPrice(ent)
+						net.Start("NET_xdefm_BestiaryRecord")
+						net.WriteString(xdefm_GetClass(ent))
+						net.Send(ply)
+						if price > 0 then
+							xdefm_GiveMoney(ply, price, true)
+							xdefm_AddNote(ply, "xdefm.GetMoney&: " .. price, "!V", "coins", 5)
 						else
-							xdefm_AddNote( ply, "xdefm.Trashed&: " .. xdefm_ItemMark( ent:GetFMod_DT() ), "physics/cardboard/cardboard_box_impact_bullet1.wav", "bin_empty", 5 )
+							xdefm_AddNote(ply, "xdefm.Trashed&: " .. xdefm_ItemMark(ent:GetFMod_DT()), "physics/cardboard/cardboard_box_impact_bullet1.wav", "bin_empty", 5)
 						end
 					end
-				else xdefm_AddNote( ply, "xdefm.NotMine", "resource/warning.wav", "cross", 5 ) end
+				else
+					xdefm_AddNote(ply, "xdefm.NotMine", "resource/warning.wav", "cross", 5)
+				end
 			end
 		end
-	end )
-	net.Receive( "NET_xdefm_NeedProfile", function( len, ply )
-		if not IsValid( ply ) or len > 0 or istable( ply.xdefm_Profile ) then return end
-		if isnumber( xdefmod.skips[ ply:SteamID() ] ) then
-			ply:SetNWFloat( "XDEFM_QC", CurTime() + GetConVar( "xdefmod_qsttime" ):GetInt() * 60 )
-			ply:SetNWBool( "XDEFM_QD", true )
+	end)
+
+	-- Handles request from a player for their server-side profile
+	net.Receive("NET_xdefm_NeedProfile", function(length, ply)
+		if not IsValid(ply) or length > 0 or istable(ply.xdefm_Profile) then return end
+
+		-- Checks if player already has a quest, sets it to failed and refreshes quest time
+		if isnumber(xdefmod.skips[ply:SteamID()]) then
+			ply:SetNWFloat("XDEFM_QC", CurTime() + GetConVar("xdefmod_qsttime"):GetInt() * 60)
+			ply:SetNWBool("XDEFM_QD", true)
 		end
-		xdefm_ProfileLoad( ply )
+
+		xdefm_ProfileLoad(ply)
 		ply.xdefm_Cool = 0
+
+		-- Re-assign player entity to owned entities
 		local id = ply:SteamID()
-		for k, v in pairs( ents.FindByClass( "xdefm_base" ) ) do
-			if IsValid( v ) and v:GetFMod_OI() == id then
-				v:SetFMod_OW( ply )
+		for _, ent in pairs(ents.FindByClass("xdefm_base")) do
+			if IsValid(ent) and ent:GetFMod_OI() == id then
+				ent:SetFMod_OW(ply)
 			end
 		end
-	end )
+	end)
 end
 
 if SERVER or CLIENT then -- Shared
@@ -4042,7 +4177,7 @@ elseif typ == 6 then -- Friends menu
 		pax:SetPos( 356, 4 ) pax:SetSize( 16, 16 ) end function pan.P_Search:DoClick() pan.P_Entry.FindTheFriend() end
 	for i=1, 2 do -- Reset / Confirm buttons
 		local but = vgui.Create( "DButton", pan )  but:SetText( "" )  but.B_Hover = false  but.N_Lerp = 0
-		but:SetSize( 120, 30 )  but:SetPos( -100 +i*160, 510 ) but:SetIcon( i == 1 and "icon16/group_go.png" or "icon16/group_edit.png" )
+		but:SetSize( 120, 30 )  but:SetPos( -100 + i * 160, 510 ) but:SetIcon( i == 1 and "icon16/group_go.png" or "icon16/group_edit.png" )
 		function but:Paint( w, h ) local col = Color( 100, 100, 100 )
 			but.N_Lerp = Lerp( 0.2, but.N_Lerp, pan.N_Clicked > CurTime() and -1 or ( but.B_Hover and 1 or 0 ) )
 			if pan.B_Edited then col = Color( 155, 0, 0 ) end
@@ -4056,7 +4191,7 @@ elseif typ == 6 then -- Friends menu
 		function but:OnCursorEntered() but.B_Hover = true end
 		function but:OnCursorExited() but.B_Hover = false end
 		function but:DoClick() if pan.N_Clicked > CurTime() then return end
-			pan.N_Clicked = CurTime() +1  pan.B_Edited = false  local str = util.TableToJSON( pan.T_Data, true )
+			pan.N_Clicked = CurTime() + 1  pan.B_Edited = false  local str = util.TableToJSON( pan.T_Data, true )
 			net.Start( "NET_xdefm_SendFriends" ) if i == 2 then net.WriteString( str ) end net.SendToServer()
 		end
 	end
