@@ -5463,7 +5463,7 @@ elseif cmd == "Upgrade" then local pro = ply.xdefm_Profile  local skp = pro.Skp 
 	end
 	if IsValid( wep ) and wep:GetClass() == "weapon_xdefm_rod" and IsValid( wep.FMod_Rod ) then wep.FMod_Rod:Remove() end return true
 elseif cmd == "Downgrade" then
-	local pro = ply.xdefm_Profile
+	--local pro = ply.xdefm_Profile -- REVIEW: Unused?
 	--local skp = pro.Skp -- REVIEW: Unused?
 	local exp = string.Explode("|", dat)
 	local d1, d2  if istable( exp ) and #exp == 2 then d1, d2 = exp[ 1 ], exp[ 2 ] else d1, d2 = dat, 1 end
@@ -5761,8 +5761,8 @@ end end
 			net.Broadcast()
 		else
 			if not IsValid( ent ) then return end
-			local pos = ent:GetPos()
-			local aa, bb = ent:WorldSpaceAABB()
+			--local pos = ent:GetPos() -- REVIEW: Unused?
+			local aa, bb = ent:WorldSpaceAABB() -- FIXME: "aa" shadows existing binding!
 			local num = math.Clamp( math.Round( ent:BoundingRadius() / 8 ), 0, 32 )
 			for i = 0, num do
 				local ef = EffectData()
@@ -5826,13 +5826,14 @@ end end
 			end
 		end
 		if SERVER and IsValid( ply ) then
-			if IsValid( ply.xdefm_Struct ) and ply.xdefm_Struct:GetClass() == "xdefm_base" and ply:GetPos():Distance( ply.xdefm_Struct:GetPos() ) > 300 then local usi = ply.xdefm_Struct
-				xdefm_CloseMenu( v, "Struct" )
+			if IsValid(ply.xdefm_Struct) and ply.xdefm_Struct:GetClass() == "xdefm_base" and ply:GetPos():Distance(ply.xdefm_Struct:GetPos()) > 300 then
+				--local usi = ply.xdefm_Struct -- REVIEW: Unused?
+				xdefm_CloseMenu(v, "Struct")
 			end
 			if ply:GetNWFloat( "XDEFM_QC" ) > 0 and ply:GetNWFloat( "XDEFM_QC" ) <= CurTime() then
 				ply:SetNWFloat( "XDEFM_QC", 0 ) ply:SetNWBool( "XDEFM_QD", false ) xdefmod.skips[ ply:SteamID() ] = nil
 			end
-			local usi, usn = ply:GetNWEntity( "XDEFM_Using" ), ply.xdefm_Using
+			--local usi, usn = ply:GetNWEntity( "XDEFM_Using" ), ply.xdefm_Using -- REVIEW: Unused?
 			local trd = ply:GetNWEntity( "XDEFMod_TPL" )
 			if IsValid( trd ) and trd:IsPlayer() and trd:Alive() and trd:HasWeapon( "weapon_xdefm_trade" ) and trd:GetNWEntity( "XDEFMod_TPL" ) == ply and
 			trd:WorldSpaceCenter():DistToSqr( ply:WorldSpaceCenter() ) < 70000 and ply:HasWeapon( "weapon_xdefm_trade" ) and not ply:GetNWBool( "XDEFMod_BTD" ) and not trd:GetNWBool( "XDEFMod_BTD" ) then
@@ -5880,7 +5881,7 @@ concommand.Add("xdefmod_collectclear", function(ply, cmd, var) xdefm_ConsoleCmd(
 
 concommand.Add("xdefmod_count", function(ply, cmd, var)
 	local num = 0
-	for k, v in pairs(xdefmod.items) do
+	for k, v in pairs(xdefmod.items) do -- FIXME: "v" shadows existing binding!
 		num = num + 1
 	end
 
@@ -5919,7 +5920,8 @@ if CLIENT then -- xdefm_gib
 			phys:Wake() phys:EnableMotion( true )
 			phys:SetMaterial( Mats[ tostring( Mag ) ] )
 			phys:SetAngles( Angle( math.Rand( 0, 360 ), math.Rand( 0, 360 ), math.Rand( 0, 360 ) ) )
-			local vel = VectorRand():GetNormalized()*math.Rand( 50, 150 )  vel = Vector( vel.x, vel.y, math.abs( vel.z ) )
+			local vel = VectorRand():GetNormalized() * math.Rand(50, 150)
+			vel = Vector(vel.x, vel.y, math.abs(vel.z))
 			phys:SetVelocity( vel ) phys:Wake()
 		end if Mag == 5 then self.Entity:SetMaterial( "models/flesh" ) end
 		self.LifeTime = CurTime() + math.Rand( 3, 5 )  self.LifeAlp = 255  self.xdefm_Allow = true
@@ -5942,17 +5944,27 @@ if true then -- xdefm_base
 	self:NetworkVar( "String", 1, "FMod_DT" ) self:NetworkVar( "Entity", 1, "FMod_LU" ) end
 	function ENT:Initialize() if not SERVER then return end self:SetCollisionGroup( COLLISION_GROUP_NONE ) self:SetUseType( SIMPLE_USE )
 		if not isstring( self:GetFMod_DT() ) or self:GetFMod_DT() == "" then self:Remove() return end
-		local aa, bb = xdefm_ItemGet( self:GetFMod_DT() )  if not istable( aa ) or not istable( bb ) then self:Remove() return end
-		self.xdefm_T1 = aa  self.xdefm_T2 = bb  local tab = string.Explode( "|", self:GetFMod_DT() )
+		local aa, bb = xdefm_ItemGet(self:GetFMod_DT()) -- FIXME: "aa" shadows existing binding!
+		if not istable(aa) or not istable(bb) then
+			self:Remove()
+			return
+		end
+		self.xdefm_T1 = aa
+		self.xdefm_T2 = bb
+		local tab = string.Explode("|", self:GetFMod_DT()) -- FIXME: "tab" shadows existing binding!
 		if bb.Type == "Creature" and isnumber( bb.MinSize ) and isnumber( bb.MaxSize ) and ( not istable( tab ) or #tab < 2 or tab[ 2 ] == 0 ) then
 			local siz = math.Round( math.Rand( bb.MinSize, bb.MaxSize ), 1 ) if not istable( tab ) then tab = { self:GetFMod_DT() } end
 			table.insert( tab, 2, siz ) self:SetFMod_DT( table.concat( tab, "|" ) )
 		elseif bb.Type == "Recipe" and isnumber( bb.Durability ) and ( not istable( tab ) or #tab < 2 or tab[ 2 ] == 0 ) then
-			local dur = math.ceil( math.Rand( bb.Durability/2, bb.Durability ) ) if not istable( tab ) then tab = { self:GetFMod_DT() } end
+			local dur = math.ceil(math.Rand(bb.Durability / 2, bb.Durability))
+			if not istable(tab) then tab = {self:GetFMod_DT()} end
 			table.insert( tab, 2, dur ) self:SetFMod_DT( table.concat( tab, "|" ) )
 		elseif bb.Type == "Struct" and bb.SType == 1 and bb.Amount > 0 then self.xdefm_T3 = {}
-			for i=1, bb.Amount do self.xdefm_T3[ i ] = "_" end
-		end local tab = string.Explode( "|", self:GetFMod_DT() )
+			for i = 1, bb.Amount do
+				self.xdefm_T3[i] = "_"
+			end
+		end
+		local tab = string.Explode("|", self:GetFMod_DT()) -- FIXME: "tab" shadows existing binding!
 		if bb.Type ~= "Bait" and ( not istable( tab ) or #tab ~= xdefmod.util.ITEM_TYPES[ bb.Type ] ) then self:SetFMod_DT( self:GetFMod_DT() .. "|0" ) end
 		if bb.Type == "Creature" and istable( tab ) and isnumber( tonumber( tab[ 2 ] ) ) then self:SetModelScale( tonumber( tab[ 2 ] ), 0.01 ) end
 		if isstring( self.xdefm_Mdl ) then self:SetModel( self.xdefm_Mdl ) else
@@ -5966,7 +5978,9 @@ if true then -- xdefm_base
 	function ENT:HandleAnimEvent() return true end
 	function ENT:OnRemove() if CLIENT or not istable( self.xdefm_T2 ) then return end self.xdefm_T2:OnRemove( self )
 		if self.xdefm_T2.Type == "Struct" then
-			for k, v in pairs( player.GetHumans() ) do if v.xdefm_Struct == self then xdefm_CloseMenu( v, "Struct" ) end end
+			for k, v in pairs(player.GetHumans()) do -- FIXME: "v" shadows existing binding!
+				if v.xdefm_Struct == self then xdefm_CloseMenu(v, "Struct") end
+			end
 		end
 	end
 	function ENT:OnDuplicated() SafeRemoveEntity( self ) end
@@ -5991,14 +6005,16 @@ if true then -- xdefm_base
 				if self.xdefm_T2.StartSound then self:EmitSound( self.xdefm_T2.StartSound ) end if act ~= true then return end
 			end
 		end
-		local use = self.xdefm_T2:OnUse( self, ent )  local typ = self.xdefm_T2.Type
-		if ( not isbool( use ) or use ~= false ) and not ent:IsPlayerHolding() then
-			if not constraint.FindConstraint( self, "Weld" ) and IsValid( self:GetPhysicsObject() ) and not self:IsPlayerHolding()
-			and self:GetPhysicsObject():IsMotionEnabled() and ( not ent.xdefm_Cool or ent.xdefm_Cool <= CurTime() ) then ent:PickupObject( self ) end
+		local use = self.xdefm_T2:OnUse(self, ent)
+		--local typ = self.xdefm_T2.Type -- REVIEW: Unused?
+		if (not isbool(use) or use ~= false) and not ent:IsPlayerHolding() and not constraint.FindConstraint(self, "Weld") and IsValid(self:GetPhysicsObject()) and not self:IsPlayerHolding() and self:GetPhysicsObject():IsMotionEnabled() and (not ent.xdefm_Cool or ent.xdefm_Cool <= CurTime()) then
+			ent:PickupObject(self)
 		end
 	end
-	function ENT:StartTouch( ent ) if not IsValid( ent ) or not istable( self.xdefm_T2 ) then return end local tab = self.xdefm_T2
-		tab:OnTouch( self, ent, 1 )
+	function ENT:StartTouch(ent)
+		if not IsValid(ent) or not istable(self.xdefm_T2) then return end
+		local tab = self.xdefm_T2 -- FIXME: "tab" shadows existing binding!
+		tab:OnTouch(self, ent, 1)
 	end
 	function ENT:Touch( ent ) if not IsValid( ent ) or not istable( self.xdefm_T2 ) then return end
 		if ent:GetClass() == "xdefm_base" and not xdefm_FriendAllow( ent:GetFMod_OW(), self:GetFMod_OI() ) and not xdefm_NadAllow( ent:GetFMod_OW(), self ) then return end
@@ -6008,7 +6024,8 @@ if true then -- xdefm_base
 		self.xdefm_T2:OnTouch( self, ent, -1 )
 	end
 	function ENT:PhysicsCollide( dat, phy ) if not istable( self.xdefm_T2 ) or not IsValid( self:GetPhysicsObject() ) then return end
-		local col = self.xdefm_T2:OnCollide( self, dat )  if isbool( col ) and col == false then return end
+		local col = self.xdefm_T2:OnCollide(self, dat) -- FIXME: "col" shadows existing binding!
+		if isbool(col) and col == false then return end
 		if isstring( self.xdefm_T2.PhysSound ) and dat.Speed >= 60 and dat.DeltaTime > 0.2 then
 			self:StopSound( self.xdefm_T2.PhysSound ) self:EmitSound( self.xdefm_T2.PhysSound )
 		end
@@ -6017,36 +6034,53 @@ if true then -- xdefm_base
 		self.xdefm_T2:OnPhysSimulate( self, phy, del )
 	end
 	function ENT:Think() if not istable( self.xdefm_T2 ) then return end
-		if CLIENT then local ply = LocalPlayer()  self:NextThink( CurTime() +0.1 )  if not IsValid( ply ) then return end
-			self:NextThink( CurTime() +0.1 )
+		if CLIENT then
+			local ply = LocalPlayer()
+			self:NextThink(CurTime() + 0.1)
+			if not IsValid(ply) then return end
+			self:NextThink(CurTime() + 0.1)
 			if self.xdefm_OnLook ~= self:BeingLookedAtByLocalPlayer() then
 				self.xdefm_OnLook = self:BeingLookedAtByLocalPlayer()
-				self.xdefm_Cur = SysTime() +0.25
+				self.xdefm_Cur = SysTime() + 0.25
 			end
-			local aa, bb = xdefm_ItemGet( self:GetFMod_DT() )
+			local _, bb = xdefm_ItemGet(self:GetFMod_DT())
 			if istable( bb ) and self.xdefm_OnLook or self.xdefm_Cur > SysTime() then
-				local alp = math.Clamp( ( self.xdefm_Cur -SysTime() )/0.25, 0, 1 )
+				local alp = math.Clamp((self.xdefm_Cur - SysTime()) / 0.25, 0, 1)
 				if self.xdefm_OnLook then alp = 1-alp end
-				local col = xdefmod.util.RARITY_COLORS[ bb.Rarity+1 ]
-				halo.Add( { self }, Color( col.r, col.g, col.b, 255*alp ), 2*alp, 2*alp, 2*alp, true, true )
+				local col = xdefmod.util.RARITY_COLORS[bb.Rarity + 1] -- FIXME: "col" shadows existing binding!
+				halo.Add({self}, Color(col.r, col.g, col.b, 255 * alp), 2 * alp, 2 * alp, 2 * alp, true, true)
 			end
-		else self.xdefm_T2:OnThink( self ) self:NextThink( CurTime() +self.xdefm_T2.TickRate ) local tab = self.xdefm_T2 end
+		else
+			self.xdefm_T2:OnThink(self)
+			self:NextThink(CurTime() + self.xdefm_T2.TickRate)
+			--local tab = self.xdefm_T2 -- REVIEW: Unused?
+		end
 		return true
 	end
 	if CLIENT then local Mat = Material( "models/shiny" )
 		function ENT:Draw() if isstring( self:GetFMod_DT() ) and self:GetFMod_DT() ~= "" and self:GetFMod_DT() ~= "_" then
-			local aa, bb = xdefm_ItemGet( self:GetFMod_DT() ) if istable( bb ) then local dis = GetConVar( "xdefmod_renderdist" ):GetInt()
-			local ply, wep = LocalPlayer(), LocalPlayer():GetActiveWeapon()
+			local _, bb = xdefm_ItemGet(self:GetFMod_DT())
+			if istable(bb) then
+				local dis = GetConVar( "xdefmod_renderdist" ):GetInt()
+				--local ply = LocalPlayer() -- REVIEW: Unused?
+				--local wep = LocalPlayer():GetActiveWeapon() -- REVIEW: Unused?
 			if not IsValid( LocalPlayer() ) or dis <= 0 or LocalPlayer():GetPos():DistToSqr( self:GetPos() ) <= dis^2 then self:DrawModel()
 			if bb.Type ~= "Bait" and not bb.CantCook then local me2, per = xdefm_CookMeter( self:GetFMod_DT() ), 0
-				if me2 > 0 then render.SetColorModulation( 1, 1, 0 ) per = me2*0.4 elseif me2 < 0 then per = 0.4 +math.abs( me2 )*0.5
-					local aaa = math.abs( 1 +me2 ) render.SetColorModulation( aaa, aaa, 0 )
-				end if per > 0 then render.SetBlend( per ) render.MaterialOverride( Mat )
+				if me2 > 0 then
+					render.SetColorModulation(1, 1, 0)
+					per = me2 * 0.4
+				elseif me2 < 0 then
+					per = 0.4 + math.abs(me2) * 0.5
+					local aaa = math.abs(1 + me2)
+					render.SetColorModulation(aaa, aaa, 0)
+				end
+				if per > 0 then render.SetBlend( per ) render.MaterialOverride( Mat )
 				self:DrawModel() render.SetBlend( 1 ) render.MaterialOverride() render.SetColorModulation( 1, 1, 1 ) end
 			end bb:OnDraw( self ) end
 		end end end
 		function ENT:BeingLookedAtByLocalPlayer() local ply = LocalPlayer() if not IsValid( ply ) or not ply:Alive() then return false end
-			local view = ply:GetViewEntity()  local dist = math.Clamp( math.ceil( GetConVar( "xdefmod_tagdist" ):GetInt() )^2, -1, 2147483647 )
+			local view = ply:GetViewEntity()
+			local dist = math.Clamp(math.ceil(GetConVar("xdefmod_tagdist"):GetInt()) ^ 2, -1, 2147483647)
 			if view:IsPlayer() then return ( ( view:EyePos():DistToSqr( self:GetPos() ) <= dist or dist == -1 ) and view:GetEyeTrace().Entity == self ) end return false
 		end
 	end
@@ -6058,17 +6092,27 @@ if true then -- xdefm_dummy
 	self:NetworkVar( "Entity", 0, "FMod_OW" ) end
 	function ENT:Initialize() if not SERVER then return end
 		if not isstring( self:GetFMod_DT() ) or self:GetFMod_DT() == "" then self:Remove() return end
-		local aa, bb = xdefm_ItemGet( self:GetFMod_DT() )  if not istable( aa ) or not istable( bb ) then self:Remove() return end
-		self.xdefm_T1 = aa  self.xdefm_T2 = bb  local tab = string.Explode( "|", self:GetFMod_DT() )
+		local aa, bb = xdefm_ItemGet(self:GetFMod_DT()) -- FIXME: "aa" shadows existing binding!
+		if not istable(aa) or not istable(bb) then
+			self:Remove()
+			return
+		end
+		self.xdefm_T1 = aa
+		self.xdefm_T2 = bb
+		local tab = string.Explode("|", self:GetFMod_DT()) -- FIXME: "tab" shadows existing binding!
 		if bb.Type == "Creature" and isnumber( bb.MinSize ) and isnumber( bb.MaxSize ) and ( not istable( tab ) or #tab < 2 or tab[ 2 ] == 0 ) then
 			local siz = math.Round( math.Rand( bb.MinSize, bb.MaxSize ), 1 ) if not istable( tab ) then tab = { self:GetFMod_DT() } end
 			table.insert( tab, 2, siz ) self:SetFMod_DT( table.concat( tab, "|" ) )
 		elseif bb.Type == "Recipe" and isnumber( bb.Durability ) and ( not istable( tab ) or #tab < 2 or tab[ 2 ] == 0 ) then
-			local dur = math.ceil( math.Rand( bb.Durability/2, bb.Durability ) ) if not istable( tab ) then tab = { self:GetFMod_DT() } end
+			local dur = math.ceil(math.Rand(bb.Durability / 2, bb.Durability))
+			if not istable(tab) then tab = {self:GetFMod_DT()} end
 			table.insert( tab, 2, dur ) self:SetFMod_DT( table.concat( tab, "|" ) )
 		elseif bb.Type == "Struct" and bb.SType == 1 and bb.Amount > 0 then self.xdefm_T3 = {}
-			for i=1, bb.Amount do self.xdefm_T3[ i ] = "_" end
-		end local tab = string.Explode( "|", self:GetFMod_DT() )
+			for i = 1, bb.Amount do
+				self.xdefm_T3[i] = "_"
+			end
+		end
+		local tab = string.Explode("|", self:GetFMod_DT()) -- FIXME: "tab" shadows existing binding!
 		if bb.Type ~= "Bait" and ( not istable( tab ) or #tab ~= xdefmod.util.ITEM_TYPES[ bb.Type ] ) then self:SetFMod_DT( self:GetFMod_DT() .. "|0" ) end
 		if bb.Type == "Creature" and istable( tab ) and isnumber( tonumber( tab[ 2 ] ) ) then self:SetModelScale( tonumber( tab[ 2 ] ), 0.01 ) end
 		self:SetNotSolid( true ) self:Activate()
@@ -6087,18 +6131,29 @@ if true then -- xdefm_dummy
 	end
 	if CLIENT then local Mat = Material( "models/shiny" )
 		function ENT:Draw() if isstring( self:GetFMod_DT() ) and self:GetFMod_DT() ~= "" and self:GetFMod_DT() ~= "_" then
-			local aa, bb = xdefm_ItemGet( self:GetFMod_DT() ) if istable( bb ) then local dis = GetConVar( "xdefmod_renderdist" ):GetInt()
-			local ply, wep = LocalPlayer(), LocalPlayer():GetActiveWeapon()  self:DrawModel()
+			local _, bb = xdefm_ItemGet(self:GetFMod_DT())
+			if istable(bb) then
+				local dis = GetConVar("xdefmod_renderdist"):GetInt()
+				--local ply = LocalPlayer() -- REVIEW: Unused?
+				--local wep = LocalPlayer():GetActiveWeapon() -- REVIEW: Unused?
+				self:DrawModel()
 			if not IsValid( LocalPlayer() ) or dis <= 0 or LocalPlayer():GetPos():DistToSqr( self:GetPos() ) <= dis^2 then
 			if bb.Type ~= "Bait" and not bb.CantCook then local me2, per = xdefm_CookMeter( self:GetFMod_DT() ), 0
-				if me2 > 0 then render.SetColorModulation( 1, 1, 0 ) per = me2*0.4 elseif me2 < 0 then per = 0.4 +math.abs( me2 )*0.5
-					local aaa = math.abs( 1 +me2 ) render.SetColorModulation( aaa, aaa, 0 )
-				end if per > 0 then render.SetBlend( per ) render.MaterialOverride( Mat )
+				if me2 > 0 then
+					render.SetColorModulation(1, 1, 0)
+					per = me2 * 0.4
+				elseif me2 < 0 then
+					per = 0.4 + math.abs(me2) * 0.5
+					local aaa = math.abs(1 + me2)
+					render.SetColorModulation(aaa, aaa, 0)
+				end
+				if per > 0 then render.SetBlend( per ) render.MaterialOverride( Mat )
 				self:DrawModel() render.SetBlend( 1 ) render.MaterialOverride() render.SetColorModulation( 1, 1, 1 ) end
 			end bb:OnDraw( self ) end
 		end end end
 		function ENT:BeingLookedAtByLocalPlayer() local ply = LocalPlayer() if not IsValid( ply ) or not ply:Alive() then return false end
-			local view = ply:GetViewEntity()  local dist = math.Clamp( math.ceil( GetConVar( "xdefmod_tagdist" ):GetInt() )^2, -1, 2147483647 )
+			local view = ply:GetViewEntity()
+			local dist = math.Clamp(math.ceil(GetConVar("xdefmod_tagdist"):GetInt()) ^ 2, -1, 2147483647)
 			if view:IsPlayer() then return ( ( view:EyePos():DistToSqr( self:GetPos() ) <= dist or dist == -1 ) and view:GetEyeTrace().Entity == self ) end return false
 		end
 	end
@@ -6113,19 +6168,39 @@ if true then -- xdefm_firespot
 	end
 	function ENT:OnDuplicated() SafeRemoveEntity( self ) end
 	function ENT:OnRestore() if SERVER then SafeRemoveEntity( self ) end end
-	function ENT:OnTakeDamage( dmg ) end function ENT:Use( ent ) end
-	function ENT:Think() if CLIENT or not self:GetFMod_Enable() then return end self:NextThink( CurTime() +0.1 )
-		if self.xdefm_NextBurn <= CurTime() and self.xdefm_Power > 0 then self.xdefm_NextBurn = CurTime() +math.Rand( 0.1, 0.5 )
-			local own = ( IsValid( self:GetParent() ) and self:GetParent() or Entity( 0 ) )
-			local siz = math.Clamp( self:GetFMod_Strength(), 1, 100 )  local tr = util.TraceHull( {
-				start = self:WorldSpaceCenter() +Vector( 0, 0, siz ), endpos = self:WorldSpaceCenter() +Vector( 0, 0, siz*3 ),
-				filter = { own, self }, mask = MASK_SHOT, mins = Vector( -siz, -siz, -siz ), maxs = Vector( siz, siz, siz )
-			} ) local ent = tr.Entity  if IsValid( ent ) and not ent:IsWorld() and util.IsValidModel( ent:GetModel() ) then
-				if ent:GetClass() ~= "xdefm_base" or not istable( ent.xdefm_T2 ) or ent.xdefm_T2.Type == "Bait" or ent:Health() > 0 then
-					local dmg = DamageInfo() dmg:SetDamage( self.xdefm_Power ) dmg:SetAttacker( Entity( 0 ) )
-					dmg:SetInflictor( self ) dmg:SetDamageType( DMG_BURN ) local vel = VectorRand():GetNormalized()*1000
-					dmg:SetDamageForce( Vector( vel.x, vel.y, 1000 ) ) dmg:SetDamagePosition( tr.HitPos ) ent:TakeDamageInfo( dmg )
-				else xdefm_CookAdd( ent, self.xdefm_Power ) end
+	function ENT:OnTakeDamage(dmg) end
+	function ENT:Use(ent) end -- FIXME: "ent" shadows existing binding!
+	function ENT:Think()
+		if CLIENT or not self:GetFMod_Enable() then return end
+		self:NextThink(CurTime() + 0.1)
+		if self.xdefm_NextBurn <= CurTime() and self.xdefm_Power > 0 then
+			self.xdefm_NextBurn = CurTime() + math.Rand(0.1, 0.5)
+			local own = IsValid(self:GetParent()) and self:GetParent() or Entity(0) -- FIXME: "own" shadows existing binding!
+			local siz = math.Clamp(self:GetFMod_Strength(), 1, 100)
+			local tr = util.TraceHull({
+				start = self:WorldSpaceCenter() + Vector(0, 0, siz),
+				endpos = self:WorldSpaceCenter() + Vector(0, 0, siz * 3),
+				filter = {own, self},
+				mask = MASK_SHOT,
+				mins = Vector(-siz, -siz, -siz),
+				maxs = Vector(siz, siz, siz)
+			})
+
+			local ent = tr.Entity -- FIXME: "ent" shadows existing binding!
+			if IsValid(ent) and not ent:IsWorld() and util.IsValidModel(ent:GetModel()) then
+				if ent:GetClass() ~= "xdefm_base" or not istable(ent.xdefm_T2) or ent.xdefm_T2.Type == "Bait" or ent:Health() > 0 then
+					local dmg = DamageInfo()
+					dmg:SetDamage(self.xdefm_Power)
+					dmg:SetAttacker(Entity(0))
+					dmg:SetInflictor(self)
+					dmg:SetDamageType(DMG_BURN)
+					local vel = VectorRand():GetNormalized() * 1000
+					dmg:SetDamageForce(Vector(vel.x, vel.y, 1000))
+					dmg:SetDamagePosition(tr.HitPos)
+					ent:TakeDamageInfo(dmg)
+				else
+					xdefm_CookAdd(ent, self.xdefm_Power)
+				end
 			end
 		end
 	end
@@ -6144,48 +6219,54 @@ if true then -- xdefm_firespot
 			if self.xdefm_Emitter == nil then self.xdefm_Emitter = ParticleEmitter( self:WorldSpaceCenter() ) end
 			if self.xdefm_Emitter ~= nil and self:GetFMod_Enable() and self:GetFMod_Strength() > 0 then
 				local siz, emt = math.Clamp( self:GetFMod_Strength(), 1, 100 ), self.xdefm_Emitter
-				local own = ( IsValid( self:GetParent() ) and self:GetParent() or Entity( 0 ) )
+				local own = IsValid(self:GetParent()) and self:GetParent() or Entity(0) -- FIXME: "own" shadows existing binding!
 				if GetConVar( "developer" ):GetInt() > 0 then
-					local tr = util.TraceHull( {
-						start = self:WorldSpaceCenter() +Vector( 0, 0, siz ), endpos = self:WorldSpaceCenter() +Vector( 0, 0, siz +siz*2 ),
-						filter = { own, self }, mask = MASK_SHOT, mins = Vector( -siz, -siz, -siz ), maxs = Vector( siz, siz, siz )
-					} )
+					local tr = util.TraceHull({
+						start = self:WorldSpaceCenter() + Vector(0, 0, siz),
+						endpos = self:WorldSpaceCenter() + Vector(0, 0, siz + siz * 2),
+						filter = {own, self},
+						mask = MASK_SHOT,
+						mins = Vector(-siz, -siz, -siz),
+						maxs = Vector(siz, siz, siz)
+					})
 					cam.IgnoreZ( true ) render.SetMaterial( Mat2 ) local pos = tr.HitPos
-					local col = ( tr.Hit and Color( 255, 0, 0 ) or Color( 255, 255, 0 ) )
+					local col = tr.Hit and Color(255, 0, 0) or Color(255, 255, 0) -- FIXME: "col" shadows existing binding!
 					render.DrawBox( pos, Angle(0,0,0), Vector(-siz,-siz,-siz), Vector(siz,siz,siz), col )
 					render.DrawBox( pos, Angle(0,0,0), Vector(-siz,-siz,siz), Vector(siz,siz,-siz), col )
 					cam.IgnoreZ( false )
 				end
-				render.SetMaterial( Mat ) local sss = siz*7 +math.sin( CurTime()*20 )*siz*2
+				render.SetMaterial(Mat)
+				local sss = siz * 7 + math.sin(CurTime() * 20) * siz * 2
 				render.DrawSprite( self:WorldSpaceCenter(), sss, sss, Color( 255, 155, 0, 255 ) )
-				if self.xdefm_NextEmit > CurTime() then return end self.xdefm_NextEmit = CurTime() +0.05
+				if self.xdefm_NextEmit > CurTime() then return end
+				self.xdefm_NextEmit = CurTime() + 0.05
 				local particle = emt:Add( "effects/fire_cloud" .. math.random( 1, 2 ), self:WorldSpaceCenter() )
 				particle:SetLifeTime( 0 )
 				particle:SetDieTime( math.Rand( 0.75, 1.5 ) )
 				particle:SetStartAlpha( 255 )
 				particle:SetEndAlpha( 0 )
-				local Size = math.Rand( siz*0.8, siz*1.2 )
+				local Size = math.Rand(siz * 0.8, siz * 1.2)
 				particle:SetStartSize( Size )
-				particle:SetEndSize( 0.1 )		
+				particle:SetEndSize( 0.1 )
 				particle:SetRoll( math.random( 0, 360 ) )
 				particle:SetAirResistance( 200 )
-				particle:SetGravity( VectorRand():GetNormalized()*siz*2 +Vector( 0, 0, siz*math.Rand( 12, 20 ) ) )
+				particle:SetGravity(VectorRand():GetNormalized() * siz * 2 + Vector(0, 0, siz * math.Rand(12, 20)))
 				particle:SetColor( 255, math.random( 200, 255 ), math.random( 200, 255 ) )
 				particle:SetCollide( false )
 				particle:SetBounce( 0 )
 				particle:SetLighting( false )
-				local particle = emt:Add( "particle/smokesprites_000" .. math.random( 1, 9 ), self:WorldSpaceCenter() +VectorRand():GetNormal()*siz/2 )
+				local particle = emt:Add("particle/smokesprites_000" .. math.random(1, 9), self:WorldSpaceCenter() + VectorRand():GetNormal() * siz / 2) -- FIXME: "particle" shadows existing binding!
 				particle:SetLifeTime( 0 )
 				particle:SetDieTime( math.Rand( 1, 1.5 ) )
 				particle:SetStartAlpha( 128 )
 				particle:SetEndAlpha( 0 )
-				local Size = math.Rand( siz*0.8, siz*1.6 )
+				local Size = math.Rand(siz * 0.8, siz * 1.6) -- FIXME: "Size" shadows existing binding!
 				particle:SetStartSize( 0 )
-				particle:SetEndSize( Size )		
+				particle:SetEndSize( Size )
 				particle:SetRoll( math.random( 0, 360 ) )
 				particle:SetRollDelta( math.Rand( -3, 3 ) )
 				particle:SetAirResistance( 200 )
-				particle:SetGravity( VectorRand():GetNormalized()*siz*4 +Vector( 0, 0, siz*20 ) )
+				particle:SetGravity(VectorRand():GetNormalized() * siz * 4 + Vector(0, 0, siz * 20))
 				particle:SetColor( 128, 128, 128 )
 				particle:SetCollide( false )
 				particle:SetBounce( 0 )
