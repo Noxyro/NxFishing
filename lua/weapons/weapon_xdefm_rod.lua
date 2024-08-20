@@ -85,13 +85,13 @@ if CLIENT then
 		local function MakeItNice( x, y, w, h )
 			draw.RoundedBox( 0, x, y, w, h, col ) surface.DrawOutlinedRect( x, y, w, h, 1 )
 			surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( x, y, w, h, 1 )
-		end local LAng = ( xdefmod.util.camera_ang != nil and xdefmod.util.camera_ang or ply:EyeAngles() )
+		end local LAng = ( xdefmod.util.cl_camera_ang != nil and xdefmod.util.cl_camera_ang or ply:EyeAngles() )
 		local tr = util.TraceLine( {
 			start = ply:EyePos(), endpos = ply:EyePos() +ply:EyeAngles():Forward()*128,
 			filter = ply, mask = MASK_SHOT_HULL
 		} ) local hps = ( tr.HitPos + tr.HitNormal )
-		if !xdefmod.util.cursor_pos then xdefmod.util.cursor_pos = hps else xdefmod.util.cursor_pos = LerpVector( 0.1, xdefmod.util.cursor_pos, hps ) end
-		scr = xdefmod.util.cursor_pos:ToScreen()  scr.x = math.Round( scr.x )  scr.y = math.Round( scr.y )
+		if !xdefmod.util.cl_cursor_pos then xdefmod.util.cl_cursor_pos = hps else xdefmod.util.cl_cursor_pos = LerpVector( 0.1, xdefmod.util.cl_cursor_pos, hps ) end
+		scr = xdefmod.util.cl_cursor_pos:ToScreen()  scr.x = math.Round( scr.x )  scr.y = math.Round( scr.y )
 		if sl >= 0 then local per = 0
 			if st == 1 then per = math.Clamp( sl/100, 0, 1 ) elseif st == 2 then
 			per = math.Clamp( self:GetFMod_RL()/xdefm_GetUpValue( pro.UpdB, "B" ), 0, 1 ) end
@@ -154,7 +154,7 @@ function SWEP:SetupDataTables()
 	self:NetworkVar( "Int", 0, "FMod_ST" ) --Rod State
 	self:NetworkVar( "Float", 2, "FMod_RL" ) --Reel Length
 end
-function SWEP:Initialize() self:SetHoldType( "passive" ) if CLIENT then xdefmod.util.cursor_pos = nil end end
+function SWEP:Initialize() self:SetHoldType( "passive" ) if CLIENT then xdefmod.util.cl_cursor_pos = nil end end
 function SWEP:Deploy() local own = self.Owner
 	if SERVER and ( !IsValid( own ) or !own:IsPlayer() ) then self:Remove() return end
 	self:SetFMod_SL( 0 ) self:SetFMod_ST( 0 ) self:SetHoldType( "passive" ) local phy = self:GetPhysicsObject()

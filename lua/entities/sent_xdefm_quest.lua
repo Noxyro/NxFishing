@@ -19,7 +19,7 @@ function ENT:Initialize() if CLIENT then return end self:SetModel( "models/props
 	self:SetSolid( SOLID_VPHYSICS ) self:SetUseType( SIMPLE_USE ) end
 function ENT:OnDuplicated() SafeRemoveEntity( self ) end function ENT:OnRestore() if SERVER then SafeRemoveEntity( self ) end end
 function ENT:GetOverlayText() local txt, num = language.GetPhrase( "xdefm.State" )..": ", 2
-if LocalPlayer():GetNWBool( "XDEFM_QD" ) then num = 3 elseif !table.IsEmpty( xdefmod.quests ) then num = 1 end
+if LocalPlayer():GetNWBool( "XDEFM_QD" ) then num = 3 elseif !table.IsEmpty( xdefmod.cl_quests ) then num = 1 end
 txt = txt..language.GetPhrase( "xdefm.State"..num )  return self.PrintName.."\n"..language.GetPhrase( "xdefm.Quest2" ).."\n"..txt end
 function ENT:Use( act ) if !act:IsPlayer() or self.xdefm_Cool > CurTime() or !act:Alive() then return end self.xdefm_Cool = CurTime() +0.5
 	if act:KeyDown( IN_SPEED ) and ( self:IsPlayerHolding() or constraint.FindConstraint( self, "Weld" ) or !self:GetPhysicsObject():IsMotionEnabled() ) then return end
@@ -30,14 +30,14 @@ function ENT:Use( act ) if !act:IsPlayer() or self.xdefm_Cool > CurTime() or !ac
 	end xdefm_OpenMenu( act, 1, act.xdefm_Quest or {} ) xdefm_UpdateMenu( act, 0, act.xdefm_Profile ) end
 function ENT:Think() if SERVER then return end local text = self:GetOverlayText() local ply, tag = LocalPlayer(), GetConVar( "xdefmod_tagdist" ):GetInt()
 	if !IsValid( ply ) or tag == 0 or ply:GetPos():DistToSqr( self:GetPos() ) > tag^2 then return end if self:BeingLookedAtByLocalPlayer() then
-	local col = table.IsEmpty( xdefmod.quests ) and Color( 0, 255, 0 ) or Color( 255, 255, 0 )
+	local col = table.IsEmpty( xdefmod.cl_quests ) and Color( 0, 255, 0 ) or Color( 255, 255, 0 )
 	if LocalPlayer():GetNWBool( "XDEFM_QD" ) then col = Color( 255, 0, 0 ) end halo.Add( { self }, col, 1, 1, 1 )
 	if text != "" then AddWorldTip( self:EntIndex(), text, 0.5, self:GetPos(), self ) end end end
 function ENT:OnTakeDamage( dmg ) self:TakePhysicsDamage( dmg ) end
 function ENT:PhysicsCollide( dat, phy ) if dat.Speed >= 60 and dat.DeltaTime > 0.2 then self:EmitSound( "Default.ImpactSoft" ) end end
 function ENT:Draw() self:DrawModel() surface.SetFont( "xdefm_Font3" )
-	local txt = table.IsEmpty( xdefmod.quests ) and "!" or "..."
-	local col = table.IsEmpty( xdefmod.quests ) and Color( 0, 255, 0 ) or Color( 255, 255, 0 )
+	local txt = table.IsEmpty( xdefmod.cl_quests ) and "!" or "..."
+	local col = table.IsEmpty( xdefmod.cl_quests ) and Color( 0, 255, 0 ) or Color( 255, 255, 0 )
 	if LocalPlayer():GetNWBool( "XDEFM_QD" ) then txt = "X"  col = Color( 255, 0, 0 ) end
 	local xx, yy = surface.GetTextSize( txt )
 	cam.Start3D2D( self:GetPos() -self:GetUp()*( 20 -2*math.sin( CurTime()*4 ) ) -self:GetRight()*1, self:LocalToWorldAngles( Angle( 0, 180, 90 ) ), 0.25 )
