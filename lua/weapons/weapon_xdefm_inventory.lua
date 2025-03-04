@@ -46,7 +46,7 @@ if CLIENT then
 	SWEP.FMod_Level		 	= nil
 	SWEP.FMod_Reason 		= nil
 	function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )
-		surface.SetDrawColor( 100, 100, 255, alpha )  surface.SetTexture( self.WepSelectIcon )
+		surface.SetDrawColor( 0, 161, 255, alpha )  surface.SetTexture( self.WepSelectIcon )
 		y = y+10  x = x+10  wide = wide-20
 		surface.DrawTexturedRect( x, y, wide, ( wide / 2 ) )
 		self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
@@ -54,7 +54,7 @@ if CLIENT then
 	function SWEP:PrintWeaponInfo( x, y, alpha )
 		if self.InfoMarkup == nil then
 			local str = ""  local title_color = "<color=255,255,255,255>"
-			local text_color = "<color=155,155,255,255>"  str = "<font=TargetID>"
+			local text_color = "<color=0,161,255,255>"  str = "<font=TargetID>"
 			if ( self.Author != "" ) then str = str..title_color..language.GetPhrase( "#xdefm.Author" )..": </color>"..text_color..self.Author.."</color>\n" end
 			if ( self.Purpose != "" ) then str = str..title_color..language.GetPhrase( "#xdefm.Purpos" )..": </color>"..text_color..language.GetPhrase( self.Purpose ).."</color>\n" end
 			str = str.."\n"..title_color..language.GetPhrase( self.PrintName ).."</color>"
@@ -63,14 +63,12 @@ if CLIENT then
 		end
 		local xx, yy, ww, hh = x - 6, y - 6, 362, self.InfoMarkup:GetHeight() + 24
 		draw.RoundedBox( 0, xx, yy, ww, hh, Color( 0, 115*0.5, 180, 255, alpha ) )
-		surface.SetDrawColor( 5, 5, 100, 255 ) surface.SetMaterial( Mat ) surface.DrawTexturedRect( xx, yy, ww, hh )
-		surface.SetDrawColor( 0, 0, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 2 )
+		surface.SetDrawColor( 0, 0, 96, 255 ) surface.SetMaterial( Mat ) surface.DrawTexturedRect( xx, yy, ww, hh )
+		surface.SetDrawColor( 0, 161, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 2 )
 		surface.SetDrawColor( 0, 255, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 1 )
 		self.InfoMarkup:Draw( x + 5, y + 5, nil, nil, alpha )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Version" )..": "..xdefmod.util.VERSION, pos = { xx, yy + hh + 16 },
-			font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 ) self.InfoMarkup = nil
+		draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Version" )..": "..xdefm.miscs.Version, "xdefm_Font1", xx, yy + hh +16, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+		self.InfoMarkup = nil
 	end
 	function SWEP:DrawWorldModel() self:DrawModel() end
 	function SWEP:DrawHUD() local pro = LocalPlayer().xdefm_Profile  if !IsValid( LocalPlayer() ) or !LocalPlayer():Alive() or
@@ -78,10 +76,7 @@ if CLIENT then
 		if GetConVar( "cl_drawhud" ):GetInt() <= 0 then return end
 		local txt = language.GetPhrase( self.PrintName )  surface.SetFont( "xdefm_Font6" )  local ww, hh = surface.GetTextSize( txt )
 		draw.RoundedBox( 8, ScrW()/2 -ww/2 -12, ScrH()*0.95 -hh/2 -12, ww +24, hh +24, Color( 0, 0, 0, 128 ) )
-		for i=1, 1 do draw.Text( {
-			text = txt, pos = { ScrW()/2, ScrH()*0.95 },
-			font = "xdefm_Font6", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 55, 255, 255 )
-		} ) end
+		draw.SimpleTextOutlined( txt, "xdefm_Font6", ScrW()/2, ScrH()*0.95, Color( 0, 161, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 	end
 end
 

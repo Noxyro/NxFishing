@@ -39,9 +39,9 @@ if CLIENT then
 	CreateClientConVar("xdefmod_quickinv", "-1", true, false, "")
 	CreateClientConVar("xdefmod_fps", "0", true, false, "", 0, 1)
 	CreateClientConVar("xdefmod_collection", "11111111111", true, false, "")
-	CreateClientConVar("xdefmod_bgr", "28", true, false, "", 0, 255)
-	CreateClientConVar("xdefmod_bgg", "25", true, false, "", 0, 255)
-	CreateClientConVar("xdefmod_bgb", "72", true, false, "", 0, 255)
+	CreateClientConVar("xdefmod_bgr", "0", true, false, "", 0, 255)
+	CreateClientConVar("xdefmod_bgg", "31", true, false, "", 0, 255)
+	CreateClientConVar("xdefmod_bgb", "127", true, false, "", 0, 255)
 	CreateClientConVar("xdefmod_bga", "255", true, false, "", 0, 255)
 	CreateClientConVar("xdefmod_brr", "0", true, false, "", 0, 255)
 	CreateClientConVar("xdefmod_brg", "206", true, false, "", 0, 255)
@@ -68,7 +68,7 @@ xdefmod.shop = {}
 xdefmod.leader = nil
 
 -- Constants
-xdefmod.util.VERSION = "1.0.0"
+xdefmod.util.VERSION = "1.0.1"
 
 xdefmod.util.ROD_POS = Vector(-6, -2.5, 10)
 xdefmod.util.ROD_ANG = Angle(0, 90, 135)
@@ -287,7 +287,7 @@ if CLIENT then
 		[ "Angle" ] = "角度: ", [ "PageA" ] = "首页", [ "PageB" ] = "上页", [ "PageC" ] = "下页", [ "PageD" ] = "尾页", [ "Page" ] = "页码",
 		[ "c_collect1" ] = "图鉴未收集提示", [ "Equipment" ] = "钓具盒", [ "Equipment2" ] = "获取/移除钓鱼模组的所有武器",
 		[ "TrashCan" ] = "垃圾桶", [ "TrashCan2" ] = "卖出触碰的物品", [ "c_hurtrod1" ] = "鱼钩碰撞", [ "c_hurtrod2" ] = "玩家可以用鱼钩造成伤害.",
-		[ "c_animui1" ] = "动态UI(低帧数会影响体验)", [ "c_quickinv1" ] = "快速打开背包", [ "Plate" ] = "展示盘", [ "Plate2" ] = "展示你的一个物品",
+		[ "c_animui1" ] = "动态UI", [ "c_quickinv1" ] = "快速打开背包", [ "Plate" ] = "展示盘", [ "Plate2" ] = "展示你的一个物品",
 		[ "c_tempmode1" ] = "临时模式", [ "c_tempmode2" ] = "玩家无法捡起除鱼饵以外的物品,只能现场卖掉物品.", [ "c_thiefnerf1" ] = "弱化海鸥", [ "c_thiefnerf2" ] = "降低所有海鸥飞行速度但是你无法再通过击杀海鸥获得经验值.",
 		[ "Radar" ] = "物品雷达", [ "Radar2" ] = "显示周围物品的位置", [ "Bucket" ] = "铁桶", [ "Bucket2" ] = "可以临时存储一定数量的物品.", [ "Recipe" ] = "图纸",
 		[ "NotRecipe" ] = "该槽位仅限图纸,", [ "NotRecip2" ] = "不是有效的图纸!", [ "Product" ] = "产品", [ "NeedRecipe" ] = "请先放入图纸.",
@@ -352,7 +352,7 @@ if CLIENT then
 		[ "Angle" ] = "Angle: ", [ "PageA" ] = "<<", [ "PageB" ] = "<", [ "PageC" ] = ">", [ "PageD" ] = ">>", [ "Page" ] = "Page",
 		[ "c_collect1" ] = "Collection reminder", [ "Equipment" ] = "Equipment Kit", [ "Equipment2" ] = "Get/Strip all the weapons in Fishing Mod",
 		[ "TrashCan" ] = "Trashcan", [ "TrashCan2" ] = "Sell items on touch", [ "Collection" ] = "Collection", [ "Plate" ] = "Display Plate", [ "Plate3" ] = "Displaying: ",
-		[ "c_animui1" ] = "Animated UI(Sluggish when in low fps)", [ "c_quickinv1" ] = "Quick Inventory", [ "Plate2" ] = "Display one of your item",
+		[ "c_animui1" ] = "Animated UI", [ "c_quickinv1" ] = "Quick Inventory", [ "Plate2" ] = "Display one of your item",
 		[ "c_tempmode1" ] = "Temp Mode", [ "c_tempmode2" ] = "Players can no longer 'carry' items but only sell them using R+E.", [ "c_thiefnerf1" ] = "Nerfed Theft", [ "c_thiefnerf2" ] = "Slow down seagulls but you can no longer get exps from killing them.",
 		[ "Radar" ] = "Item Radar", [ "Radar2" ] = "Show the location of owner's items", [ "Recipe" ] = "Recipe",
 		[ "NotRecipe" ] = "This slot is for recipes only,", [ "TCraft" ] = "Total Craft", [ "NotRecip2" ] = "Is not a valid recipe!", [ "Product" ] = "Products", [ "NeedRecipe" ] = "Insert a recipe here.",
@@ -368,7 +368,7 @@ if CLIENT then
 		[ "DEnter" ] = "Enter Convert Value...", [ "Conv1" ] = "To DarkRP", [ "Conv2" ] = "To Fishing", [ "DarkNPC" ] = "Fisherman", [ "DarkNPC2" ] = "What can I do for you?",
 		[ "NPC1" ] = "Equip/Unequip Fishing Equipments", [ "NPC2" ] = "Sell Everything", [ "NPC3" ] = "Open Inventory and Bank", [ "NPC4" ] = "Open Inventory and Crafting", [ "NPC5" ] = "Open Collection Menu", [ "NPC6" ] = "Open Quest Eenu", [ "NPC7" ] = "Open Currency Conversion",
 		[ "c_bg" ] = "Menu background color", [ "c_br" ] = "Menu outline color", [ "Weapon_Craft" ] = "Crafting", [ "Struct" ] = "Structure", [ "U3" ] = "Interact",
-		[ "ST0" ] = "Structure", [ "ST1" ] = "Storage", [ "ST2" ] = "Crafting", [ "ST3" ] = "Shop", [ "c_nomorehook1" ] = "Disable Extra Hooks", [ "c_nomorehook2" ] = "Since some say it causes lags.",
+		[ "ST0" ] = "Structure", [ "ST1" ] = "Storage", [ "ST2" ] = "Crafting", [ "ST3" ] = "Shop", [ "c_nomorehook1" ] = "Disable Extra Hooks", [ "c_nomorehook2" ] = "Since some said it causes lags.",
 		[ "NoMoreHook" ] = "Extra Hooks is disabled in this server!", [ "NotEmpty" ] = "Is not empty!",
 	}
 
@@ -465,14 +465,17 @@ if CLIENT then
 			surface.SetDrawColor(col)
 			surface.DrawOutlinedRect(0, 0, w, h, slot_box.N_Lerp)
 
-			draw.TextShadow({
-				text = isstring(item_text) and item_text or "",
-				pos = { h - 4, 4 },
-				font = "xdefm_Font2",
-				xalign = TEXT_ALIGN_RIGHT,
-				yalign = TEXT_ALIGN_DOWN,
-				color = Color(255, 255, 255)
-			}, 1, 255)
+			draw.SimpleTextOutlined(
+				isstring(item_text) and item_text or "", 	-- Text
+				"xdefm_Font2", 								-- Font
+				(h - 4), 									-- X Pos
+				4, 											-- Y Pos
+				Color(255, 255, 255), 						-- Color
+				TEXT_ALIGN_RIGHT, 							-- X Align
+				TEXT_ALIGN_DOWN, 							-- Y Align
+				1, 											-- Outline Width
+				Color(0, 0, 0) 								-- Outline Color
+			)
 		end
 
 		if not locked then
@@ -788,14 +791,17 @@ if CLIENT then
 							indicator_x = math.sin(CurTime() * 2) * size / 2
 						end
 
-						draw.TextShadow({
-							text = nam,
-							pos = { indicator_width / 2 + indicator_x / 2, indicator_height / 2 },
-							font = "xdefm_Font2",
-							xalign = TEXT_ALIGN_CENTER,
-							yalign = TEXT_ALIGN_CENTER,
-							color = rarity_color
-						}, 1, 255)
+						draw.SimpleTextOutlined(
+							nam,
+							"xdefm_Font2",
+							indicator_width / 2 + indicator_x / 2,
+							indicator_height / 2,
+							rarity_color,
+							TEXT_ALIGN_CENTER,
+							TEXT_ALIGN_CENTER,
+							1,
+							Color( 0, 0, 0 )
+						)
 
 						surface.SetDrawColor(rarity_color)
 						surface.DrawOutlinedRect(0, 0, slot_width, math.ceil(slot_height * 0.25), 1)
@@ -927,9 +933,9 @@ if CLIENT then
 				RunConsoleCommand("xdefmod_fps", 0)
 				RunConsoleCommand("xdefmod_sonar", 1)
 				RunConsoleCommand("xdefmod_collection", "11111111111")
-				RunConsoleCommand("xdefmod_bgr", 28)
-				RunConsoleCommand("xdefmod_bgg", 25)
-				RunConsoleCommand("xdefmod_bgb", 72)
+				RunConsoleCommand("xdefmod_bgr", 0)
+				RunConsoleCommand("xdefmod_bgg", 31)
+				RunConsoleCommand("xdefmod_bgb", 127)
 				RunConsoleCommand("xdefmod_bga", 255)
 				RunConsoleCommand("xdefmod_brr", 0)
 				RunConsoleCommand("xdefmod_brg", 206)
@@ -1101,23 +1107,29 @@ if CLIENT then
 						scr.x = math.Round(scr.x)
 						scr.y = math.Round(scr.y)
 
-						draw.TextShadow({
-							text = v:Nick(),
-							pos = { scr.x, scr.y },
-							font = "xdefm_Font5",
-							xalign = TEXT_ALIGN_CENTER,
-							yalign = TEXT_ALIGN_CENTER,
-							color = col
-						}, 1, 255)
+						draw.SimpleTextOutlined(
+							v:Nick(),
+							"xdefm_Font5",
+							scr.x,
+							scr.y,
+							col,
+							TEXT_ALIGN_CENTER,
+							TEXT_ALIGN_CENTER,
+							1,
+							Color( 0, 0, 0 )
+						)
 
-						draw.TextShadow({
-							text = language.GetPhrase("xdefm.Trade10"),
-							pos = { scr.x, scr.y + 20 },
-							font = "xdefm_Font1",
-							xalign = TEXT_ALIGN_CENTER,
-							yalign = TEXT_ALIGN_CENTER,
-							color = col
-						}, 1, 255)
+						draw.SimpleTextOutlined(
+							language.GetPhrase("xdefm.Trade10"),
+							"xdefm_Font1",
+							scr.x,
+							scr.y + 20,
+							col,
+							TEXT_ALIGN_CENTER,
+							TEXT_ALIGN_CENTER,
+							1,
+							Color( 0, 0, 0 )
+						)
 					end
 				end
 			end
@@ -1193,13 +1205,11 @@ if CLIENT then
 		end
 
 		local is_empty_item = (item_data == "_")
-		if GetConVar("xdefmod_animui"):GetInt() > 0 then
-			local ttt = string.Explode("|", item_data)
-			if xdefmod.util.cl_ls ~= ttt[1] then
-				xdefmod.util.cl_ls = ttt[1]
-				if item_data ~= "_" then xdefmod.util.cl_ds = item_data end
-				xdefmod.util.cl_dl = SysTime() + 0.25
-			end
+		local ttt = string.Explode("|", item_data)
+		if xdefmod.util.cl_ls ~= ttt[1] then
+			xdefmod.util.cl_ls = ttt[1]
+			if item_data ~= "_" then xdefmod.util.cl_ds = item_data end
+			xdefmod.util.cl_dl = SysTime() +( GetConVar( "xdefmod_animui" ):GetInt() > 0 and 0.25 or 0 )
 		end
 
 		if IsValid(ply) and (xdefmod.util.cl_ds ~= "_" or xdefmod.util.cl_dl > SysTime()) then
@@ -1242,7 +1252,7 @@ if CLIENT then
 				if istable(xdefmod.util.cl_craft_recipe) and xdefmod.util.cl_lc and not (input.IsShiftDown() or input.IsButtonDown(KEY_LSHIFT) or input.IsButtonDown(KEY_RSHIFT)) then
 					local craft_recipe = xdefmod.util.cl_craft_recipe
 					local ply_items = ply.xdefm_Profile.Items
-					local anim_percentage = (GetConVar("xdefmod_animui"):GetInt() > 0 and math.Clamp((xdefmod.util.cl_dl - SysTime()) / 0.25, 0, 1) or 1)
+					local anim_percentage = math.Clamp((xdefmod.util.cl_dl - SysTime()) / 0.25, 0, 1)
 					if not is_empty_item then
 						anim_percentage = 1 - anim_percentage
 					end
@@ -1295,14 +1305,17 @@ if CLIENT then
 									surface.SetMaterial(xdefmod.util.ITEM_ICONS[item.Type])
 									surface.DrawTexturedRect(x2 + 2, y2 + 1, 16, 16)
 
-									draw.TextShadow({
-										text = xdefm_ItemMark(craft_recipe[ingredient_index], true),
-										pos = { x2 + 4 + 19, y2 + 2 },
-										font = "xdefm_Font2",
-										xalign = TEXT_ALIGN_LEFT,
-										yalign = TEXT_ALIGN_TOP,
-										color = color_indicator
-									}, 1, 255)
+									draw.SimpleTextOutlined(
+										xdefm_ItemMark(craft_recipe[ingredient_index], true),
+										"xdefm_Font2",
+										x2 + 4 + 19,
+										y2 + 2,
+										color_indicator,
+										TEXT_ALIGN_LEFT,
+										TEXT_ALIGN_TOP,
+										1,
+										Color( 0, 0, 0 )
+									)
 
 									if not upp then
 										upp = true
@@ -1398,21 +1411,24 @@ if CLIENT then
 					local markup_obj = markup.Parse(markup_string, 250)
 					--local ww = markup_obj:GetWidth() -- Unused?
 					local hh = markup_obj:GetHeight()
-					local animation_state = (GetConVar("xdefmod_animui"):GetInt() > 0 and math.Clamp((xdefmod.util.cl_dl - SysTime()) / 0.25, 0, 1) or 1)
+					local animation_state = math.Clamp((xdefmod.util.cl_dl - SysTime()) / 0.25, 0, 1)
 					if not is_empty_item then
 						animation_state = 1 - animation_state
 					end
 
 					local color_alpha = animation_state * 255
 					if GetConVar("xdefmod_collect"):GetInt() > 0 and not isnumber(xdefmod.cl_bestiary[xdefm_GetClass(item_data)]) then
-						draw.TextShadow({
-							text = language.GetPhrase("xdefm.Besti2"),
-							pos = { draw_x + 256, draw_y + hh * animation_state + 20 },
-							font = "xdefm_Font1",
-							xalign = TEXT_ALIGN_RIGHT,
-							yalign = TEXT_ALIGN_CENTER,
-							color = Color(0, 255, 255, color_alpha)
-						}, 1, color_alpha)
+						draw.SimpleTextOutlined(
+							language.GetPhrase("xdefm.Besti2"),
+							"xdefm_Font1",
+							draw_x + 256,
+							draw_y + hh * animation_state + 20,
+							Color(0, 255, 255, color_alpha),
+							TEXT_ALIGN_RIGHT,
+							TEXT_ALIGN_CENTER,
+							1,
+							Color(0, 0, 0, color_alpha)
+						)
 					end
 
 					local x2 = draw_x - 7.5
@@ -1440,11 +1456,11 @@ if CLIENT then
 					markup_obj:Draw(draw_x, draw_y, nil, nil, color_alpha)
 					render.SetScissorRect(0, 0, 0, 0, false)
 
-					if IsValid(ent) and item_data ~= "_" and ent:GetClass() == "xdefm_base" and not vgui.CursorVisible() and animation_state > 0 and (xdefm_CanInteract(LocalPlayer(), ent) or (GetConVar("xdefmod_animui"):GetInt() > 0 and xdefmod.util.cl_key_ler > 0)) then
+					if IsValid(ent) and item_data ~= "_" and ent:GetClass() == "xdefm_base" and not vgui.CursorVisible() and animation_state > 0 and (xdefm_CanInteract(LocalPlayer(), ent) or xdefmod.util.cl_key_ler > 0) then
 						xdefmod.util.cl_key_ler = Lerp(0.1, xdefmod.util.cl_key_ler, xdefm_CanInteract(LocalPlayer(), ent) and 1 or 0)
 
 						local hei = markup_obj:GetHeight() * animation_state + 15
-						local alp = GetConVar("xdefmod_animui"):GetInt() > 0 and math.Clamp(xdefmod.util.cl_key_ler / 1 * 255, 0, 255) or 255
+						local alp = math.Clamp(xdefmod.util.cl_key_ler / 1 * 255, 0, 255)
 						local k1 = input.LookupBinding("+use", true)
 						if isstring(bb.HelperUse) and isstring(k1) and bb.HelperUse ~= "" then
 							local kk = string.Explode("", k1)
@@ -1466,23 +1482,27 @@ if CLIENT then
 							surface.SetDrawColor(Color(0, 0, 0, alp))
 							surface.DrawOutlinedRect(draw_x - 4, draw_y + hei, x1 + 8, y1, 1)
 
-							draw.TextShadow({
-								text = k1,
-								pos = { draw_x + x1 / 2 - 2, draw_y + hei + y1 / 2 },
-								font = "xdefm_Font1",
-								xalign = TEXT_ALIGN_CENTER,
-								yalign = TEXT_ALIGN_CENTER,
-								color = ply:KeyDown(IN_USE) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp)
-							}, 1, alp)
+							draw.SimpleText(
+								k1,
+								"xdefm_Font1",
+								draw_x + x1 / 2 - 2,
+								draw_y + hei + y1 / 2,
+								ply:KeyDown(IN_USE) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp),
+								TEXT_ALIGN_CENTER,
+								TEXT_ALIGN_CENTER
+							)
 
-							draw.TextShadow({
-								text = language.GetPhrase(bb.HelperUse),
-								pos = { draw_x + x1 + 12, draw_y + hei + y1 / 2 },
-								font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_LEFT,
-								yalign = TEXT_ALIGN_CENTER,
-								color = Color(255, 255, 255, alp)
-							}, 1, alp)
+							draw.SimpleTextOutlined(
+								language.GetPhrase(bb.HelperUse),
+								"xdefm_Font2",
+								draw_x + x1 + 12,
+								draw_y + hei + y1 / 2 - 1,
+								ply:KeyDown(IN_USE) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp),
+								TEXT_ALIGN_LEFT,
+								TEXT_ALIGN_CENTER,
+								1,
+								Color(0, 0, 0, alp)
+							)
 
 							hei = hei + y1 + 5
 						end
@@ -1527,41 +1547,49 @@ if CLIENT then
 								dst = "xdefm.Store"
 							end
 
-							draw.TextShadow({
-								text = k2,
-								pos = { draw_x + x1 / 2 - 2, draw_y + hei + y1 / 2 },
-								font = "xdefm_Font1",
-								xalign = TEXT_ALIGN_CENTER,
-								yalign = TEXT_ALIGN_CENTER,
-								color = ply:KeyDown(IN_RELOAD) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp)
-							}, 1, alp)
+							draw.SimpleText(
+								k2,
+								"xdefm_Font1",
+								draw_x + x1 / 2 - 2,
+								draw_y + hei + y1 / 2,
+								ply:KeyDown(IN_RELOAD) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp),
+								TEXT_ALIGN_CENTER,
+								TEXT_ALIGN_CENTER
+							)
 
-							draw.TextShadow({
-								text = k1,
-								pos = { draw_x + x1 + x2 / 2 + 28 - 2, draw_y + hei + y1 / 2 },
-								font = "xdefm_Font1",
-								xalign = TEXT_ALIGN_CENTER,
-								yalign = TEXT_ALIGN_CENTER,
-								color = ply:KeyDown(IN_USE) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp)
-							}, 1, alp)
+							draw.SimpleText(
+								k1,
+								"xdefm_Font1",
+								draw_x + x1 + x2 / 2 + 28 - 2,
+								draw_y + hei + y1 / 2,
+								ply:KeyDown(IN_USE) and Color(255, 255, 0, alp) or Color(255, 255, 255, alp),
+								TEXT_ALIGN_CENTER,
+								TEXT_ALIGN_CENTER
+							)
 
-							draw.TextShadow({
-								text = "+",
-								pos = { draw_x + x1 + 14, draw_y + hei + y1 / 2 },
-								font = "xdefm_Font4",
-								xalign = TEXT_ALIGN_CENTER,
-								yalign = TEXT_ALIGN_CENTER,
-								color = Color(255, 255, 255, alp)
-							}, 1, alp)
+							draw.SimpleTextOutlined(
+								"+",
+								"xdefm_Font4",
+								draw_x + x1 + 14,
+								draw_y + hei + y1 / 2 - 1,
+								Color(255, 255, 255, alp),
+								TEXT_ALIGN_CENTER,
+								TEXT_ALIGN_CENTER,
+								1,
+								Color(0, 0, 0, alp)
+							)
 
-							draw.TextShadow({
-								text = language.GetPhrase(dst),
-								pos = { draw_x + x1 + x2 + 40, draw_y + hei + y1 / 2 },
-								font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_LEFT,
-								yalign = TEXT_ALIGN_CENTER,
-								color = Color(255, 255, 255, alp)
-							}, 1, alp)
+							draw.SimpleTextOutlined(
+								language.GetPhrase(dst),
+								"xdefm_Font2",
+								draw_x + x1 + x2 + 40,
+								draw_y + hei + y1 / 2 - 1,
+								Color(255, 255, 255, alp),
+								TEXT_ALIGN_LEFT,
+								TEXT_ALIGN_CENTER,
+								1,
+								Color(0, 0, 0, alp)
+							)
 						end
 					elseif xdefmod.util.cl_key_ler ~= 0 then
 						xdefmod.util.cl_key_ler = 0
@@ -1881,11 +1909,10 @@ if SERVER then -- Server only
 		-- Round level (why?) and limit between 0 and max level
 		level = isnumber(level) and math.Clamp(math.Round(level), 0, 1000) or 0
 		bait = isstring(bait) and bait or "_"
-		-- FIXME: Fix efficiency calculation
 		-- TODO: Replace hard-coded max efficiency with configurable variable
 		-- REVIEW: Change efficiency calculation to a logarithmic function based on upgrade level?
 		-- Round efficiency (why?) and limit between 0 and 100 percent
-		efficiency = isnumber(efficiency) and math.Clamp(math.Round(efficiency), 0, 100) or 0
+		efficiency = isnumber(efficiency) and (math.Clamp(math.Round(efficiency), 0, 100) / 100) or 0
 		ground = isbool(ground) and ground or false
 
 		-- TODO: Replace hard-coded chance with configurable variable
@@ -1916,13 +1943,10 @@ if SERVER then -- Server only
 		end
 
 		local chance = item_group.Chances
+		-- TODO: Replace hard-coded values with configurable variables
 		-- Roll a random value between chance, minus smaller value of either rounded up depth or half of chance,
 		-- then multiply roll with efficiency percentage reduction and round everything up
-		local roll = math.ceil(math.random(chance - math.min(math.ceil(depth / 0.01905), chance * 0.5)) * (1 - efficiency / 100))
-		-- Roll can not be 0 or negative
-		if roll <= 0 then
-			return nil, nil
-		end
+		local roll = math.ceil(math.random(chance - math.min(math.ceil(depth / 0.01905), chance * 0.5)) * (1 - efficiency * 0.8))
 
 		-- Check level requirements, minimum and maximum depth and ground-only flag
 		if level < item_group.Level or (not no_depth and (depth < item_group.DepthMin or depth > item_group.DepthMax)) or (item_group.GroundOnly and not ground) then
@@ -2148,19 +2172,44 @@ if SERVER then -- Server only
 
 		if file.Exists(ply_file_path, "DATA") then
 			ply_profile = util.JSONToTable(file.Read(ply_file_path, "DATA"))
-			if not ply_profile.UpdG then
-				ply_profile.UpdG = 0
-			end
 
-			for slot_index, item_info in pairs(ply_profile.Items) do
-				if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
-					ply_profile.Items[slot_index] = (slot_index == 21 and "ba_junk" or "it_error")
+			if !istable(ply_profile) then
+				ply_profile = {
+					Level = 0,
+					Money = 0,
+					Exp = 0,
+					Items = {"it_bait1", "re_basic|25", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"},
+					UpdA = 0,
+					UpdB = 0,
+					UpdC = 0,
+					UpdD = 0,
+					UpdE = 0,
+					UpdF = 0,
+					UpdG = 0,
+					Skp = 0,
+					Bnk = {},
+					TCatch = 0,
+					TExp = 0,
+					TEarn = 0,
+					TBuy = 0,
+					TCraft = 0,
+					TQuest = 0,
+				}
+			else
+				if not ply_profile.UpdG then
+					ply_profile.UpdG = 0
 				end
-			end
 
-			for slot_index, item_info in pairs(ply_profile.Bnk) do
-				if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
-					ply_profile.Bnk[slot_index] = "it_error"
+				for slot_index, item_info in pairs(ply_profile.Items) do
+					if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
+						ply_profile.Items[slot_index] = (slot_index == 21 and "ba_junk" or "it_error")
+					end
+				end
+
+				for slot_index, item_info in pairs(ply_profile.Bnk) do
+					if isstring(item_info) and item_info ~= "_" and not xdefmod.items[xdefm_GetClass(item_info)] then
+						ply_profile.Bnk[slot_index] = "it_error"
+					end
 				end
 			end
 		else
@@ -2169,7 +2218,7 @@ if SERVER then -- Server only
 				Money = 0,
 				Exp = 0,
 				-- TODO: Replace hard-coded default inventory with configurable one
-				Items = { "it_bait1", "re_basic|25", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_" },
+				Items = {"it_bait1", "re_basic|25", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_"},
 				UpdA = 0,
 				UpdB = 0,
 				UpdC = 0,
@@ -2357,6 +2406,8 @@ if SERVER then -- Server only
 
 		ent:SetFMod_OW(owner)
 		ent.Owner = owner
+		local mii, maa = ent:GetCollisionBounds()
+		ent:SetPos(pos + (mii + maa) / 2)
 		ent:Spawn()
 		ent:Activate()
 
@@ -2415,7 +2466,9 @@ if SERVER then -- Server only
 		end
 
 		xdefm_ProfileUpdate(ply)
-		xdefm_SendSnd(ply, "physics/metal/chain_impact_soft" .. math.random(1, 3) .. ".wav")
+		-- REVIEW: Is this sound change just a matter of taste or is there another reason?
+		--xdefm_SendSnd(ply, "physics/metal/chain_impact_soft" .. math.random(1, 3) .. ".wav")
+		xdefm_SendSnd(ply, "ambient/levels/labs/coinslot1.wav")
 	end
 
 	--- Sends a menu update to the player.
@@ -2596,19 +2649,20 @@ if SERVER then -- Server only
 	-- Prevents flagged fishing entities to be interacted with by phys gun
 	hook.Add("PhysgunPickup", "xdefm_NoTool", function(ply, ent)
 		if ent.xdefm_NoTool then return false end
-		if ent:GetClass() == "xdefm_base" then return false end
+		if IsValid(ply) and ent:GetClass() == "xdefm_base" and !xdefm_FriendAllow(ply, ent:GetFMod_OI()) and !xdefm_NadAllow(ply, ent) then return false end
 	end)
 
 	-- Prevents flagged fishing entities to have their properties changed
 	hook.Add("CanProperty", "xdefm_NoTool", function(ply, property, ent)
 		if ent.xdefm_NoTool then return false end
-		if ent:GetClass() == "xdefm_base" then return false end
+		if IsValid(ply) and ent:GetClass() == "xdefm_base" and !xdefm_FriendAllow(ply, ent:GetFMod_OI()) and !xdefm_NadAllow(ply, ent) then return false end
 	end)
 
 	-- Prevents flagged fishing entities to be targeted by tools
 	hook.Add("CanTool", "xdefm_NoTool", function(ply, trace_table, toolname, tool, button)
 		if IsValid(trace_table.Entity) and trace_table.Entity.xdefm_NoTool then return false end
-		if IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" then return false end
+		if IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" and toolname == "precision_align" then return false end
+		if IsValid(ply) and IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" and !xdefm_FriendAllow(ply, trace_table.Entity:GetFMod_OI()) and !xdefm_NadAllow(ply, trace_table.Entity) then return false end
 	end)
 
 	-- Prevents flagged fishing entities to be picked up by players
@@ -3199,9 +3253,9 @@ if SERVER or CLIENT then -- Shared
 if typ == 0 then -- Inventory menu
 	if IsValid( xdefmod.util.cl_menus[ "Inventory" ] ) then return end
 	local pan = vgui.Create( "DFrame" )  xdefmod.util.cl_menus.Inventory = pan  pan.T_Data = tab  pan.T_Slots = {}
-	pan:SetPos( ScrW() / 2 -500, ScrH() / 2 - 500 / 2 ) pan:SetSize( 450, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
+	pan:SetPos( ScrW() / 2 - 500, ScrH() / 2 - 500 / 2 ) pan:SetSize( 450, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 -500, ScrH() / 2 - 550 / 2, 0.2 ) ply.xdefm_Profile = tab  function pan:OnRemove()
+	pan:MoveTo( ScrW() / 2 - 500, ScrH() / 2 - 550 / 2, GetConVar( "xdefmod_animui" ):GetInt() > 0 and 0.2 or 0 ) ply.xdefm_Profile = tab  function pan:OnRemove()
 		if ispanel( xdefmod.util.cl_menus.Double ) then xdefmod.util.cl_menus.Double:Remove() end
 		if ispanel( xdefmod.util.cl_menus.Bank ) then xdefmod.util.cl_menus.Bank:Remove() end
 		if ispanel( xdefmod.util.cl_menus.Trade ) then xdefmod.util.cl_menus.Trade:Remove() end
@@ -3215,10 +3269,8 @@ if typ == 0 then -- Inventory menu
 		surface.DrawTexturedRectRotated( w / 2, h / 2, w, h, 180 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.TextShadow( { text = ply:Nick(), pos = { 80, 24 }, font = "xdefm_Font5",
-		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-		draw.TextShadow( { text = language.GetPhrase( "#xdefm.Money" ) .. ": " .. tab.Money, pos = { 80, 54 }, font = "xdefm_Font1",
-		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 ) end
+		draw.SimpleTextOutlined( ply:Nick(), "xdefm_Font5", 80, 24, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.Money" ) .. ": " .. tab.Money, "xdefm_Font1", 80, 54, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE ) end
 	if true then -- Avatar image
 		pan.P_AIcon = pan:Add( "AvatarImage" )  local pax = pan.P_AIcon
 		pax:SetPos( 8, 8 ) pax:SetSize( 64, 64 ) pax:SetPlayer( ply, 128 ) pax:SetMouseInputEnabled( false )
@@ -3230,11 +3282,9 @@ if typ == 0 then -- Inventory menu
 		pan.P_Close = pan:Add( "DButton" )  local pax = pan.P_Close
 		pax:SetText( "" ) pax:SetPos( 410, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint( w, h ) draw.TextShadow( {
-				text = "×", pos = { w / 2, h / 2 }, font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 )
-		}, 2, 255 ) end function pax:DoClick() pan:Close() end
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end
 	if true then -- Level panel
 		pan.P_Level = pan:Add( "DPanel" )  local pax = pan.P_Level
@@ -3245,8 +3295,7 @@ if typ == 0 then -- Inventory menu
 			surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 0, 0, w, h )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h )
-			draw.TextShadow( { text = language.GetPhrase( "#xdefm.Level" ) .. ": " .. tab.Level, pos = { 12, 18 }, font = "xdefm_Font1",
-			xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+			draw.SimpleTextOutlined( language.GetPhrase("#xdefm.Level") .. ": " .. tab.Level, "xdefm_Font1", 12, 18, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			local xx, yy = pax:GetPos()  local x2, y2 = pan:GetPos()  xx = xx + x2  yy = yy + y2  local per = math.Clamp(ee / pp,0,1)
 			surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 8, 32, 416, 30 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 8, 32, 416, 30, 2 )
@@ -3255,8 +3304,7 @@ if typ == 0 then -- Inventory menu
 			draw.RoundedBox( 4, 4 + 8, 4 + 32, 416 - 8, 30 - 8, Color( 0, 155, 200 ) )
 			render.SetScissorRect( 0, 0, 0, 0, false )
 			local txt = ""  if self.B_Hover then txt = ee .. " / " .. pp else txt = tostring(math.floor(per * 100)) .. " %" end
-			draw.TextShadow( { text = txt, pos = { w / 2, 46 }, font = "xdefm_Font2",
-			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+			draw.SimpleTextOutlined( txt, "xdefm_Font2", w / 2, 46, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 		function pax:OnCursorEntered() self.B_Hover = true end function pax:OnCursorExited() self.B_Hover = false end end
 	if true then -- Inventory/Upgrade/Stats/Leaderbord/Shop tabs
@@ -3281,7 +3329,7 @@ if typ == 0 then -- Inventory menu
 		if GetConVar( "xdefmod_lbdelay" ):GetInt() > 0 and not game.SinglePlayer() then
 			pan.P_Menu4 = AddASheetFM( language.GetPhrase( "xdefm.M4" ), "icon16/chart_bar.png", language.GetPhrase( "xdefm.M44" ) )
 		end
-		for k, v in pairs( { pan.P_Menu2, pan.P_Menu3, pan.P_Menu4, pan.P_Menu5 } ) do
+		for k, v in ipairs( { pan.P_Menu2, pan.P_Menu3, pan.P_Menu4, pan.P_Menu5 } ) do
 			if IsValid( v ) then
 				function v:Paint( w, h )
 					surface.SetDrawColor( Color( xdefmod.COLOR_BACKGROUND.r * 0.5, xdefmod.COLOR_BACKGROUND.g * 0.5, xdefmod.COLOR_BACKGROUND.b * 0.5, xdefmod.COLOR_BACKGROUND.a * 0.5 ) )
@@ -3289,7 +3337,7 @@ if typ == 0 then -- Inventory menu
 				end
 			end
 		end
-		for k, v in pairs( { pan.P_Menu1, pan.P_Menu2, pan.P_Menu3, pan.P_Menu5 } ) do
+		for k, v in ipairs( { pan.P_Menu1, pan.P_Menu2, pan.P_Menu3, pan.P_Menu5 } ) do
 			if IsValid( v ) then
 				v.P_Scroll = v:Add( "DScrollPanel" )  v.P_Scroll:Dock( FILL )  local vba = v.P_Scroll:GetVBar()
 				vba:SetHideButtons( true )  vba:SetSize( 0, 0 )
@@ -3366,14 +3414,13 @@ if typ == 0 then -- Inventory menu
 					dnm:Open()
 				end
 			end end
-		-- Uprade panel
+		-- Upgrade panel
 		if true then
 			local pax = pan.P_Menu2 -- FIXME: "pax" shadows existing binding!
 			local skp = pax.P_Scroll:Add( "DPanel" ) skp:SetSize( 0, 30 ) skp:Dock( TOP )
 			function skp:Paint( w, h )
 				local tab = xdefmod.util.cl_menus.Inventory.T_Data -- FIXME: "tab" shadows existing binding!
-				draw.TextShadow( { text = language.GetPhrase( "xdefm.Skp" ) .. ": " .. tab.Skp, pos = { 8, h / 2 }, font = "xdefm_Font7",
-				xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+				draw.SimpleTextOutlined( language.GetPhrase("xdefm.Skp") .. ": " .. tab.Skp, "xdefm_Font7", 8, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			end local MatA = Material( "gui/gradient_up" )
 			local function AddASkillTab( ski ) local num = xdefmod.util.UPGRADE_COSTS[ ski ]  if not isnumber( num ) or not tab[ "Upd" .. ski ] then return end
 				local pan = pax.P_Scroll:Add( "DPanel" ) -- FIXME: "pan" shadows existing binding!
@@ -3387,20 +3434,22 @@ if typ == 0 then -- Inventory menu
 					surface.SetMaterial( MatA ) surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawTexturedRect( 8, 2, w - 16, h -4 )
 					surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 8, 2, w - 16, h - 4, 2 )
 					surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 8, 2, w - 16, h - 4, 1 )
-					draw.TextShadow( { text = language.GetPhrase( "xdefm.Upd" .. ski ) .. ( ski == "G" and GetConVar( "xdefmod_nomorehook" ):GetInt() >= 1 and " ※" or "" ),
-					pos = { 16, h / 2 }, font = "xdefm_Font5", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-					draw.TextShadow( { text = "Lv." .. ( ( ski == "G" and tab[ "Upd" .. ski ] >= 5 or tab[ "Upd" .. ski ] >= 100 ) and "Max" or tab[ "Upd" .. ski ] ),
-					pos = { w -160, h / 2 }, font = "xdefm_Font5", xalign = TEXT_ALIGN_RIGHT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-					draw.TextShadow( { text = "±" .. tostring( num ), pos = { w - 72, h / 2 }, font = "xdefm_Font1",
-					xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm.Upd" .. ski) .. (ski == "G" and GetConVar("xdefmod_nomorehook"):GetInt() >= 1 and " ※" or ""),
+					"xdefm_Font5", 16, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+
+					draw.SimpleTextOutlined( "Lv." .. ((ski == "G" and tab["Upd"..ski] >= 5 or tab["Upd" .. ski] >= 100) and "Max" or tab["Upd"..ski]),
+					"xdefm_Font5", w - 160, h / 2, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+
+					draw.SimpleTextOutlined( "±" .. tostring(num),
+					"xdefm_Font1", w - 72, h / 2, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 				end for i = 1, 2 do
-					local but = pan:Add( "DButton" ) but:SetSize( 30, 20 ) but:SetPos( 305 + (i - 1) * 80, 10 ) but:SetText( "" )
+					local but = pan:Add( "DButton" ) but:SetSize( 30, 20 ) but:SetPos( 290 + (i - 1) * 80, 10 ) but:SetText( "" )
 						but.B_Hover = false  but.N_Lerp = 0  function but:Paint( w, h ) but.N_Lerp = Lerp( 0.2, but.N_Lerp, but.B_Hover and 1 or 0 )
 						col = Color( 100 + 55 * but.N_Lerp, 100 + 100 * but.N_Lerp, 100 + 100 * but.N_Lerp ) local skl = xdefmod.util.cl_menus.Inventory.T_Data[ "Upd" .. ski ]
 						local mmm = ( ski == "G" and skl >= 5 or skl >= 100 )
 						if ( i == 2 and mmm ) or ( i == 1 and skl <= 0 ) or ( i == 2 and xdefmod.util.cl_menus.Inventory.T_Data[ "Skp" ] < num ) then return end
-						draw.RoundedBox( 0, 1, 1, w - 2, h - 2, col ) draw.TextShadow( { text = i == 2 and "+" or "-", pos = { w / 2, h / 2 }, font = "xdefm_Font4",
-						xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+						draw.RoundedBox( 0, 1, 1, w - 2, h - 2, col )
+						draw.SimpleTextOutlined( i == 2 and "+" or "-", "xdefm_Font4", w / 2, h / 2 - 1, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 						surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 						surface.SetDrawColor( 255, 255, 255, 255 ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) end
 					function but:OnCursorEntered() self.B_Hover = true end function but:OnCursorExited() self.B_Hover = false end
@@ -3442,7 +3491,7 @@ if typ == 0 then -- Inventory menu
 			-- Inventory button
 			if true then
 				local ppp = pax.P_Scroll:Add( "DPanel" ) ppp:SetSize( 0, 75 ) ppp:Dock( TOP ) function ppp:Paint( w, h ) end ppp.N_Lerp = 0
-				local but = ppp:Add( "DButton" ) but:SetSize( 150, 28 ) but:SetPos( 274, 8 ) but:SetText( "" ) but.B_Hover = false function but:Paint( w, h )
+				local but = ppp:Add( "DButton" ) but:SetSize( 200, 28 ) but:SetPos( 224, 8 ) but:SetText( "" ) but.B_Hover = false function but:Paint( w, h )
 					ppp.N_Lerp = Lerp( 0.2, ppp.N_Lerp, but.B_Hover and 1 or 0 )
 					col = Color( 100 + 55 * ppp.N_Lerp, 100 + 100 * ppp.N_Lerp, 100 + 100 * ppp.N_Lerp )
 					if xdefmod.util.cl_skill_reset_cooldown > CurTime() then col = Color( 55, 55, 55 ) end
@@ -3451,8 +3500,8 @@ if typ == 0 then -- Inventory menu
 						local per = math.Clamp( (xdefmod.util.cl_skill_reset_cooldown-CurTime()) / GetConVar( "xdefmod_skpcool" ):GetInt(), 0, 1 )
 						surface.SetDrawColor( 255, 55, 55 ) surface.DrawRect( 0, 0, w * per, h )
 					end surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
-					surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) draw.TextShadow( { text = txt,
-					pos = { w / 2, h / 2 - 1 }, font = "xdefm_Font2", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+					surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
+					draw.SimpleTextOutlined( txt, "xdefm_Font1", w / 2, h / 2 - 1, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 				end function but:OnCursorEntered() self.B_Hover = true end function but:OnCursorExited() self.B_Hover = false end
 				function but:DoClick() if xdefmod.util.cl_skill_reset_cooldown > CurTime() then return end
 					if IsValid( pan.P_DMenu ) then pan.P_DMenu:Remove() end pan.P_DMenu = DermaMenu( false, nil )  local dnm = pan.P_DMenu
@@ -3471,8 +3520,7 @@ if typ == 0 then -- Inventory menu
 				local tab = xdefmod.util.cl_menus.Inventory.T_Data -- FIXME: "tab" shadows existing binding!
 					local dat, num = stt, 0  if isnumber( xdefmod.util.UPGRADE_COSTS[ stt ] )
 					then dat = "Upd" .. stt  num = xdefm_GetUpValue( tab[ dat ], stt ) else num = tab[ stt ] or 0 end
-					draw.TextShadow( { text = language.GetPhrase( "xdefm." .. dat ) .. ": " .. num,
-					pos = { 16, h / 2 }, font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm." .. dat).. ": " .. num, "xdefm_Font1", 16, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 				end
 			end
 			AddAStatTab( "!V" ) AddAStatTab( "TCatch" ) AddAStatTab( "TEarn" ) AddAStatTab( "TExp" )
@@ -3504,18 +3552,10 @@ if typ == 0 then -- Inventory menu
 					local ccc = Item.N_Lerp  draw.RoundedBox( 0, 1, 1, w -2, h -2, Color( col.r * ccc, col.g * ccc, col.b * ccc ) )
 					surface.SetMaterial( MaX ) surface.SetDrawColor( col.r * ccc * 1.5, col.g * ccc * 1.5, col.b * ccc * 1.5 ) surface.DrawTexturedRect( 1, 1, w -2, h -2 )
 					local co1, co2 = Color( 255, 0, 0 ), Color( 0, 255, 0 )
-					draw.TextShadow( {
-						text = language.GetPhrase( Item.S_Name ), pos = { 75, 15 }, font = "xdefm_Font2",
-						xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col
-					}, 1, 255 )
-					draw.TextShadow( {
-						text = language.GetPhrase( "xdefm.Price" ) .. ": " .. Item.N_Cost, pos = { 75, 35 }, font = "xdefm_Font2",
-						xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = pro.Money >= Item.N_Cost and co2 or co1
-					}, 1, 255 )
-					draw.TextShadow( {
-						text = language.GetPhrase( "xdefm.Level" ) .. ": " .. Item.N_Level, pos = { 75, 55 }, font = "xdefm_Font2",
-						xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = pro.Level >= Item.N_Level and co2 or co1
-					}, 1, 255 ) end
+					draw.SimpleTextOutlined( language.GetPhrase(Item.S_Name), "xdefm_Font2", 75, 15, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm.Price") .. ": " .. Item.N_Cost, "xdefm_Font2", 75, 35, pro.Money >= Item.N_Cost and co2 or co1, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm.Level") .. ": " .. Item.N_Level, "xdefm_Font2", 75, 55, pro.Level >= Item.N_Level and co2 or co1, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+				end
 				Item.P_Frame = Item:Add( "DPanel" )  Item:SetText( "" )
 				Item.P_Frame:SetSize( 64, 64 ) Item.P_Frame:SetPos( 6, 6 )
 				Item.P_Frame:SetMouseInputEnabled( false )  function Item.P_Frame:Paint( w, h )
@@ -3532,14 +3572,11 @@ if typ == 0 then -- Inventory menu
 			function ldb:Paint( w, h )
 				--local tab = xdefmod.util.menus.Inventory.T_Data -- Unused?
 				if not istable( pax.T_Leader ) or #pax.T_Leader <= 0 then
-					draw.TextShadow( { text = language.GetPhrase( "xdefm.NoInfo" ), pos = { w / 2, h / 2 }, font = "xdefm_Font5",
-					xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 ) return end
-				draw.TextShadow( { text = language.GetPhrase( "xdefm.Level" ), pos = { 245, 24 }, font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-				draw.TextShadow( { text = language.GetPhrase( "xdefm.Money" ), pos = { 345, 24 }, font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-				draw.TextShadow( { text = language.GetPhrase( "xdefm.Player" ), pos = { 65, 24 }, font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm.NoInfo"), "xdefm_Font5", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+				return end
+				draw.SimpleTextOutlined( language.GetPhrase("xdefm.Level"), "xdefm_Font5", 245, 24, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+				draw.SimpleTextOutlined( language.GetPhrase("xdefm.Money"), "xdefm_Font5", 345, 24, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+				draw.SimpleTextOutlined( language.GetPhrase("xdefm.Player"), "xdefm_Font5", 65, 24, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			end local Mat, Ma2 = Material( "gui/noicon.png" ), Material( "gui/center_gradient" )
 			pax.P_Scroll = ldb:Add( "DScrollPanel" ) pax.P_Scroll:SetSize( 420, 310 ) local scr = pax.P_Scroll
 			local vba = pax.P_Scroll:GetVBar() pax.P_Scroll:SetPos( 6, 40 ) vba:SetHideButtons( true ) vba:SetSize( 0, 0 )
@@ -3560,16 +3597,12 @@ if typ == 0 then -- Inventory menu
 						local bb, si = ( LocalPlayer():SteamID64() == plc.S_Sid ), ( 0.5 + 0.5 * math.abs( math.sin( CurTime() * 4 ) ) )
 						surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, bb and 3 or 2 )
 						surface.SetDrawColor( bb and Color( col.r * si, col.g * si, col.b * si ) or col ) surface.DrawOutlinedRect( 0, 0, w, h, bb and 2 or 1 )
-						draw.TextShadow( { text = k .. ".", pos = { 16, h  / 2 }, font = "xdefm_Font7",
-						xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
-						surface.SetMaterial( Mat ) surface.SetDrawColor( 255, 255, 255 ) surface.DrawTexturedRect( 32, 3, 33, 33 )
-						surface.SetDrawColor( col ) surface.DrawOutlinedRect( 32, 3, 34, 34, 2 )
-						draw.TextShadow( { text = plc.T_Data[ 3 ], pos = { 72, h / 2 }, font = "xdefm_Font2",
-						xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
-						draw.TextShadow( { text = plc.T_Data[ 4 ], pos = { 240, h / 2 }, font = "xdefm_Font2",
-						xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
-						draw.TextShadow( { text = plc.T_Data[ 5 ], pos = { 340, h / 2 }, font = "xdefm_Font2",
-						xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
+						draw.SimpleTextOutlined( k .. ".", "xdefm_Font7", 16, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+						surface.SetMaterial(Mat) surface.SetDrawColor(255, 255, 255) surface.DrawTexturedRect(32, 3, 33, 33)
+						surface.SetDrawColor(col) surface.DrawOutlinedRect(32, 3, 34, 34, 2)
+						draw.SimpleTextOutlined( plc.T_Data[3], "xdefm_Font2", 72, h / 2, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+						draw.SimpleTextOutlined( plc.T_Data[4], "xdefm_Font2", 240, h / 2, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+						draw.SimpleTextOutlined( plc.T_Data[5], "xdefm_Font2", 340, h / 2, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 					end
 				end
 			end pax:UpdateLbd( xdefmod.leader ) end
@@ -3589,7 +3622,7 @@ elseif typ == 1 then
 	local pan = vgui.Create( "DFrame" )  xdefmod.util.cl_menus.Quest = pan
 	pan:SetPos( ScrW() / 2 - 300, ScrH() / 2 - 300 ) pan:SetSize( 600, 400 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 - 300, ScrH() / 2 - 300, 0.2 ) pan.T_Require = {} pan.T_Reward = {}
+	pan:MoveTo( ScrW() / 2 - 300, ScrH() / 2 - 300, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0 ) pan.T_Require = {} pan.T_Reward = {}
 	pan.B_1 = false  pan.B_2 = false  pan.B_3 = false  pan.N_Total = 0
 	function pan:Paint( w, h )
 		--local tab = pan.T_Data -- Unused?
@@ -3599,18 +3632,10 @@ elseif typ == 1 then
 		surface.DrawTexturedRectRotated( w / 2, h / 2, w, h, 180 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Quest" ) .. " #" .. pan.N_Total, font = "xdefm_Font6", pos = { w / 2, 24 },
-			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Require" ), font = "xdefm_Font5", pos = { w / 2 -160, 50 },
-			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Reward" ), font = "xdefm_Font5", pos = { w / 2 + 160, 50 },
-			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 ) surface.SetMaterial( Aro )
+		draw.SimpleTextOutlined( language.GetPhrase("xdefm.Quest") .. " #" .. pan.N_Total, "xdefm_Font6", w / 2, 24, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase("xdefm.Require"), "xdefm_Font5",  w / 2 - 160, 50, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase("xdefm.Reward"), "xdefm_Font5", w / 2 + 160, 50, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		surface.SetMaterial( Aro )
 		surface.SetDrawColor( pan.B_2 and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) ) surface.DrawTexturedRectRotated( w / 2, h / 2 - 15, 60, 60, 90 )
 		surface.SetDrawColor( pan.B_1 and Color( 0, 255, 0 ) or Color( 255, 0, 0 ) ) surface.DrawTexturedRectRotated( w / 2, h / 2 + 15, 60, 60, 270 ) end
 	if true then -- Close button
@@ -3618,11 +3643,9 @@ elseif typ == 1 then
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint( w, h ) draw.TextShadow( {
-				text = "×", pos = { w / 2, h / 2 }, font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 )
-		}, 2, 255 ) end function pax:DoClick() pan:Close() end
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end --
 	for i = 1, 2 do -- Requirements / Reward panel
 		local pax = pan:Add("DPanel") -- FIXME: "pax" shadows existing binding!
@@ -3648,8 +3671,7 @@ elseif typ == 1 then
 			if ( i == 1 and ( not pan.B_1 or not pan.B_2 ) ) or ( i == 2 and not pan.B_3 ) then col = Color( 155, 0, 0 ) end
 			col = Color( col.r + col.r * 0.5 * but.N_Lerp, col.g + col.g * 0.5 * but.N_Lerp, col.b + col.b * 0.5 * but.N_Lerp )
 			surface.SetDrawColor( col ) surface.DrawRect( 0, 0, w, h )
-			draw.TextShadow( { text = i == 1 and "#xdefm.Finish" or "#xdefm.Skip", pos = { w / 2, h / 2 }, font = "xdefm_Font4",
-			color = Color( 255, 255, 255 ), xalign = TEXT_ALIGN_CENTER, yalign =  TEXT_ALIGN_CENTER }, 1, 200 )
+			draw.SimpleTextOutlined( language.GetPhrase(i == 1 and "#xdefm.Finish" or "#xdefm.Skip"), "xdefm_Font5", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
 		end
@@ -3721,7 +3743,7 @@ elseif typ == 2 then -- Exchange menu
 	local pan = vgui.Create( "DFrame" )  xdefmod.util.cl_menus.Exchange = pan  pan.T_Data = tab  pan.N_Enter = 0
 	pan:SetPos( ScrW() / 2 -300, ScrH() / 2 - 150 ) pan:SetSize( 600, 275 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 -300, ScrH() / 2 - 275 / 2, 0.2 ) ply.xdefm_Profile = tab  pan.N_Clicked = 0
+	pan:MoveTo( ScrW() / 2 - 300, ScrH() / 2 - 275 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0 ) ply.xdefm_Profile = tab  pan.N_Clicked = 0
 	function pan:Paint( w, h )
 		local tab = pan.T_Data -- FIXME: "tab" shadows existing binding!
 		surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 0, 0, w, h )
@@ -3730,15 +3752,11 @@ elseif typ == 2 then -- Exchange menu
 		surface.DrawTexturedRectRotated( w / 2, h / 2, w, h, 180 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.TextShadow( { text = ply:Nick(), pos = { 115, 25 }, font = "xdefm_Font4",
-		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-		draw.TextShadow( { text = language.GetPhrase( "#xdefm.FMoney" ) .. ": " .. tab.Money, pos = { 115, 55 }, font = "xdefm_Font1",
-		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-		draw.TextShadow( { text = language.GetPhrase( "#xdefm.DMoney" ) .. ": " .. ( ply.getDarkRPVar and ply:getDarkRPVar("money") or "Currency Not Found!" ), pos = { 115, 78 }, font = "xdefm_Font1",
-		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-		local rat = math.Round( 0.99 * GetConVar( "xdefmod_darkrp" ):GetFloat() * 100, 2 ) .. "%"
-		draw.TextShadow( { text = language.GetPhrase( "#xdefm.DRate" ) .. ": " .. rat, pos = { 115, 101 }, font = "xdefm_Font1",
-		xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+		draw.SimpleTextOutlined( ply:Nick(), "xdefm_Font4", 115, 25, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.FMoney" )..": "..tab.Money, "xdefm_Font1", 115, 55, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.DMoney" )..": "..( ply.getDarkRPVar and ply:getDarkRPVar("money") or "Currency Not Found!" ), "xdefm_Font1", 115, 78, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		local rat = math.Round( 0.99*GetConVar( "xdefmod_darkrp" ):GetFloat()*100, 2 ).."%"
+		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.DRate" )..": "..rat, "xdefm_Font1", 115, 101, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 8, 115, 582, 150, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 8, 115, 582, 150 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 16, 126, 564, 43 )
@@ -3756,11 +3774,9 @@ elseif typ == 2 then -- Exchange menu
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint( w, h ) draw.TextShadow( {
-				text = "×", pos = { w / 2, h / 2 }, font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color( 255, 0, 0 ) or Color( 255, 255, 255 )
-		}, 2, 255 ) end function pax:DoClick() pan:Close() end
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end
 	if true then -- Value
 		pan.P_Entry = vgui.Create( "DTextEntry", pan )
@@ -3791,22 +3807,8 @@ elseif typ == 2 then -- Exchange menu
 			but.N_Lerp = Lerp( 0.2, but.N_Lerp, pan.N_Clicked > CurTime() and -1 or ( but.B_Hover and 1 or 0 ) )
 			col = Color(col.r + col.r * 0.5 * but.N_Lerp, col.g + col.g * 0.5 * but.N_Lerp, col.b + col.b * 0.5 * but.N_Lerp)
 			surface.SetDrawColor( col ) surface.DrawRect( 0, 0, w, h )
-			draw.TextShadow({
-				text = i == 1 and "#xdefm.Conv1" or "#xdefm.Conv2",
-				pos = {w / 2, 16},
-				font = "xdefm_Font5",
-				color = Color(255, 255, 255),
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER
-			}, 1, 200)
-			draw.TextShadow({
-				text = math.Round(but.N_Num),
-				pos = {w / 2, 45},
-				font = "xdefm_Font5",
-				color = Color(255, 255, 255),
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER
-			}, 1, 200)
+			draw.SimpleTextOutlined( i == 1 and "#xdefm.Conv1" or "#xdefm.Conv2", "xdefm_Font5", w / 2, 16, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( math.Round( but.N_Num ), "xdefm_Font5", w / 2, 42, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
 		end
@@ -3838,7 +3840,7 @@ elseif typ == 3 then -- NPC menu
 	pan:ParentToHUD()
 	pan:SetAlpha(255)
 	pan:MakePopup()
-	pan:MoveTo(ScrW() / 2 - 250, ScrH() / 2 - 275 / 2, 0.2)
+	pan:MoveTo(ScrW() / 2 - 250, ScrH() / 2 - 275 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0)
 	ply.xdefm_Profile = tab
 	pan.N_Clicked = 0
 	function pan:Paint(w, h)
@@ -3849,14 +3851,7 @@ elseif typ == 3 then -- NPC menu
 		surface.DrawTexturedRectRotated(w / 2, h / 2, w, h, 180)
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.TextShadow({
-			text = "#xdefm.DarkNPC2",
-			pos = {w / 2, 24},
-			font = "xdefm_Font4",
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER,
-			color = Color(255, 255, 255)
-		}, 1, 255)
+		draw.SimpleTextOutlined( "#xdefm.DarkNPC2", "xdefm_Font4", w / 2, 24, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		surface.SetDrawColor(Color(xdefmod.COLOR_BACKGROUND.r * 0.5, xdefmod.COLOR_BACKGROUND.g * 0.5, xdefmod.COLOR_BACKGROUND.b * 0.5, xdefmod.COLOR_BACKGROUND.a * 0.5))
 		surface.DrawRect(8, 45, 484, 290)
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 8, 45, 484, 290, 2 )
@@ -3866,15 +3861,8 @@ elseif typ == 3 then -- NPC menu
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 460, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -3893,14 +3881,7 @@ elseif typ == 3 then -- NPC menu
 			but.N_Lerp = Lerp( 0.2, but.N_Lerp, but.N_Clicked > CurTime() and -1 or ( but.B_Hover and 1 or 0 ) )
 			col = Color(col.r + col.r * 0.5 * but.N_Lerp, col.g + col.g * 0.5 * but.N_Lerp, col.b + col.b * 0.5 * but.N_Lerp)
 			surface.SetDrawColor( col ) surface.DrawRect( 0, 0, w, h )
-			draw.TextShadow({
-				text = "#xdefm.NPC" .. i,
-				pos = {36, h / 2},
-				font = "xdefm_Font5",
-				color = Color(255, 255, 255),
-				xalign = TEXT_ALIGN_LEFT,
-				yalign = TEXT_ALIGN_CENTER
-			}, 1, 200)
+			draw.SimpleTextOutlined( "#xdefm.NPC" .. i, "xdefm_Font5", 36, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) end
 		function but:OnCursorEntered() but.B_Hover = true end
@@ -3916,7 +3897,7 @@ elseif typ == 4 then -- Structure menu
 	local pan = vgui.Create( "DFrame" )  xdefmod.util.cl_menus.Struct = pan  pan.T_Data = ply.xdefm_Profile  pan.S_Recipe = "_"
 	pan:SetPos( ScrW() / 2 -40, ScrH() / 2 - 550 / 2 ) pan:SetSize( 600, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 -40, ScrH() / 2 - 500 / 2, 0.2 ) pan.S_Struct = "_"  pan.N_Num = -1  pan.N_Max = -1  pan.N_SType = 0
+	pan:MoveTo( ScrW() / 2 - 40, ScrH() / 2 - 500 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0 ) pan.S_Struct = "_"  pan.N_Num = -1  pan.N_Max = -1  pan.N_SType = 0
 	function pan:Paint( w, h )
 		surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 0, 0, w, h )
 		surface.SetMaterial( Zom ) surface.SetDrawColor( 0, 0, 0, 96 )
@@ -3933,24 +3914,10 @@ elseif typ == 4 then -- Structure menu
 				col = xdefmod.util.RARITY_COLORS[bb.Rarity + 1]
 				local nam = language.GetPhrase( "xdefm.ST" .. pan.N_SType )
 				if pan.N_Num ~= -1 then nam = nam .. ( pan.N_Max ~= -1 and " ( " .. pan.N_Num .. " / " .. pan.N_Max .. " )" or " ( " .. pan.N_Num .. " )" ) end
-				draw.TextShadow({
-					text = nam,
-					pos = {w / 2, 52},
-					font = "xdefm_Font7",
-					xalign = TEXT_ALIGN_CENTER,
-					yalign = TEXT_ALIGN_CENTER,
-					color = Color(128, 128, 128)
-				}, 1, 255)
+				draw.SimpleTextOutlined( nam, "xdefm_Font7",  w / 2, 52, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			end
 		end
-		draw.TextShadow({
-			text = language.GetPhrase(rec),
-			pos = {w / 2, 25},
-			font = "xdefm_Font6",
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER,
-			color = col
-		}, 1, 255)
+		draw.SimpleTextOutlined( language.GetPhrase(rec), "xdefm_Font6", w / 2, 25, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 	end
 	function pan:OnRemove() xdefm_Command( LocalPlayer(), "StructExit", "_" ) xdefmod.util.cl_lc = false end
 	if true then -- Structure panel
@@ -3978,15 +3945,8 @@ elseif typ == 4 then -- Structure menu
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4058,12 +4018,9 @@ elseif typ == 4 then -- Structure menu
 					surface.DrawOutlinedRect(2 + 3, 2, w - 1 - 8, h - 2, 2)
 					surface.SetDrawColor(xdefmod.COLOR_LINE)
 					surface.DrawOutlinedRect(2 + 3, 2, w - 1 - 8, h - 2)
-					draw.TextShadow( { text = bb.Name, pos = { 102, 30 }, font = "xdefm_Font5",
-					xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
-					draw.TextShadow( { text = language.GetPhrase( "xdefm.Materials" ) .. ": " .. tostring( #cc -1 ),
-					pos = { 80, 60 }, font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-					draw.TextShadow( { text = "#" .. slo.N_Num,
-					pos = { 540, 40 }, font = "xdefm_Font4", xalign = TEXT_ALIGN_RIGHT, yalign = TEXT_ALIGN_CENTER, color = Color( 200, 200, 200 ) }, 1, 255 ) end
+					draw.SimpleTextOutlined( bb.Name, "xdefm_Font5", 102, 30, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm.Materials") .. ": " .. tostring(#cc - 1), "xdefm_Font1", 80, 60, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+					draw.SimpleTextOutlined( "#" .. slo.N_Num, "xdefm_Font4", 540, 40, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE ) end
 					function slo:OnCursorEntered() slo.B_Hover = true  xdefmod.util.cl_craft_recipe = cc  pan.P_Select = slo  xdefmod.util.cl_aim_pan = slo
 					xdefmod.util.cl_ings = {}  xdefmod.util.cl_ing2 = {}  xdefmod.util.cl_marker = slo.S_Item  xdefmod.util.cl_lc = true end
 					function slo:OnCursorExited() slo.B_Hover = false  if xdefmod.util.cl_aim_pan == slo then xdefmod.util.cl_aim_pan = nil end
@@ -4106,18 +4063,10 @@ elseif typ == 4 then -- Structure menu
 							surface.SetDrawColor(col.r * ccc * 1.5, col.g * ccc * 1.5, col.b * ccc * 1.5)
 							surface.DrawTexturedRect(1, 1, w - 2, h - 2)
 							local co1, co2 = Color( 255, 0, 0 ), Color( 0, 255, 0 )
-							draw.TextShadow( {
-								text = language.GetPhrase( Item.S_Name ), pos = { 75, 15 }, font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col
-							}, 1, 255 )
-							draw.TextShadow( {
-								text = language.GetPhrase( "xdefm.Price" ) .. ": " .. Item.N_Cost, pos = { 75, 35 }, font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = pro.Money >= Item.N_Cost and co2 or co1
-							}, 1, 255 )
-							draw.TextShadow( {
-								text = language.GetPhrase( "xdefm.Level" ) .. ": " .. Item.N_Level, pos = { 75, 55 }, font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = pro.Level >= Item.N_Level and co2 or co1
-							}, 1, 255 ) end
+							draw.SimpleTextOutlined( language.GetPhrase(Item.S_Name), "xdefm_Font2", 75, 15, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+							draw.SimpleTextOutlined( language.GetPhrase("xdefm.Price") .. ": " .. Item.N_Cost, "xdefm_Font2", 75, 35, pro.Money >= Item.N_Cost and co2 or co1, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+							draw.SimpleTextOutlined( language.GetPhrase("xdefm.Level") .. ": " .. Item.N_Level, "xdefm_Font2", 75, 55, pro.Level >= Item.N_Level and co2 or co1, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+						end
 						Item.P_Frame = Item:Add( "DPanel" )  Item:SetText( "" )
 						Item.P_Frame:SetSize( 64, 64 ) Item.P_Frame:SetPos( 6, 6 )
 						Item.P_Frame:SetMouseInputEnabled(false)
@@ -4143,7 +4092,7 @@ elseif typ == 5 then -- Bank menu
 	local pan = vgui.Create( "DFrame" )  xdefmod.util.cl_menus.Bank = pan  pan.T_Data = tab  pan.T_Slots = {}  pan.N_Store = 0
 	pan:SetPos( ScrW() / 2 - 40, ScrH() / 2 - 550 / 2 ) pan:SetSize( 800, 600 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 - 40, ScrH() / 2 - 500 / 2, 0.2 )
+	pan:MoveTo( ScrW() / 2 - 40, ScrH() / 2 - 500 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0 )
 	function pan:Paint( w, h )
 		local tab = pan.T_Data -- FIXME: "tab" shadows existing binding!
 		local pro = LocalPlayer().xdefm_Profile
@@ -4153,24 +4102,15 @@ elseif typ == 5 then -- Bank menu
 		surface.DrawTexturedRectRotated( w / 2, h / 2, w, h, 180 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Bank" ) .. " ( " .. pan.N_Store .. " / " .. pro.UpdF .. " )", pos = { w/2, 25 }, font = "xdefm_Font6",
-			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 ) end
+		draw.SimpleTextOutlined( language.GetPhrase("xdefm.Bank") .. " ( " .. pan.N_Store .. " / " .. pro.UpdF .. " )", "xdefm_Font6", w / 2, 25, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+	end
 	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 760, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4232,7 +4172,7 @@ elseif typ == 6 then -- Friends menu
 	pan:ParentToHUD()
 	pan:SetAlpha(255)
 	pan:MakePopup()
-	pan:MoveTo(ScrW() / 2 - 200, ScrH() / 2 - 500 / 2, 0.2)
+	pan:MoveTo(ScrW() / 2 - 200, ScrH() / 2 - 500 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0)
 	pan.N_Clicked = 0
 	function pan:Paint(w, h)
 		local tab = pan.T_Data -- FIXME: "tab" shadows existing binding!
@@ -4246,14 +4186,7 @@ elseif typ == 6 then -- Friends menu
 		surface.DrawOutlinedRect(0, 0, w, h, 2)
 		surface.SetDrawColor(xdefmod.COLOR_LINE)
 		surface.DrawOutlinedRect(0, 0, w, h, 1)
-		draw.TextShadow({
-			text = language.GetPhrase("xdefm.FList"),
-			font = "xdefm_Font6",
-			pos = {w / 2, 24},
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER,
-			color = Color(255, 255, 255)
-		}, 1, 255)
+		draw.SimpleTextOutlined(language.GetPhrase("xdefm.FList"), "xdefm_Font6", w / 2, 24, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE)
 
 		draw.RoundedBox(0, 8 + 0, 50 + 0, 382, 420, xdefmod.COLOR_LINE)
 		draw.RoundedBox(0, 8 + 1, 50 + 1, 382 - 2, 420 - 2, xdefmod.COLOR_BORDER)
@@ -4273,15 +4206,8 @@ elseif typ == 6 then -- Friends menu
 		pax.B_Hover = false
 		pax:SetTooltip("#xdefm.Close")
 
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4379,14 +4305,7 @@ elseif typ == 6 then -- Friends menu
 			if pan.B_Edited then col = Color( 155, 0, 0 ) end
 			col = Color(col.r + col.r * 0.5 * but.N_Lerp, col.g + col.g * 0.5 * but.N_Lerp, col.b + col.b * 0.5 * but.N_Lerp)
 			surface.SetDrawColor( col ) surface.DrawRect( 0, 0, w, h )
-			draw.TextShadow({
-				text = i == 1 and "#xdefm.Reset" or "#xdefm.Apply",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font1",
-				color = Color(255, 255, 255),
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER
-			}, 1, 200)
+			draw.SimpleTextOutlined( language.GetPhrase(i == 1 and "#xdefm.Reset" or "#xdefm.Apply"), "xdefm_Font1", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
 		end
@@ -4408,21 +4327,14 @@ elseif typ == 7 then -- Trade menu
 	pan.T_TabA = tab  pan.T_TabB = { "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", 0 }
 	pan:SetPos( ScrW() / 2 - 40, ScrH() / 2 - 750 / 2 ) pan:SetSize( 500, 685 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 - 40, ScrH() / 2 - 700 / 2, 0.2 )
+	pan:MoveTo( ScrW() / 2 - 40, ScrH() / 2 - 700 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0 )
 	if true then -- Close button
 		pan.P_Close = pan:Add( "DButton" )
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 455, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4442,14 +4354,7 @@ elseif typ == 7 then -- Trade menu
 		surface.DrawOutlinedRect(0, 0, w, h, 2)
 		surface.SetDrawColor(xdefmod.COLOR_LINE)
 		surface.DrawOutlinedRect(0, 0, w, h, 1)
-		draw.TextShadow({
-			text = language.GetPhrase("xdefm.Weapon_Trade"),
-			pos = {w / 2, 25},
-			font = "xdefm_Font6",
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER,
-			color = Color(255, 255, 255)
-		}, 1, 255)
+		draw.SimpleTextOutlined( language.GetPhrase("xdefm.Weapon_Trade"), "xdefm_Font6", w / 2, 25, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 	end
 	for i = 1, 2 do -- Own / Other side panel
 		local pax = vgui.Create("DPanel", pan) -- FIXME: "pax" shadows existing binding!
@@ -4461,16 +4366,10 @@ elseif typ == 7 then -- Trade menu
 			surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 0, 0, w, h )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h )
-			draw.TextShadow( {
-				text = tab[ 1 ], pos = { 80, 24 }, font = "xdefm_Font4",
-				xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-			}, 1, 255 )
+			draw.SimpleTextOutlined( tab[1], "xdefm_Font4", 80, 24, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 10, 77, 464, 188, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 10, 77, 464, 188, 1 )
-			draw.TextShadow( {
-				text = language.GetPhrase( "xdefm.Money" ) .. ": ", pos = { 8, 285 }, font = "xdefm_Font1",
-				xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-			}, 1, 255 )
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Money") .. ": ", "xdefm_Font1", 8, 285, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			if IsValid( pax.P_Entry ) and i ~= 2 then
 				--local col = pax.P_Entry:IsEditing() and Color(150, 150, 150) or Color(75, 75, 75) -- REVIEW: Unused?
 				if not pax.P_Entry:IsEditing() and ta2[ 11 ] ~= pax.P_Entry.N_Enter then col = Color( 150, 25, 25 ) end
@@ -4495,8 +4394,7 @@ elseif typ == 7 then -- Trade menu
 				if pax.N_Clicked <= CurTime() and but.B_Hover then col = Color( col.r * 1.5, col.g * 1.5, col.b * 1.5 ) end
 				if pax.N_Clicked > CurTime() then col = Color( col.r * 0.25, col.g * 0.25, col.b * 0.25 ) end
 				surface.SetDrawColor( col ) surface.DrawRect( 0, 0, w, h )
-				draw.TextShadow( { text = rd and "#xdefm.ReadyY" or "#xdefm.ReadyN", pos = { w / 2, h / 2 -2 }, font = "xdefm_Font1",
-				color = Color( 255, 255, 255 ), xalign = TEXT_ALIGN_CENTER, yalign =  TEXT_ALIGN_CENTER }, 1, 200 )
+				draw.SimpleTextOutlined( language.GetPhrase(rd and "#xdefm.ReadyY" or "#xdefm.ReadyN"), "xdefm_Font1", w / 2, h / 2 - 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 				if i == 1 then surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 				surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) end
 			end if i == 2 then but:SetMouseInputEnabled( false ) end if i == 1 then pan.P_ButA = but else pan.P_ButB = but end
@@ -4568,6 +4466,12 @@ elseif typ == 7 then -- Trade menu
 		pan.P_NoTrade = vgui.Create("DPanel", pan)
 		pan.P_NoTrade:SetPos(8, 365)
 		pan.P_NoTrade:SetSize(484, 310)
+
+		pan.P_NoTrade:SetMouseInputEnabled( true )
+		pan.P_NoTrade:SetAlpha( 255 )
+
+		pan.P_PanB:SetMouseInputEnabled( false )
+		pan.P_PanB:SetAlpha( 0 )
 		function pan.P_NoTrade:Paint(w, h)
 			surface.SetDrawColor(Color(xdefmod.COLOR_BACKGROUND.r * 0.5, xdefmod.COLOR_BACKGROUND.g * 0.5, xdefmod.COLOR_BACKGROUND.b * 0.5, 255))
 			surface.DrawRect(0, 0, w, h)
@@ -4575,14 +4479,7 @@ elseif typ == 7 then -- Trade menu
 			surface.DrawOutlinedRect(0, 0, w, h, 2)
 			surface.SetDrawColor(xdefmod.COLOR_LINE)
 			surface.DrawOutlinedRect(0, 0, w, h)
-			draw.TextShadow({
-				text = language.GetPhrase("xdefm.Trade17"),
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font6",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = Color(255, 255, 255)
-			}, 1, 255)
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Trade17"), "xdefm_Font6", w / 2, h / 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 	end
 	pan.P_NoTrade:SetMouseInputEnabled( true ) pan.P_NoTrade:SetAlpha( 255 )
@@ -4639,7 +4536,7 @@ elseif typ == 8 then -- Collection menu
 	if istable( xdefmod.cl_bestiary ) then for k, v in pairs( xdefmod.cl_bestiary ) do if xdefmod.items[ k ] then table.insert( pan.T_Items, k ) pan.N_Total = pan.N_Total +1 end end end
 	pan:SetPos( ScrW() / 2 - 750 / 2, ScrH() / 2 - 700 / 2 ) pan:SetSize( 750, 700 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:ParentToHUD() pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 - 750 / 2, ScrH() / 2 - 750 / 2, 0.2 ) pan.B_Hover = false
+	pan:MoveTo( ScrW() / 2 - 750 / 2, ScrH() / 2 - 750 / 2, GetConVar("xdefmod_animui"):GetInt() > 0 and 0.2 or 0 ) pan.B_Hover = false
 	if ply:IsSuperAdmin() then pan:SetIcon( "icon16/shield.png" ) end
 	local Ma2 = Material( "vgui/gradient_up" )
 	if true then -- Close button
@@ -4647,15 +4544,8 @@ elseif typ == 8 then -- Collection menu
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 710, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4685,33 +4575,16 @@ elseif typ == 8 then -- Collection menu
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 7, 163, w -14, h -277, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 7, 163, w -14, h -277, 1 )
 		if not pan.B_Hover then local ppp = math.Round( per, 4 ) * 100
-			draw.TextShadow({
-				text = language.GetPhrase("xdefm.Progress") .. ": " .. ppp .. "%",
-				pos = {w / 2, 670},
-				font = "xdefm_Font4",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = Color(255, 255, 255)
-			}, 1, 255)
-		else draw.TextShadow( { text = language.GetPhrase( "xdefm.Progress" ) .. ": " .. pan.N_Total .. "/" .. pan.N_All, pos = { w / 2, 670 },
-			font = "xdefm_Font4", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-		end draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Collection" ), pos = { w / 2, 25 }, font = "xdefm_Font6",
-			xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
-		draw.TextShadow( { text = language.GetPhrase( "xdefm.Total" ) .. ": " .. pan.T_Dats.Num, pos = { 150 + w / 2, 145 },
-		font = "xdefm_Font5", xalign = TEXT_ALIGN_CENTER,
-		yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Progress") .. ": " .. ppp .. "%", "xdefm_Font4", w / 2, 670, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		else
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Progress") .. ": " .. pan.N_Total .. "/" .. pan.N_All, "xdefm_Font4", w / 2, 670, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		end
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Collection"), "xdefm_Font6", w / 2, 25, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Total") .. ": " .. pan.T_Dats.Num, "xdefm_Font5", 150 + w / 2, 145, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		if pan.T_Dats.PagT > 0 then
-			draw.TextShadow({
-				text = language.GetPhrase("xdefm.Page") .. ": " .. pan.T_Dats.PagO .. "/" .. pan.T_Dats.PagT,
-				pos = {-150 + w / 2, 145},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = Color(255, 255, 255)
-			}, 1, 255)
-		else draw.TextShadow( { text = language.GetPhrase( "xdefm.Page" ) .. ": 0", pos = { -150 + w / 2, 145 },
-			font = "xdefm_Font5", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 ) }, 1, 255 )
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Page") .. ": " .. pan.T_Dats.PagO .. "/" .. pan.T_Dats.PagT, "xdefm_Font5", -150 + w / 2, 145, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		else
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Page") .. ": 0", "xdefm_Font5", -150 + w / 2, 145, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end end
 	local function AddTickButton(x, y, typ) -- FIXME: "typ" shadows existing binding!
 		if not isstring( typ ) then typ = "Useless" end
@@ -4727,15 +4600,14 @@ elseif typ == 8 then -- Collection menu
 				local pe2 = math.Clamp( per * 2, 0, 1 )
 				draw.RoundedBox( 0, 2, 2, ( w -4 ) * pe2, ( h - 4 ) * pe2, Color( 255, 255, 255, 255 * (1-per) ) ) end
 			draw.RoundedBox( 0, 2, 2, w -4, h -4, Color( 255, 255, 255, 50 * (1-pe3) ) )
-			draw.TextShadow( { text = language.GetPhrase( "xdefm." .. typ ), pos = { 32, h / 2 },
-			font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT,
-			yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 * pe3 ) }, 1, 255 )
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm." .. typ), "xdefm_Font1", 32, h / 2, Color(255, 255, 255 * pe3), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawRect( w -20 -8, 5, 22, 22 )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( w -20 -8, 5, 22, 22, 3 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( w -20 -8, 5, 22, 22, 1 )
-			if pan.T_Typs[ typ ] then draw.TextShadow( { text = "●", pos = { w -18, 16 },
-				font = "xdefm_Font2", xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER, color = Color( 0, 255, 0 ) }, 1, 255 ) end end
+			if pan.T_Typs[ typ ] then
+				draw.SimpleText( "■", "xdefm_Font4", w - 18, 12, Color(0, 255, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			end
+		end
 		function but:OnCursorEntered() but.B_Hover = true  but.N_Ho = SysTime() + 0.5 end
 		function but:OnCursorExited() but.B_Hover = false  but.N_Ho = SysTime() + 0.5 end
 		function but:DoClick() pan.T_Typs[ typ ] = not pan.T_Typs[ typ ]  but.N_In = SysTime() + 0.4
@@ -4810,14 +4682,7 @@ elseif typ == 8 then -- Collection menu
 			surface.DrawRect( 0, 0, w, h ) surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 1 ) local txt = ""
 			if i == 1 then txt = "A" elseif i == 2 then txt = "B" elseif i == 3 then txt = "C" elseif i == 4 then txt = "D" end
-			draw.TextShadow({
-				text = language.GetPhrase("xdefm.Page" .. txt),
-				pos = {w / 2, h / 2 - 2},
-				font = "xdefm_Font4",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = Color(255, 255, 255)
-			}, 1, 255)
+			draw.SimpleTextOutlined( language.GetPhrase("xdefm.Page" .. txt), "xdefm_Font4", w / 2, h / 2 - 2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end function but:OnCursorEntered() self.B_Hover = true end function but:OnCursorExited() self.B_Hover = false end
 		function but:DoClick()
 			if but.N_Clicked > CurTime() or pan.T_Dats.PagT <= 0 then return end
@@ -4886,7 +4751,7 @@ elseif typ == 9 then -- Craft menu
 	local pan = vgui.Create( "DFrame" )  xdefmod.util.cl_menus.Craft = pan  pan.T_Data = ply.xdefm_Profile  pan.S_Recipe = "_"
 	pan:SetPos( ScrW() / 2 - 40, ScrH() / 2 - 550 / 2 ) pan:SetSize( 600, 550 ) pan:ShowCloseButton( false ) pan:SetAnimationEnabled( false )
 	pan:SetVisible( true ) pan:SetScreenLock( true ) pan:SetDraggable( true ) pan:SetTitle( "" ) pan:SetAlpha( 255 ) pan:MakePopup()
-	pan:MoveTo( ScrW() / 2 -40, ScrH() / 2 - 500 / 2, 0.2 )
+	pan:MoveTo( ScrW() / 2 - 40, ScrH() / 2 - 500 / 2, GetConVar( "xdefmod_animui" ):GetInt() > 0 and 0.2 or 0 )
 	function pan:Paint( w, h )
 		surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 0, 0, w, h )
 		surface.SetMaterial( Zom ) surface.SetDrawColor( 0, 0, 0, 96 )
@@ -4894,14 +4759,7 @@ elseif typ == 9 then -- Craft menu
 		surface.DrawTexturedRectRotated(w / 2, h / 2, w, h, 180)
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.TextShadow({
-			text = language.GetPhrase("xdefm.Weapon_Craft"),
-			pos = {w / 2, 25},
-			font = "xdefm_Font6",
-			xalign = TEXT_ALIGN_CENTER,
-			yalign = TEXT_ALIGN_CENTER,
-			color = Color(255, 255, 255)
-		}, 1, 255)
+		draw.SimpleTextOutlined( language.GetPhrase("xdefm.Weapon_Craft"), "xdefm_Font6", w / 2, 25, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 	end
 	function pan:OnRemove()
 		xdefmod.util.cl_lc = false  local num = 0
@@ -4914,15 +4772,8 @@ elseif typ == 9 then -- Craft menu
 		local pax = pan.P_Close -- FIXME: "pax" shadows existing binding!
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
-		function pax:Paint(w, h)
-			draw.TextShadow({
-				text = "×",
-				pos = {w / 2, h / 2},
-				font = "xdefm_Font5",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)
-			}, 2, 255)
+		function pax:Paint( w, h )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4955,12 +4806,10 @@ elseif typ == 9 then -- Craft menu
 			surface.SetDrawColor( xdefmod.COLOR_BACKGROUND ) surface.DrawRect( 0, 0, w, 80 )
 			surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, 80, 2 )
 			surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, 80 )
-			draw.TextShadow( { text = language.GetPhrase( rec ), pos = { 80, 20 }, font = "xdefm_Font1",
-			xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
-			if yes and dur and dum then draw.TextShadow( { text = language.GetPhrase( "xdefm.Durability" ) .. ": " .. dur .. " / " .. dum,
-				pos = { 80, 40 }, font = "xdefm_Font2", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = xdefmod.COLOR_BORDER }, 1, 255 )
-				draw.TextShadow( { text = language.GetPhrase( "xdefm.Product" ) .. ": " .. pro,
-				pos = { 80, 60 }, font = "xdefm_Font2", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = xdefmod.COLOR_BORDER }, 1, 255 )
+			draw.SimpleTextOutlined( language.GetPhrase(rec), "xdefm_Font1", 80, 20, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+			if yes and dur and dum then
+				draw.SimpleTextOutlined( language.GetPhrase("xdefm.Durability") .. ": " .. dur .. " / " .. dum, "xdefm_Font2", 80, 40, xdefmod.COLOR_BORDER, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+				draw.SimpleTextOutlined( language.GetPhrase("xdefm.Product") .. ": " .. pro, "xdefm_Font2", 80, 60, xdefmod.COLOR_BORDER, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 			end
 		end
 		local res = xdefm_SlotBox( 8, 8, 64, 64, 1, "#xdefm.Recipe", nil ) pax:Add( res ) res.S_Type = "Recipe"  pan.P_Slot = res
@@ -5025,32 +4874,9 @@ elseif typ == 9 then -- Craft menu
 					surface.DrawOutlinedRect(2 + 3, 2, w - 1 - 8, h - 2, 2)
 					surface.SetDrawColor(xdefmod.COLOR_LINE)
 					surface.DrawOutlinedRect(2 + 3, 2, w - 1 - 8, h - 2)
-					draw.TextShadow({
-						text = bb.Name,
-						pos = {102, 30},
-						font = "xdefm_Font5",
-						xalign = TEXT_ALIGN_LEFT,
-						yalign = TEXT_ALIGN_CENTER,
-						color = col
-					}, 1, 255)
-
-					draw.TextShadow({
-						text = language.GetPhrase("xdefm.Materials") .. ": " .. tostring(#cc - 1),
-						pos = {80, 60},
-						font = "xdefm_Font1",
-						xalign = TEXT_ALIGN_LEFT,
-						yalign = TEXT_ALIGN_CENTER,
-						color = Color(255, 255, 255)
-					}, 1, 255)
-
-					draw.TextShadow({
-						text = "#" .. slo.N_Num,
-						pos = {540, 40},
-						font = "xdefm_Font4",
-						xalign = TEXT_ALIGN_RIGHT,
-						yalign = TEXT_ALIGN_CENTER,
-						color = Color(200, 200, 200)
-					}, 1, 255)
+					draw.SimpleTextOutlined( language.GetPhrase(bb.Name), "xdefm_Font5", 102, 30, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+					draw.SimpleTextOutlined( language.GetPhrase("xdefm.Materials") .. ": " .. tostring(#cc - 1), "xdefm_Font1", 80, 60, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
+					draw.SimpleTextOutlined( "#" .. slo.N_Num, "xdefm_Font4", 540, 40, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0) )
 				end
 			function slo:OnCursorEntered() slo.B_Hover = true  xdefmod.util.cl_craft_recipe = cc  pan.P_Select = slo  xdefmod.util.cl_aim_pan = slo
 			xdefmod.util.cl_ings = {}  xdefmod.util.cl_ing2 = {}  xdefmod.util.cl_marker = slo.S_Item  xdefmod.util.cl_lc = true end

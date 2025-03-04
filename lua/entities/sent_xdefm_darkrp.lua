@@ -35,8 +35,6 @@ function ENT:Draw() self:DrawModel() surface.SetFont( "xdefm_Font2" )
 	local tx2 = GAMEMODE.Name  local x2, y2 = surface.GetTextSize( tx2 )
 	cam.Start3D2D( self:GetPos() -self:GetUp()*10 +self:GetForward()*13, self:LocalToWorldAngles( Angle( 0, 90, 90 ) ), 0.2 )
 		local col = Color( 140, 0, 0 )
-		draw.TextShadow( { text = txt, pos = { 0, -65 }, font = "xdefm_Font2",
-		xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
-		draw.TextShadow( { text = tx2, pos = { 0, -80 }, font = "xdefm_Font2",
-		xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
+		draw.SimpleTextOutlined( txt, "xdefm_Font2", 0, -65, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+		draw.SimpleTextOutlined( tx2, "xdefm_Font2", 0, -80, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 	cam.End3D2D() end

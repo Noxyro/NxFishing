@@ -40,13 +40,12 @@ function ENT:Think() if SERVER then self:NextThink( CurTime() +0.1 )
 	if self:BeingLookedAtByLocalPlayer() then halo.Add( { self }, Color( 0, 255, 255 ), 1, 1, 1 ) end end
 function ENT:OnTakeDamage( dmg ) self:TakePhysicsDamage( dmg ) end
 function ENT:PhysicsCollide( dat, phy ) if dat.Speed >= 60 and dat.DeltaTime > 0.2 then self:EmitSound( "Computer.ImpactSoft" ) end end
-function ENT:Draw() self:DrawModel() surface.SetFont( "xdefm_Font2" )
+function ENT:Draw() self:DrawModel() surface.SetFont( "xdefm_Font3" )
 	local txt = language.GetPhrase( "xdefm.DarkNPC" )  local xx, yy = surface.GetTextSize( txt )
-	cam.Start3D2D( self:GetPos() +self:GetUp()*64, self:LocalToWorldAngles( Angle( 0, 90, 90 ) ), 0.2 )
-		local col = Color( 0, 255, 255 )
-		draw.RoundedBox( 8, 0 -xx -8, -65 -yy -4, xx*2 +16, yy*2 +8, Color( 0, 0, 0, 155 ) )
-		draw.TextShadow( { text = txt, pos = { 0, -65 }, font = "xdefm_Font4",
-		xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 )
+	cam.Start3D2D( self:GetPos() +self:GetUp()*68, self:LocalToWorldAngles( Angle( 0, 90, 90 ) ), 0.1 )
+		local col = Color( 0, 161, 255 )
+		draw.RoundedBox( 8, -xx/2 -4, -yy*2, xx +8, yy +16, Color( 0, 0, 0, 128 ) )
+		draw.SimpleTextOutlined( txt, "xdefm_Font3", 0, -65, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 	cam.End3D2D() end
 if SERVER then return end
 function ENT:BeingLookedAtByLocalPlayer() local ply = LocalPlayer() if !IsValid( ply ) or !ply:Alive() then return false end

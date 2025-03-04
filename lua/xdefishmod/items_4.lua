@@ -1040,7 +1040,7 @@ if true then local it = "it_cage"
 end
 if true then local it = "it_auto"
 	local ITEM = { Name = "#xdefm."..it, Type = "Struct", Model = "models/props_c17/FurnitureBoiler001a.mdl", Helper = "#xdefm.d"..it, StartSound = "Doors.FullOpen7", ExitSound = "Doors.FullClose7",
-	Rarity = 5, Price = 10000, Carryable = false, TickRate = 0.4, PhysSound = "SolidMetal.ImpactSoft", HelperUse = "xdefm.U3", SType = 1, Amount = 12 }
+	Rarity = 5, Price = 10000, Carryable = false, TickRate = 0.2, PhysSound = "SolidMetal.ImpactSoft", HelperUse = "xdefm.U3", SType = 1, Amount = 12 }
 	function ITEM:OnInit( self ) self.xdefm_Delay = 0  self.xdefm_Snd = nil
 		self:SetNWInt( "XDEFM_CT", 0 )  self:SetNWBool( "XDEFM_AV", false )
 	end
@@ -1049,7 +1049,7 @@ if true then local it = "it_auto"
 		self:SetNWInt( "XDEFM_CT", tot )
 		local bb = ( self:WaterLevel() >= 1 and !ful )
 		if self.xdefm_Delay <= CurTime() and self.xdefm_Avail != bb then
-			self.xdefm_Delay = CurTime() +0.5  self.xdefm_Avail = bb
+			self.xdefm_Delay = CurTime() +0.4  self.xdefm_Avail = bb
 			self:SetNWBool( "XDEFM_AV", bb )
 			if self.xdefm_Avail then
 				self:EmitSound( "friends/message.wav" )

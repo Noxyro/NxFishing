@@ -41,5 +41,5 @@ function ENT:Draw() local txt = self:GetFMod_DT()  local aa, bb = xdefm_ItemGet(
 	local col = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ]  txt = language.GetPhrase( bb.Name )  local xx, yy = surface.GetTextSize( txt )
 	cam.IgnoreZ( true ) cam.Start3D2D( self:GetPos(), self:LocalToWorldAngles( Angle( 0, 90, 90 ) ), 0.1 )
 		draw.RoundedBox( 8, -xx/2 -8, -yy/2 -100 -8, xx +16, yy +16, Color( 0, 0, 0, 155 ) )
-		draw.TextShadow( { text = txt, pos = { 0, -100 }, font = "xdefm_Font3",
-		xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 ) cam.End3D2D() cam.IgnoreZ( false ) end
+		draw.SimpleTextOutlined( txt, "xdefm_Font3", 0, -100, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+	cam.End3D2D() cam.IgnoreZ( false ) end

@@ -47,7 +47,7 @@ if CLIENT then
 	function SWEP:PrintWeaponInfo( x, y, alpha )
 		if self.InfoMarkup == nil then
 			local str = ""  local title_color = "<color=255,255,255,255>"
-			local text_color = "<color=155,155,255,255>"  str = "<font=TargetID>"
+			local text_color = "<color=0,161,255,255>"  str = "<font=TargetID>"
 			if ( self.Author != "" ) then str = str..title_color..language.GetPhrase( "#xdefm.Author" )..": </color>"..text_color..self.Author.."</color>\n" end
 			if ( self.Purpose != "" ) then str = str..title_color..language.GetPhrase( "#xdefm.Purpos" )..": </color>"..text_color..language.GetPhrase( self.Purpose ).."</color>\n" end
 			str = str.."\n"..title_color..language.GetPhrase( self.PrintName ).."</color>"
@@ -56,17 +56,15 @@ if CLIENT then
 		end
 		local xx, yy, ww, hh = x - 6, y - 6, 362, self.InfoMarkup:GetHeight() + 24
 		draw.RoundedBox( 0, xx, yy, ww, hh, Color( 0, 115*0.5, 180, 255, alpha ) )
-		surface.SetDrawColor( 5, 5, 100, 255 ) surface.SetMaterial( Mat ) surface.DrawTexturedRect( xx, yy, ww, hh )
-		surface.SetDrawColor( 0, 0, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 2 )
+		surface.SetDrawColor( 0, 0, 96, 255 ) surface.SetMaterial( Mat ) surface.DrawTexturedRect( xx, yy, ww, hh )
+		surface.SetDrawColor( 0, 161, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 2 )
 		surface.SetDrawColor( 0, 255, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 1 )
 		self.InfoMarkup:Draw( x + 5, y + 5, nil, nil, alpha )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Version" )..": "..xdefmod.util.VERSION, pos = { xx, yy + hh + 16 },
-			font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 ) self.InfoMarkup = nil
+		draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Version" )..": "..xdefm.miscs.Version, "xdefm_Font1", xx, yy + hh +16, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+		self.InfoMarkup = nil
 	end
 	function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )
-		surface.SetDrawColor( 100, 100, 255, alpha )  surface.SetTexture( self.WepSelectIcon )
+		surface.SetDrawColor( 0, 161, 255, alpha )  surface.SetTexture( self.WepSelectIcon )
 		y = y+10  x = x+10  wide = wide-20
 		surface.DrawTexturedRect( x, y, wide, ( wide / 2 ) )
 		self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
@@ -78,10 +76,7 @@ if CLIENT then
 		local pro = ply.xdefm_Profile  local str = xdefm_GetUpValue( pro.UpdB, "B" )
 		local txt = language.GetPhrase( self.PrintName )  surface.SetFont( "xdefm_Font6" )  local ww, hh = surface.GetTextSize( txt )
 		draw.RoundedBox( 8, ScrW()/2 -ww/2 -12, ScrH()*0.95 -hh/2 -12, ww +24, hh +24, Color( 0, 0, 0, 128 ) )
-		draw.Text( {
-			text = txt, pos = { ScrW()/2, ScrH()*0.95 },
-			font = "xdefm_Font6", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 55, 255, 255 )
-		} )
+		draw.SimpleTextOutlined( txt, "xdefm_Font6", ScrW()/2, ScrH()*0.95, Color( 0, 161, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 		local function MakeItNice( x, y, w, h )
 			draw.RoundedBox( 0, x, y, w, h, col ) surface.DrawOutlinedRect( x, y, w, h, 1 )
 			surface.SetDrawColor( 0, 0, 0, 255 ) surface.DrawOutlinedRect( x, y, w, h, 1 )
@@ -99,15 +94,9 @@ if CLIENT then
 		end MakeItNice( scr.x -3, scr.y -3, 6, 6 )
 		if LocalPlayer():WaterLevel() < 2 then
 			if sl > 0 and st == 1 then local ll = str*self:GetFMod_SL()/100
-				draw.TextShadow( {
-					text = language.GetPhrase( "xdefm.Length" )..": "..math.Round( ll*0.01905, 1 ), pos = { scr.x, scr.y + 25 },
-					font = "xdefm_Font1", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col
-				}, 1, 255 )
+				draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Length" )..": "..math.Round( ll*0.01905, 1 ), "xdefm_Font1", scr.x, scr.y +25, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 			elseif st == 2 then
-				draw.TextShadow( {
-					text = language.GetPhrase( "xdefm.Length" )..": "..math.Round( self:GetFMod_RL()*0.01905, 1 ), pos = { scr.x, scr.y + 25 },
-					font = "xdefm_Font1", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col
-				}, 1, 255 )
+				draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Length" )..": "..math.Round( self:GetFMod_RL()*0.01905, 1 ), "xdefm_Font1", scr.x, scr.y +25, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 			end
 			if GetConVar( "xdefmod_showhook" ):GetInt() > 0 then
 				for k, v in pairs( ents.FindByClass( "xdefm_bobber" ) ) do
@@ -121,22 +110,16 @@ if CLIENT then
 						end MakeItNice( scr.x -5, scr.y -5, 10, 10 )
 						local rea, lee, hh = v:GetFMod_RS(), v:GetFMod_DP(), 0
 						if rea < 1 or ( IsValid( v:GetFMod_HK() ) and IsValid( v:GetFMod_HK():GetFMod_FS() ) ) then
-							draw.TextShadow( {
-								text = math.Round( rea*100 ).."%", pos = { scr.x, scr.y -16 },
-								font = "xdefm_Font2", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col
-							}, 1, 255 )
+							draw.SimpleTextOutlined( math.Round( rea*100 ).."%", "xdefm_Font2", scr.x, scr.y -16, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 						end
 						if lee > 0 then
-							draw.TextShadow( {
-								text = language.GetPhrase( "xdefm.Depth" )..": "..math.Round( lee*0.01905, 1 ), pos = { scr.x, scr.y +16 },
-								font = "xdefm_Font2", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col
-							}, 1, 255 ) hh = hh +16
+							draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Depth" )..": "..math.Round( lee*0.01905, 1 ), "xdefm_Font2", scr.x, scr.y +16, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+							hh = hh +16
 						end
 						if GetConVar( "xdefmod_sonar" ):GetInt() > 0 and IsValid( v:GetFMod_HK() ) and IsValid( v:GetFMod_HK():GetFMod_FS() ) then
 							local aa, bb = xdefm_ItemGet( v:GetFMod_HK():GetFMod_FS() )
 							if istable( bb ) then
-								draw.TextShadow( { text = language.GetPhrase( "xdefm.Caught" )..": "..language.GetPhrase( bb.Name ), pos = { scr.x, scr.y +16 +hh }, font = "xdefm_Font2",
-								xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = xdefmod.util.RARITY_COLORS[ bb.Rarity +1 ] }, 1, 255 )
+								draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Caught" )..": "..language.GetPhrase( bb.Name ), "xdefm_Font2", scr.x, scr.y +16 +hh, xdefm.miscs.Rarity[ bb.Rarity +1 ], TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 							end
 						end
 					end

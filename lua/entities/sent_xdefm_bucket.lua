@@ -43,6 +43,6 @@ function ENT:Draw() self:DrawModel()  local red = self:GetFMod_CT()/16  local co
 	surface.SetFont( "xdefm_Font3" ) local xx, yy = surface.GetTextSize( txt )
 	cam.IgnoreZ( true ) local aaa = ( LocalPlayer():GetPos() -self:GetPos() ):Angle()
 	cam.Start3D2D( self:GetPos(), Angle( 0, 90 +aaa.yaw, 90 ), 0.1 )
-		draw.RoundedBox( 8, -xx/2 -8, -yy/2 -128 -8, xx +16, yy +16, Color( 0, 0, 0, 155 ) )
-		draw.TextShadow( { text = txt, pos = { 0, -128 }, font = "xdefm_Font3",
-		xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col }, 1, 255 ) cam.End3D2D() cam.IgnoreZ( false ) end
+		draw.RoundedBox( 8, -xx/2 -8, -yy/2 -128 -8, xx +16, yy +16, Color( 0, 0, 0, 128 ) )
+		draw.SimpleTextOutlined( txt, "xdefm_Font3", 0, -128, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+	cam.End3D2D() cam.IgnoreZ( false ) end

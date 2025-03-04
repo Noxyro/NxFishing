@@ -30,7 +30,7 @@ function ENT:Touch( ent ) if ent:GetClass() != "xdefm_base" or self.xdefm_Cool >
 	net.Start( "NET_xdefm_BestiaryRecord" ) net.WriteString( xdefm_GetClass( ent ) ) net.Send( ow )
 	ent.xdefm_Trashed = true  xdefm_AddNote( ow, "xdefm.GetMoney&: "..prc, "!V", "coins", 5 ) xdefm_GiveMoney( ow, prc ) ent:Remove() end
 function ENT:Think() if SERVER then return end local text = self:GetOverlayText() local ply, tag = LocalPlayer(), GetConVar( "xdefmod_tagdist" ):GetInt()
-	if !IsValid( ply ) or tag == 0 or ply:GetPos():DistToSqr( self:GetPos() ) > tag^2 then return end local tak = false
+	if !IsValid( ply ) or tag == 0 or ply:GetPos():DistToSqr( self:GetPos() ) > tag^2 then return end
 	if self:BeingLookedAtByLocalPlayer() then halo.Add( { self }, Color( 0, 255, 255 ), 1, 1, 1 )
 	if text != "" then AddWorldTip( self:EntIndex(), text, 0.5, self:GetPos(), self ) end end end
 function ENT:OnTakeDamage( dmg ) self:TakePhysicsDamage( dmg ) end

@@ -42,7 +42,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon	= false
 	SWEP.FMod_CTarget 		= nil
 	function SWEP:DrawWeaponSelection( x, y, wide, tall, alpha )
-		surface.SetDrawColor( 100, 100, 255, alpha )  surface.SetTexture( self.WepSelectIcon )
+		surface.SetDrawColor( 0, 161, 255, alpha )  surface.SetTexture( self.WepSelectIcon )
 		y = y+10  x = x+10  wide = wide-20
 		surface.DrawTexturedRect( x, y, wide, ( wide / 2 ) )
 		self:PrintWeaponInfo( x + wide + 20, y + tall * 0.95, alpha )
@@ -50,7 +50,7 @@ if CLIENT then
 	function SWEP:PrintWeaponInfo( x, y, alpha )
 		if self.InfoMarkup == nil then
 			local str = ""  local title_color = "<color=255,255,255,255>"
-			local text_color = "<color=155,155,255,255>"  str = "<font=TargetID>"
+			local text_color = "<color=0,161,255,255>"  str = "<font=TargetID>"
 			if ( self.Author != "" ) then str = str..title_color..language.GetPhrase( "#xdefm.Author" )..": </color>"..text_color..self.Author.."</color>\n" end
 			if ( self.Purpose != "" ) then str = str..title_color..language.GetPhrase( "#xdefm.Purpos" )..": </color>"..text_color..language.GetPhrase( self.Purpose ).."</color>\n" end
 			str = str.."\n"..title_color..language.GetPhrase( self.PrintName ).."</color>"
@@ -63,52 +63,38 @@ if CLIENT then
 		end
 		local xx, yy, ww, hh = x - 6, y - 6, 362, self.InfoMarkup:GetHeight() +24
 		draw.RoundedBox( 0, xx, yy, ww, hh, Color( 0, 115*0.5, 180, 255, alpha ) )
-		surface.SetDrawColor( 5, 5, 100, 255 ) surface.SetMaterial( Mat ) surface.DrawTexturedRect( xx, yy, ww, hh )
-		surface.SetDrawColor( 0, 0, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 2 )
+		surface.SetDrawColor( 0, 0, 96, 255 ) surface.SetMaterial( Mat ) surface.DrawTexturedRect( xx, yy, ww, hh )
+		surface.SetDrawColor( 0, 161, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 2 )
 		surface.SetDrawColor( 0, 255, 255, 255 ) surface.DrawOutlinedRect( xx, yy, ww, hh, 1 )
 		self.InfoMarkup:Draw( x + 5, y + 5, nil, nil, alpha )
-		draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.Version" )..": "..xdefmod.util.VERSION, pos = { xx, yy + hh + 16 },
-			font = "xdefm_Font1", xalign = TEXT_ALIGN_LEFT, yalign = TEXT_ALIGN_CENTER, color = Color( 255, 255, 255 )
-		}, 1, 255 ) self.InfoMarkup = nil
+		draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Version" )..": "..xdefm.miscs.Version, "xdefm_Font1", xx, yy + hh +16, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+		self.InfoMarkup = nil
 	end
 	function SWEP:DrawWorldModel() self:DrawModel() end
 	function SWEP:DrawHUD() local pro = LocalPlayer().xdefm_Profile  if !IsValid( LocalPlayer() ) or !LocalPlayer():Alive() or
 		vgui.CursorVisible() or !istable( pro ) then return end local own = LocalPlayer()  if GetConVar( "cl_drawhud" ):GetInt() <= 0 then return end
 		local txt = language.GetPhrase( self.PrintName )  surface.SetFont( "xdefm_Font6" )  local ww, hh = surface.GetTextSize( txt )
 		draw.RoundedBox( 8, ScrW()/2 -ww/2 -12, ScrH()*0.95 -hh/2 -12, ww +24, hh +24, Color( 0, 0, 0, 128 ) )
-		for i=1, 1 do draw.Text( {
-			text = txt, pos = { ScrW()/2, ScrH()*0.95 },
-			font = "xdefm_Font6", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 55, 255, 255 )
-		} ) end local blk = own:GetNWBool( "XDEFMod_BTD" )
+		draw.SimpleTextOutlined( txt, "xdefm_Font6", ScrW()/2, ScrH()*0.95, Color( 0, 161, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+		local blk = own:GetNWBool( "XDEFMod_BTD" )
 		local tr = util.TraceLine( { start = own:EyePos(), endpos = own:EyePos() +own:EyeAngles():Forward()*128,
 		filter = own, mask = MASK_SHOT } )  local ent = tr.Entity  local col = Color( 255, 255, 255 )
 		if IsValid( ent ) and ent:IsPlayer() and ent:WorldSpaceCenter():DistToSqr( own:WorldSpaceCenter() ) > 65536 then ent = Entity( 0 ) end
 		local scr = ( tr.HitPos +tr.HitNormal ):ToScreen()  scr.x = math.Round( scr.x )  scr.y = math.Round( scr.y )
-		if !own:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() then draw.TextShadow( {
-			text = language.GetPhrase( "xdefm.TradeStat" )..": "..language.GetPhrase( "xdefm."..( blk and "Disallow" or "Allow" ) ), pos = { scr.x, scr.y +50 },
-			font = "xdefm_Font1", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = blk and Color( 255, 55, 55 ) or Color( 55, 255, 55 )
-		}, 1, 255 ) end if own:GetNWBool( "XDEFMod_BTD" ) then return end local ply = own:GetNWEntity( "XDEFMod_TPL" )
+		if !own:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() then
+		draw.SimpleTextOutlined( language.GetPhrase( "xdefm.TradeStat" )..": "..language.GetPhrase( "xdefm."..( blk and "Disallow" or "Allow" ) ), "xdefm_Font1", scr.x, scr.y +50, blk and Color( 255, 0, 0 ) or Color( 0, 255, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+		end if own:GetNWBool( "XDEFMod_BTD" ) then return end local ply = own:GetNWEntity( "XDEFMod_TPL" )
 		if ply:IsPlayer() and ply:Alive() then plo = ply:GetNWEntity( "XDEFMod_TPL" )
 			if plo == own then local k1 = input.LookupBinding( "+attack2", true ) if isstring( k1 ) then
 				local kk1 = string.Explode( "", k1 ) if !istable( kk1 ) then k1 = string.upper( k1 )
 				else kk1[ 1 ] = string.upper( kk1[ 1 ] )  k1 = table.concat( kk1, "" ) end
-				draw.TextShadow( {
-					text = language.GetPhrase( "xdefm.Trade13" ).." "..k1.." "..language.GetPhrase( "xdefm.Trade14" ), pos = { scr.x, scr.y +25 },
-					font = "xdefm_Font1", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = Color( 55, 255, 255 )
-				}, 1, 255 )
+				draw.SimpleTextOutlined( language.GetPhrase( "xdefm.Trade13" ).." "..k1.." "..language.GetPhrase( "xdefm.Trade14" ), "xdefm_Font1", scr.x, scr.y +25, Color( 0, 161, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 			end end
-			local co2 = ( plo == own and Color( 55, 255, 255 ) or Color( 255, 255, 0 ) )
+			local co2 = ( plo == own and Color( 0, 161, 255 ) or Color( 255, 255, 0 ) )
 			local bol = language.GetPhrase( "xdefm."..( plo == own and "Trade11" or "Trade12" ) )
 			local sc2 = ply:WorldSpaceCenter():ToScreen()  sc2.x = math.Round( sc2.x )  sc2.y = math.Round( sc2.y )
-			draw.TextShadow( {
-				text = ply:Nick(), pos = { sc2.x, sc2.y },
-				font = "xdefm_Font5", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = co2
-			}, 1, 255 )
-			draw.TextShadow( {
-				text = bol, pos = { sc2.x, sc2.y +20 },
-				font = "xdefm_Font1", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = co2
-			}, 1, 255 )
+			draw.SimpleTextOutlined( ply:Nick(), "xdefm_Font5", sc2.x, sc2.y, co2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
+			draw.SimpleTextOutlined( bol, "xdefm_Font1", sc2.x, sc2.y +20, co2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 			cam.Start3D()
 			render.DrawBeam( own:WorldSpaceCenter(), ply:WorldSpaceCenter(), 0.5, 1, 1, co2 )
 			cam.End3D()
@@ -131,10 +117,7 @@ if CLIENT then
 			elseif tar:GetNWEntity( "XDEFMod_TPL" ):IsPlayer() and tar:GetNWEntity( "XDEFMod_TPL" ) != own then tx2 = tar:Nick().." "..language.GetPhrase( "xdefm.AlTrade" )
 			else tx2 = language.GetPhrase( "xdefm."..( tar:GetNWEntity( "XDEFMod_TPL" ) == own and "Trade4" or "Trade3" ) ).." - "..tar:Nick() end
 		elseif IsValid( tar ) and tar:IsPlayer() then tx2 = language.GetPhrase( "xdefm.Trade5" ) end
-		draw.TextShadow( {
-			text = tx2, pos = { scr.x, scr.y +25 },
-			font = "xdefm_Font1", xalign = TEXT_ALIGN_CENTER, yalign = TEXT_ALIGN_CENTER, color = col
-		}, 1, 255 )
+		draw.SimpleTextOutlined( tx2, "xdefm_Font1", scr.x, scr.y +25, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color( 0, 0, 0 ) )
 	end
 else SWEP.ReloadOnce 		= false end
 function SWEP:Initialize() self:SetHoldType( "pistol" ) end

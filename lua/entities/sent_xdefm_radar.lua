@@ -82,14 +82,7 @@ hook.Add( "HUDPaint", "xdefm_Radar", function() local ply = LocalPlayer()
 			surface.SetDrawColor( col )
 			surface.SetMaterial( ico )
 			surface.DrawTexturedRectRotated( xx, yy, 16, 16, 0 )
-			draw.Text( {
-				text = xdefm_ItemMark( v:GetFMod_DT(), true ),
-				pos = { xx, yy+16 },
-				font = "TargetIDSmall",
-				xalign = TEXT_ALIGN_CENTER,
-				yalign = TEXT_ALIGN_CENTER,
-				color = col
-			} )
+			draw.SimpleText( xdefm_ItemMark( v:GetFMod_DT(), true ), "TargetIDSmall", xx, yy+16, col, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 		end
 	elseif XDEFM_RADAREND > 0 then
 		XDEFM_RADAREND = 0

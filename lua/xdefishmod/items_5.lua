@@ -284,10 +284,10 @@ if true then local it = "it_plate"
 	function ITEM:OnInit( self ) self.xdefm_Dummy = nil end
 	function ITEM:OnInteract( self, ent, typ )
 		if typ == -1 then local cls = self.xdefm_T3[ 1 ]
-			if isstring( cls ) and cls != "_" then
 			if IsValid( self.xdefm_Dummy ) then self.xdefm_Dummy:Remove() end
-			local ite = xdefm_DummySpawn( cls, self:GetPos(), self:GetAngles(), self:GetFMod_OW() )
-			if IsValid( ite ) then ite:SetPos( self:WorldSpaceCenter() +self:GetUp()*8 ) ite:SetParent( self ) self.xdefm_Dummy = ite end end
+			if isstring( cls ) and cls != "_" then
+			local ite = xdefm_DummySpawn( cls, self:WorldSpaceCenter(), self:GetAngles(), self:GetFMod_OW() )
+			if IsValid( ite ) then ite:SetParent( self ) self.xdefm_Dummy = ite end end
 		end
 	end
 	function ITEM:OnThink( self ) if IsValid( self.xdefm_Dummy ) then self.xdefm_Dummy:SetAngles( self:LocalToWorldAngles( Angle( 0, CurTime()*10, 0 ) ) ) end end
