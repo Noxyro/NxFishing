@@ -1,5 +1,22 @@
 Listed below are the change notes of the original work as found on the [Steam Workshop page](https://steamcommunity.com/sharedfiles/filedetails/?id=2909221398).
-This list only contains information up to the last version that was available on 06.08.2024 and is ordered from newest to oldest changes.
+This list only contains information up to the last version that was available on 27.11.2024 and is ordered from newest to oldest changes.
+
+**Update: 27 Nov, 2024 @ 3:22pm**
+- *No update information available.*
+
+**Update: 19 Oct, 2024 @ 11:43am**
+- *No update information available.*
+
+**Update: 18 Oct, 2024 @ 12:02pm**
+- *No update information available.*
+
+**Update: 18 Oct, 2024 @ 8:46am**
+- *No update information available.*
+
+**Update: 2 Oct, 2024 @ 3:34pm**
+- **4.5.2**
+    - Efficiency skill finally works
+    - Some UI text style changes and minor bug fixes
 
 **Update: 13 Apr, 2024 @ 5:27am**  
 - *No update information available.*
