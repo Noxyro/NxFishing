@@ -468,13 +468,13 @@ if CLIENT then
 			draw.SimpleTextOutlined(
 				isstring(item_text) and item_text or "", 	-- Text
 				"xdefm_Font2", 								-- Font
-				(h - 4), 									-- X Pos
+				h - 4, 										-- X Pos
 				4, 											-- Y Pos
 				Color(255, 255, 255), 						-- Color
 				TEXT_ALIGN_RIGHT, 							-- X Align
 				TEXT_ALIGN_DOWN, 							-- Y Align
 				1, 											-- Outline Width
-				Color(0, 0, 0) 								-- Outline Color
+				Color(0, 0, 0) 							-- Outline Color
 			)
 		end
 
@@ -1209,7 +1209,7 @@ if CLIENT then
 		if xdefmod.util.cl_ls ~= ttt[1] then
 			xdefmod.util.cl_ls = ttt[1]
 			if item_data ~= "_" then xdefmod.util.cl_ds = item_data end
-			xdefmod.util.cl_dl = SysTime() +( GetConVar( "xdefmod_animui" ):GetInt() > 0 and 0.25 or 0 )
+			xdefmod.util.cl_dl = SysTime() + ( GetConVar( "xdefmod_animui" ):GetInt() > 0 and 0.25 or 0 )
 		end
 
 		if IsValid(ply) and (xdefmod.util.cl_ds ~= "_" or xdefmod.util.cl_dl > SysTime()) then
@@ -2173,7 +2173,7 @@ if SERVER then -- Server only
 		if file.Exists(ply_file_path, "DATA") then
 			ply_profile = util.JSONToTable(file.Read(ply_file_path, "DATA"))
 
-			if !istable(ply_profile) then
+			if not istable(ply_profile) then
 				ply_profile = {
 					Level = 0,
 					Money = 0,
@@ -2649,20 +2649,20 @@ if SERVER then -- Server only
 	-- Prevents flagged fishing entities to be interacted with by phys gun
 	hook.Add("PhysgunPickup", "xdefm_NoTool", function(ply, ent)
 		if ent.xdefm_NoTool then return false end
-		if IsValid(ply) and ent:GetClass() == "xdefm_base" and !xdefm_FriendAllow(ply, ent:GetFMod_OI()) and !xdefm_NadAllow(ply, ent) then return false end
+		if IsValid(ply) and ent:GetClass() == "xdefm_base" and not xdefm_FriendAllow(ply, ent:GetFMod_OI()) and not xdefm_NadAllow(ply, ent) then return false end
 	end)
 
 	-- Prevents flagged fishing entities to have their properties changed
 	hook.Add("CanProperty", "xdefm_NoTool", function(ply, property, ent)
 		if ent.xdefm_NoTool then return false end
-		if IsValid(ply) and ent:GetClass() == "xdefm_base" and !xdefm_FriendAllow(ply, ent:GetFMod_OI()) and !xdefm_NadAllow(ply, ent) then return false end
+		if IsValid(ply) and ent:GetClass() == "xdefm_base" and not xdefm_FriendAllow(ply, ent:GetFMod_OI()) and not xdefm_NadAllow(ply, ent) then return false end
 	end)
 
 	-- Prevents flagged fishing entities to be targeted by tools
 	hook.Add("CanTool", "xdefm_NoTool", function(ply, trace_table, toolname, tool, button)
 		if IsValid(trace_table.Entity) and trace_table.Entity.xdefm_NoTool then return false end
 		if IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" and toolname == "precision_align" then return false end
-		if IsValid(ply) and IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" and !xdefm_FriendAllow(ply, trace_table.Entity:GetFMod_OI()) and !xdefm_NadAllow(ply, trace_table.Entity) then return false end
+		if IsValid(ply) and IsValid(trace_table.Entity) and trace_table.Entity:GetClass() == "xdefm_base" and not xdefm_FriendAllow(ply, trace_table.Entity:GetFMod_OI()) and not xdefm_NadAllow(ply, trace_table.Entity) then return false end
 	end)
 
 	-- Prevents flagged fishing entities to be picked up by players
@@ -3437,7 +3437,7 @@ if typ == 0 then -- Inventory menu
 					draw.SimpleTextOutlined( language.GetPhrase("xdefm.Upd" .. ski) .. (ski == "G" and GetConVar("xdefmod_nomorehook"):GetInt() >= 1 and " ※" or ""),
 					"xdefm_Font5", 16, h / 2, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 
-					draw.SimpleTextOutlined( "Lv." .. ((ski == "G" and tab["Upd"..ski] >= 5 or tab["Upd" .. ski] >= 100) and "Max" or tab["Upd"..ski]),
+					draw.SimpleTextOutlined( "Lv." .. ((ski == "G" and tab["Upd" .. ski] >= 5 or tab["Upd" .. ski] >= 100) and "Max" or tab["Upd" .. ski]),
 					"xdefm_Font5", w - 160, h / 2, Color(255, 255, 255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 
 					draw.SimpleTextOutlined( "±" .. tostring(num),
@@ -3752,11 +3752,11 @@ elseif typ == 2 then -- Exchange menu
 		surface.DrawTexturedRectRotated( w / 2, h / 2, w, h, 180 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 0, 0, w, h, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 0, 0, w, h, 1 )
-		draw.SimpleTextOutlined( ply:Nick(), "xdefm_Font4", 115, 25, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
-		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.FMoney" )..": "..tab.Money, "xdefm_Font1", 115, 55, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
-		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.DMoney" )..": "..( ply.getDarkRPVar and ply:getDarkRPVar("money") or "Currency Not Found!" ), "xdefm_Font1", 115, 78, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
-		local rat = math.Round( 0.99*GetConVar( "xdefmod_darkrp" ):GetFloat()*100, 2 ).."%"
-		draw.SimpleTextOutlined( language.GetPhrase( "#xdefm.DRate" )..": "..rat, "xdefm_Font1", 115, 101, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( ply:Nick(), "xdefm_Font4", 115, 25, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase("#xdefm.FMoney") .. ": " .. tab.Money, "xdefm_Font1", 115, 55, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		draw.SimpleTextOutlined( language.GetPhrase("#xdefm.DMoney") .. ": " .. (ply.getDarkRPVar and ply:getDarkRPVar("money") or "Currency Not Found!"), "xdefm_Font1", 115, 78, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+		local rat = math.Round(0.99 * GetConVar("xdefmod_darkrp"):GetFloat() * 100, 2) .. "%"
+		draw.SimpleTextOutlined( language.GetPhrase("#xdefm.DRate") .. ": " .. rat, "xdefm_Font1", 115, 101, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 8, 115, 582, 150, 2 )
 		surface.SetDrawColor( xdefmod.COLOR_LINE ) surface.DrawOutlinedRect( 8, 115, 582, 150 )
 		surface.SetDrawColor( xdefmod.COLOR_BORDER ) surface.DrawOutlinedRect( 16, 126, 564, 43 )
@@ -3775,7 +3775,7 @@ elseif typ == 2 then -- Exchange menu
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end function pax:DoClick() pan:Close() end
 		function pax:OnCursorEntered() pax.B_Hover = true end function pax:OnCursorExited() pax.B_Hover = false end end
 	if true then -- Value
@@ -3862,7 +3862,7 @@ elseif typ == 3 then -- NPC menu
 		pax:SetText( "" ) pax:SetPos( 460, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -3946,7 +3946,7 @@ elseif typ == 4 then -- Structure menu
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4110,7 +4110,7 @@ elseif typ == 5 then -- Bank menu
 		pax:SetText( "" ) pax:SetPos( 760, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4207,7 +4207,7 @@ elseif typ == 6 then -- Friends menu
 		pax:SetTooltip("#xdefm.Close")
 
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4272,7 +4272,7 @@ elseif typ == 6 then -- Friends menu
 			for k, v in pairs( player.GetAll() ) do
 				if IsValid( v ) and not v:IsBot() and v ~= LocalPlayer() and not istable( pan.T_Data[ v:SteamID() ] ) then
 					if v:SteamID() == str then ply = v break end
-					local st, ed = string.find( string.lower( v:Nick() ), string.lower( str ) )
+					local st, _ = string.find( string.lower( v:Nick() ), string.lower( str ) )
 					if st then ply = v break end
 				end
 			end
@@ -4334,7 +4334,7 @@ elseif typ == 7 then -- Trade menu
 		pax:SetText( "" ) pax:SetPos( 455, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4545,7 +4545,7 @@ elseif typ == 8 then -- Collection menu
 		pax:SetText( "" ) pax:SetPos( 710, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
@@ -4773,7 +4773,7 @@ elseif typ == 9 then -- Craft menu
 		pax:SetText( "" ) pax:SetPos( 560, 8 ) pax:SetSize( 32, 32 )
 		pax.B_Hover = false  pax:SetTooltip( "#xdefm.Close" )
 		function pax:Paint( w, h )
-			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, (pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255)), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
+			draw.SimpleTextOutlined( "×", "xdefm_Font5", w / 2, h / 2, pax.B_Hover and Color(255, 0, 0) or Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, xdefmod.COLOR_LINE )
 		end
 
 		function pax:DoClick()
