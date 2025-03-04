@@ -1,8 +1,8 @@
 "AddonInfo"
 {
     "name"        "NxFishing"
-    "version"     "v1.0.0"
-    "up_date"     "06.08.2024"
+    "version"     "v1.0.1"
+    "up_date"     "04.03.2025"
     "author_name" "Noxyro"
     "info"        "A comprehensive fishing experience with inventory, leveling, trading, crafting, and quest systems, inspired by classic fishing mods."
 }
